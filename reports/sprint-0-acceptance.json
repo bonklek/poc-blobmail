@@ -31,7 +31,7 @@
     "no production privacy, settlement, delivery, read, or acknowledgement claim"
   ],
   "tests": {
-    "total": 37,
+    "total": 52,
     "failures": 0
   },
   "safety": {
@@ -41,7 +41,7 @@
   "artifacts": [
     {
       "path": "README.md",
-      "sha256": "8f3605044cdf8fd05394628ce484834fa57a7a934134176e8cf354ba57c52630"
+      "sha256": "52fa8acfcd3fbccaa90cd2dff10915b18094894ff7d3784e3d5fb68537675208"
     },
     {
       "path": "docs/SPRINT_0_AGENT_PROMPT.md",
@@ -61,7 +61,7 @@
     },
     {
       "path": "docs/sprint-0-handoff.md",
-      "sha256": "47d2e288b3d9b34e736fce84e315be5b70e98cf2cf0663d6da9a960979961a05"
+      "sha256": "30aed331eea7d299bab34d04997e31d45f69f078d6fe85adaaf8b176055dd480"
     },
     {
       "path": "vectors/blobmail-v0.json",
@@ -85,19 +85,19 @@
     },
     {
       "path": "reports/protocol-core-tests.json",
-      "sha256": "7179ff1a115ca3b1ed13f2446b244f92a17708ffdc7e16b60b76b005a24c5f93"
+      "sha256": "c3e3ff7c9601432114b7e30ee4183d43410cb8e6502a5be1bcf0e6b62133da34"
     },
     {
       "path": "reports/browser-loopback.json",
-      "sha256": "de498b29f419a64612f0ba69f9807ca314cf94d5a77b03257a8c651c4672101c"
+      "sha256": "e0425e5829cf6e5324488095be56213a3ba7ae8bd683985795c601663f29bfcc"
     },
     {
       "path": "reports/sprint-0-adversarial.json",
-      "sha256": "30972d3543f3d9f5c23b3c5f2c7cac5ab839ba1e2f7982b86207d1004a7848ed"
+      "sha256": "a52ade98e9611819684695e5a52c599c4f86136a9a5590521e5a7fa97f2bc4a1"
     },
     {
       "path": "reports/safety-audit.json",
-      "sha256": "2ab32157ee77de4131dc3838f35ba472db4a321c2f4f05b5d51653634dcabf8b"
+      "sha256": "cb33b632686ecc008b30cb4ca91d06a559d1487d56fcea21bdf8d28d73fa79aa"
     },
     {
       "path": "reports/dev-server-probe.json",

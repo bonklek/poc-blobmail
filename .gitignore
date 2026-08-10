@@ -2,6 +2,9 @@ node_modules/
 dist/
 coverage/
 *.log
+.env
+.env.*
+!.env.example
 
 # Papertiger runtime authority is local and never merged through Git.
 /state/papertiger.sqlite

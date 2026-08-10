@@ -39,8 +39,8 @@
       "no funded-key environment access in project source",
       "no credential-shaped literals in project source",
       "no wallet-injection access in project source",
-      "no external runtime network or peer API in application source",
-      "the only verification-network exception is a hard-coded 127.0.0.1 client probe"
+      "no external runtime network or peer API in browser application source",
+      "verification-network exceptions are the hard-coded 127.0.0.1 client probe and the explicit bounded read-only Sepolia provider probe"
     ]
   },
   "expectedOutcomes": [
@@ -73,17 +73,17 @@
       "outcome": "restore only allowlisted bounded state and retain no key or wallet authority"
     }
   ],
-  "tests": 37,
+  "tests": 52,
   "failures": 0,
   "safetyFindings": 0,
   "artifacts": [
     {
       "path": "reports/test-results.xml",
-      "sha256": "79b98928eafa15f6ba704d9f477871519ab477134c96b4a98dd8052d79abee52"
+      "sha256": "7d3cc7c5dbb8e8d32fc619879fcb3954b23b6210da7783da53b69a05697f68f0"
     },
     {
       "path": "reports/safety-audit.json",
-      "sha256": "2ab32157ee77de4131dc3838f35ba472db4a321c2f4f05b5d51653634dcabf8b"
+      "sha256": "cb33b632686ecc008b30cb4ca91d06a559d1487d56fcea21bdf8d28d73fa79aa"
     }
   ]
 }

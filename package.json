@@ -12,6 +12,7 @@
     "vectors": "node scripts/generate-vectors.mjs",
     "audit:safety": "node scripts/verify-safety.mjs",
     "probe:client": "node scripts/probe-running-client.mjs",
+    "probe:sepolia": "node scripts/probe-sepolia-providers.mjs",
     "verify:milxdy": "node examples/milxdy-blobmail/tools/verify.mjs",
     "reports": "node scripts/generate-reports.mjs",
     "verify": "pnpm run vectors && pnpm run test:receipt && pnpm run audit:safety && pnpm run build && pnpm run build:milxdy && pnpm run verify:milxdy && pnpm run reports"

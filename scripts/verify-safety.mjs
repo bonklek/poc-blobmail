@@ -15,6 +15,9 @@ const FORBIDDEN = [
   ["peer or streaming network", /\b(?:WebSocket|EventSource|RTCPeerConnection)\b/],
   ["runtime network request", /\bfetch\s*\(|from\s+["']node:https?["']/],
 ];
+const APPROVED_READ_ONLY_NETWORK_PROBES = new Set([
+  "scripts/probe-sepolia-providers.mjs",
+]);
 
 async function filesUnder(root) {
   const entries = await readdir(root, { withFileTypes: true });
@@ -42,8 +45,20 @@ for (const file of files.sort()) {
   const text = await readFile(file, "utf8");
   for (const [rule, pattern] of FORBIDDEN) {
     if (file.endsWith("probe-running-client.mjs") && rule === "runtime network request") continue;
+    if (APPROVED_READ_ONLY_NETWORK_PROBES.has(file.replaceAll("\\", "/")) && rule === "runtime network request") continue;
     if (pattern.test(text)) findings.push({ file: file.replaceAll("\\", "/"), rule });
   }
+}
+
+const sepoliaProbe = await readFile("scripts/probe-sepolia-providers.mjs", "utf8");
+const sepoliaProbeChecks = {
+  httpsOnly: sepoliaProbe.includes("spec.url.protocol !== 'https:'"),
+  boundedTimeout: sepoliaProbe.includes("spec.timeoutMs > 10_000"),
+  boundedResponse: sepoliaProbe.includes("spec.maxResponseBytes > 1_048_576"),
+  noRedirectHandling: !sepoliaProbe.includes("redirect"),
+};
+for (const [check, passed] of Object.entries(sepoliaProbeChecks)) {
+  if (!passed) findings.push({ file: "scripts/probe-sepolia-providers.mjs", rule: check });
 }
 
 const clientMain = await readFile("src/client/main.js", "utf8");
@@ -63,11 +78,12 @@ const report = {
     "no funded-key environment access in project source",
     "no credential-shaped literals in project source",
     "no wallet-injection access in project source",
-    "no external runtime network or peer API in application source",
-    "the only verification-network exception is a hard-coded 127.0.0.1 client probe",
+    "no external runtime network or peer API in browser application source",
+    "verification-network exceptions are the hard-coded 127.0.0.1 client probe and the explicit bounded read-only Sepolia provider probe",
   ],
   filesScanned: files.length,
   renderingChecks,
+  sepoliaProbeChecks,
   findings,
   passed: findings.length === 0,
 };

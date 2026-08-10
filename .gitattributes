@@ -1,0 +1,8 @@
+/.env.example text eol=lf
+/docs/sepolia-provider-profile.md text eol=lf
+/reports/sepolia-provider-probe.json text eol=lf
+/reports/sepolia-source-provenance.json text eol=lf
+/scripts/probe-sepolia-providers.mjs text eol=lf
+/src/network/*.js text eol=lf
+/test/network-*.test.mjs text eol=lf
+/test/sepolia-probe-receipt.test.mjs text eol=lf

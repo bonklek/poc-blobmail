@@ -24,7 +24,7 @@
     "senderAuthenticated": false
   },
   "checks": {
-    "fullSuiteTests": 37,
+    "fullSuiteTests": 52,
     "fullSuiteFailures": 0,
     "localHttp": {
       "rootHttp200": true,
@@ -59,7 +59,7 @@
   "artifacts": [
     {
       "path": "reports/test-results.xml",
-      "sha256": "79b98928eafa15f6ba704d9f477871519ab477134c96b4a98dd8052d79abee52"
+      "sha256": "7d3cc7c5dbb8e8d32fc619879fcb3954b23b6210da7783da53b69a05697f68f0"
     },
     {
       "path": "reports/dev-server-probe.json",
@@ -67,7 +67,7 @@
     },
     {
       "path": "test/client-dom-integration.test.mjs",
-      "sha256": "81f8db6b27a477c6aa8c6f6825e62f7016e2a4a8d2914bb4a4b2ec04013063ea"
+      "sha256": "a2a3b85441a4c6255c37ddfcbe4114e0e22380da350ec229ade8336f85e51191"
     },
     {
       "path": "test/integration-loopback.test.mjs",
