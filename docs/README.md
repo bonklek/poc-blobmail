@@ -6,6 +6,7 @@ Start here:
 
 - [Master architecture](./master-architecture.md)
 - [Read-only Sepolia provider profile](./sepolia-provider-profile.md)
+- [Sepolia sidecar replay](./sepolia-sidecar-replay.md)
 - [Privacy technology options](./privacy-tech.md)
 - [Posting client](./posting-client.md)
 - [Receiving client](./receiving-client.md)

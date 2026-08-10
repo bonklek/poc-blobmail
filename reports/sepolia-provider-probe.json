@@ -159,8 +159,12 @@
         "sha256": "6a59c8b7ff9a0bc9a4199fac7f163ffc70cf79b25a033654b7ea95167e5f0076"
       },
       {
+        "path": "src/network/node-https.js",
+        "sha256": "dcae0bab2a2fe52f0872fb56bb5182c45a70b3416c4547c38aee3370932c6be7"
+      },
+      {
         "path": "scripts/probe-sepolia-providers.mjs",
-        "sha256": "1a666996ffd0e5cb4642c03eae5eda117c6b6356acb11f132d8c91dfbd1ee8ff"
+        "sha256": "0f0d533df897b451b3916cf9f034fabb94457f6e5e642fa0c37109b4850f69ce"
       },
       {
         "path": "reports/sepolia-source-provenance.json",
@@ -180,7 +184,7 @@
       },
       {
         "path": "test/sepolia-probe-receipt.test.mjs",
-        "sha256": "88c0a313e9c52296c309ab79ef724b83a6a4646af288345615b9dd9bcded3cc5"
+        "sha256": "2530a9d30dc418a2d3266421bcffba00f706c9ea5dbcc5222b8a56027f4c3690"
       }
     ]
   }

@@ -1,0 +1,69 @@
+{
+  "schema": "blobmail.sepolia-sidecar-source-provenance.v1",
+  "scope": "read-only Sepolia sidecar acquisition and KZG verification",
+  "publicReadPath": {
+    "repository": "https://github.com/bonklek/eth-radio",
+    "commit": "b465e02f88bbca85932344228c1cfe5abfb51253",
+    "license": "Viral Public License",
+    "files": [
+      {
+        "path": "scripts/fetch-blob-sidecars.mjs",
+        "gitBlob": "f1f05f50ae799f806ce68f3ff5f13abdf7bc3466",
+        "sha256": "190af2b173d8c5a7ef5dde7d9aa6745e80dc7a5d5f1f9cc9342ee152d09a7a63",
+        "adaptedConcept": "transaction-to-slot resolution and commitment-derived versioned-hash selection"
+      },
+      {
+        "path": "scripts/reconstruct-blob-media.mjs",
+        "gitBlob": "f1fd8e9114a71e7c3d338d6c4a6d1e463e4e96e9",
+        "sha256": "8d543a76d6769c878a99b5201ea6eb7bb23aa1559d054a54b390a807845ac5e9",
+        "adaptedConcept": "bounded 31-byte field-element reconstruction and payload SHA-256 verification"
+      },
+      {
+        "path": "public/decentralized/app.js",
+        "gitBlob": "bdd6c1d38a3e175ffdb2cc088d0138321643a378",
+        "sha256": "7d737ed629d4d088210fc6e8157b22c0497ca55690fea9fe60fbfa949dcbe790",
+        "adaptedConcept": "multi-provider read observations, canonical sidecar matching, and bounded cache keys"
+      },
+      {
+        "path": "LICENSE",
+        "gitBlob": "4e66002138dc8dfebffa9f2cb5723c06952a827c",
+        "sha256": "6fb5fda028900d05b6a8e9d7775257172e7825dede439edd9052cef2c16a6370",
+        "adaptedConcept": "license retained verbatim in THIRD_PARTY_NOTICES.md"
+      }
+    ]
+  },
+  "kzgImplementation": {
+    "package": "kzg-wasm",
+    "version": "1.0.0",
+    "repository": "https://github.com/ethereumjs/kzg-wasm",
+    "gitHead": "31c76b4219f7afe98924ca871574a12fd84262a1",
+    "license": "MIT",
+    "npmIntegrity": "sha512-jMvFK5uiV41BgcLrCaHbNeDeQeZdoTcqOYm7yS1Xdvl4MAykjou+SLlnt+P1bWz5C0YWHOmgUUjIpCuU83zNTA==",
+    "description": "WASM compilation of c-kzg-4844 using the Ethereum ceremony trusted setup",
+    "wasmSha256": "a475ced0c6b173145eafbe0569710966a7341566993d2e40b6b2258211986523",
+    "trustedSetupModuleSha256": "06d697d8d2bf10ac794b46190815bdbc1aadb9ca8b32311195f63a6a9a1310d7",
+    "apiUsed": "verifyBlobKZGProof(blob, commitment, proof)"
+  },
+  "independentVector": {
+    "sourceRule": "EIP-4844 zero polynomial commitment and blob-proof point-at-infinity identity",
+    "blobBytes": 131072,
+    "blobSha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471",
+    "commitment": "0xC00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "proof": "0xC00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "test": "test/sepolia-sidecar-replay.test.mjs"
+  },
+  "references": [
+    "https://eips.ethereum.org/EIPS/eip-4844",
+    "https://github.com/ethereum/c-kzg-4844"
+  ],
+  "excludedRepositories": [
+    "eth-radio-private-unsafe-history"
+  ],
+  "negativeClaims": {
+    "publisherCodeAdapted": false,
+    "walletOrSignerCodeAdapted": false,
+    "privateKeyAccessed": false,
+    "authenticatedRpcPersisted": false,
+    "transactionSubmissionPresent": false
+  }
+}

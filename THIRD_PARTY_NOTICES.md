@@ -26,3 +26,11 @@ conditions:
 
 2. No further restrictions of ANY kind may be applied.
 ```
+
+## kzg-wasm
+
+BlobMail's fixture and read-only Sepolia sidecar verification uses
+`kzg-wasm` version `1.0.0`. The published package metadata declares the
+package under the MIT license. Exact package integrity, published `gitHead`,
+and runtime artifact digests are recorded in
+`reports/sepolia-sidecar-source-provenance.json`.

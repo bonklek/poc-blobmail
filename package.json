@@ -9,17 +9,19 @@
     "build:milxdy": "vite build --config examples/milxdy-blobmail/vite.config.js",
     "test": "node --test",
     "test:receipt": "node --test --test-reporter=junit --test-reporter-destination=reports/test-results.xml && node scripts/normalize-test-receipt.mjs",
-    "vectors": "node scripts/generate-vectors.mjs",
+    "vectors": "node scripts/generate-vectors.mjs && node scripts/generate-sidecar-vectors.mjs",
     "audit:safety": "node scripts/verify-safety.mjs",
     "probe:client": "node scripts/probe-running-client.mjs",
     "probe:sepolia": "node scripts/probe-sepolia-providers.mjs",
+    "probe:sidecars": "node scripts/probe-sepolia-sidecars.mjs",
     "verify:milxdy": "node examples/milxdy-blobmail/tools/verify.mjs",
-    "reports": "node scripts/generate-reports.mjs",
+    "reports": "node scripts/generate-sidecar-replay-report.mjs && node scripts/generate-reports.mjs",
     "verify": "pnpm run vectors && pnpm run test:receipt && pnpm run audit:safety && pnpm run build && pnpm run build:milxdy && pnpm run verify:milxdy && pnpm run reports"
   },
   "dependencies": {
     "@hpke/core": "1.9.0",
-    "@hpke/dhkem-x25519": "1.8.0"
+    "@hpke/dhkem-x25519": "1.8.0",
+    "kzg-wasm": "1.0.0"
   },
   "devDependencies": {
     "happy-dom": "20.11.2",

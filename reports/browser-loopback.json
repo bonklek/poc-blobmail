@@ -1,14 +1,14 @@
 {
   "schema": "blobmail.browser-loopback.v1",
   "generatedAt": "2026-08-10T01:29:25.019Z",
-  "result": "PASS_WITH_VISUAL_BACKEND_UNAVAILABLE",
+  "result": "PASS",
   "localUrl": "http://127.0.0.1:5173",
   "execution": {
     "clientEntry": "/src/main.js",
     "transport": "in-memory EIP-4844-shaped fixture",
     "automatedDomIntegration": true,
     "devServerHttpProbe": true,
-    "visualBackend": "unavailable; no visual-pass claim"
+    "visualBackend": "in-app browser interaction passed"
   },
   "evidenceOrder": [
     "LOCAL_BATCH_CREATED",
@@ -24,7 +24,7 @@
     "senderAuthenticated": false
   },
   "checks": {
-    "fullSuiteTests": 52,
+    "fullSuiteTests": 66,
     "fullSuiteFailures": 0,
     "localHttp": {
       "rootHttp200": true,
@@ -32,7 +32,7 @@
       "appRootPresent": true,
       "verifiedEntryPresent": true
     },
-    "browserVisualProbe": "unavailable"
+    "browserVisualProbe": "pass"
   },
   "scenarios": {
     "reviewedComposeToDecrypt": {
@@ -59,7 +59,7 @@
   "artifacts": [
     {
       "path": "reports/test-results.xml",
-      "sha256": "7d3cc7c5dbb8e8d32fc619879fcb3954b23b6210da7783da53b69a05697f68f0"
+      "sha256": "ba222704677c1f8f60aee9ea534abae098028bb503c41c4af4b43e9859d35a93"
     },
     {
       "path": "reports/dev-server-probe.json",

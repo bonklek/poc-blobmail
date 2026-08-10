@@ -41,7 +41,7 @@ test('checked-in live receipt is a redacted successful Sepolia capability observ
     providers: report.providers,
     negativeClaims: report.negativeClaims,
   })))
-  assert.equal(report.evidence.artifacts.length, 10)
+  assert.equal(report.evidence.artifacts.length, 11)
   assert.ok(report.evidence.artifacts.every(({ path, sha256 }) => (
     typeof path === 'string' && /^[0-9a-f]{64}$/.test(sha256)
   )))

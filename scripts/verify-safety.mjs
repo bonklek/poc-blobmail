@@ -16,7 +16,7 @@ const FORBIDDEN = [
   ["runtime network request", /\bfetch\s*\(|from\s+["']node:https?["']/],
 ];
 const APPROVED_READ_ONLY_NETWORK_PROBES = new Set([
-  "scripts/probe-sepolia-providers.mjs",
+  "src/network/node-https.js",
 ]);
 
 async function filesUnder(root) {
@@ -50,15 +50,19 @@ for (const file of files.sort()) {
   }
 }
 
+const boundedHttps = await readFile("src/network/node-https.js", "utf8");
 const sepoliaProbe = await readFile("scripts/probe-sepolia-providers.mjs", "utf8");
+const sidecarProbe = await readFile("scripts/probe-sepolia-sidecars.mjs", "utf8");
 const sepoliaProbeChecks = {
-  httpsOnly: sepoliaProbe.includes("spec.url.protocol !== 'https:'"),
-  boundedTimeout: sepoliaProbe.includes("spec.timeoutMs > 10_000"),
-  boundedResponse: sepoliaProbe.includes("spec.maxResponseBytes > 1_048_576"),
-  noRedirectHandling: !sepoliaProbe.includes("redirect"),
+  httpsOnly: boundedHttps.includes("spec.url.protocol !== 'https:'"),
+  boundedTimeout: boundedHttps.includes("spec.timeoutMs > 15_000"),
+  boundedResponse: boundedHttps.includes("spec.maxResponseBytes > 8_388_608"),
+  noRedirectHandling: !boundedHttps.includes("redirect"),
+  providerProbeUsesBoundedAdapter: sepoliaProbe.includes("boundedHttpsJson"),
+  sidecarProbeUsesBoundedAdapter: sidecarProbe.includes("boundedHttpsJson"),
 };
 for (const [check, passed] of Object.entries(sepoliaProbeChecks)) {
-  if (!passed) findings.push({ file: "scripts/probe-sepolia-providers.mjs", rule: check });
+  if (!passed) findings.push({ file: "src/network/node-https.js", rule: check });
 }
 
 const clientMain = await readFile("src/client/main.js", "utf8");
@@ -79,7 +83,7 @@ const report = {
     "no credential-shaped literals in project source",
     "no wallet-injection access in project source",
     "no external runtime network or peer API in browser application source",
-    "verification-network exceptions are the hard-coded 127.0.0.1 client probe and the explicit bounded read-only Sepolia provider probe",
+    "verification-network exceptions are the hard-coded 127.0.0.1 client probe and explicit bounded read-only Sepolia provider/sidecar probes",
   ],
   filesScanned: files.length,
   renderingChecks,

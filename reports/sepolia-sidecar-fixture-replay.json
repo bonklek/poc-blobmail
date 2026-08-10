@@ -1,0 +1,155 @@
+{
+  "schema": "blobmail.sepolia-sidecar-replay-receipt.v1",
+  "generatedAt": "2026-08-10T00:00:00.000Z",
+  "result": "PASS_FIXTURE",
+  "observationMode": "deterministic-offline-fixture",
+  "provenance": {
+    "chainId": 11155111,
+    "genesisValidatorsRoot": "0xd8ea171f3c94aea21ebc42a1ed61052acf3f9209c00e4efbaaddac09ed9b8078",
+    "transactionHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+    "blockNumber": 9900000,
+    "blockHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+    "slot": 8800000,
+    "beaconRoot": "0x3333333333333333333333333333333333333333333333333333333333333333",
+    "providerIds": [
+      "blobmail-sepolia-v0:execution:fixture.invalid",
+      "blobmail-sepolia-v0:beacon:fixture.invalid"
+    ],
+    "headSlots": [
+      8800064
+    ],
+    "finalizedSlots": [
+      8800032
+    ],
+    "finality": "finalized_checkpoint_at_or_after_inclusion"
+  },
+  "payload": {
+    "bytes": 664,
+    "sha256": "8cf385f4db72cb1de2de39d83bbc248b9ccd88c89a502fff985737d340ea7d40",
+    "batchId": "d70a8e1acb203ba8a07aaf59bea545d6e1d804dfaba75ac809f2f79061c3d7b2",
+    "entryIds": [
+      "fec345ac070cba4d96c0db9ec93147f0122e321e5098740d86f466006f85a9b0"
+    ]
+  },
+  "sidecars": {
+    "blobCount": 1,
+    "blobBytes": 131072,
+    "blobSha256": "e506272d8113bd6a2a46737f82a238041e4fca545f7c14dbdeff5490e1b9d08d",
+    "commitments": [
+      "0xaf1080cc392ef6522f69e4c56690a786b25caf966e82eef88c43e7898cc41f4fea8fbfd9ad3fe9709d03eefe3f5ed6cf"
+    ],
+    "proofs": [
+      "0xa87dcd22039c915bc844646b5abf503e35d074d4208087d427c05b8a8c5924a9e18be3005b5b6eb038468aae1b069e86"
+    ],
+    "versionedHashes": [
+      "0x0118143cadfe506858f7cd52a792e90f6ba725b388b6c2826096198df4ce390d"
+    ],
+    "kzgImplementation": "kzg-wasm@1.0.0/c-kzg-4844"
+  },
+  "evidence": [
+    {
+      "state": "BLOB_TRANSACTION_INCLUDED"
+    },
+    {
+      "state": "SIDECARS_MATCHED"
+    },
+    {
+      "state": "KZG_PROOF_VERIFIED"
+    },
+    {
+      "state": "BATCH_RECONSTRUCTED"
+    },
+    {
+      "state": "PAYLOAD_SHA256_VERIFIED"
+    }
+  ],
+  "adversarialCases": [
+    {
+      "name": "missing",
+      "expectedError": "MISSING_SIDECAR",
+      "completedEvidence": 1
+    },
+    {
+      "name": "duplicate",
+      "expectedError": "DUPLICATE_SIDECAR",
+      "completedEvidence": 1
+    },
+    {
+      "name": "reordered-with-unrelated",
+      "expectedResult": "PASS"
+    },
+    {
+      "name": "corrupt-canonical-bytes",
+      "expectedError": "PAYLOAD_SHA256_MISMATCH",
+      "completedEvidence": 4
+    },
+    {
+      "name": "wrong-chain",
+      "expectedError": "CHAIN_ID_MISMATCH",
+      "completedEvidence": 0
+    },
+    {
+      "name": "reorged-execution",
+      "expectedError": "REORGED_BLOCK",
+      "completedEvidence": 0
+    },
+    {
+      "name": "reorged-beacon",
+      "expectedError": "REORGED_BLOCK",
+      "completedEvidence": 0
+    },
+    {
+      "name": "non-finalized",
+      "expectedResult": "PASS",
+      "finality": "not_finalized_at_observation"
+    },
+    {
+      "name": "provider-disagreement",
+      "expectedError": "PROVIDER_DISAGREEMENT",
+      "completedEvidence": 0
+    },
+    {
+      "name": "invalid-kzg",
+      "expectedError": "INVALID_KZG_PROOF",
+      "completedEvidence": 2
+    },
+    {
+      "name": "nonzero-field-prefix",
+      "expectedError": "BATCH_RECONSTRUCTION_FAILED",
+      "completedEvidence": 3
+    },
+    {
+      "name": "truncated-sidecar",
+      "expectedError": "INVALID_SIDECARS",
+      "completedEvidence": 1
+    },
+    {
+      "name": "oversized-manifest",
+      "expectedError": "INVALID_MANIFEST",
+      "completedEvidence": 0
+    }
+  ],
+  "commands": {
+    "generate": "node scripts/generate-sidecar-vectors.mjs && node scripts/generate-sidecar-replay-report.mjs",
+    "test": "node --test test/sepolia-sidecar-replay.test.mjs test/sepolia-sidecar-receipt.test.mjs",
+    "live": "pnpm probe:sidecars -- --tx 0x... --manifest path/to/public-manifest.json"
+  },
+  "artifacts": {
+    "vector": {
+      "path": "vectors/sepolia-sidecar-replay-v1.json",
+      "sha256": "3a6e89988568262fc1971989c6d4ddb1e2da3598509b1e592eab189fcff6fc81"
+    },
+    "sourceProvenance": {
+      "path": "reports/sepolia-sidecar-source-provenance.json",
+      "sha256": "82916126c780f8fc1be91a3db3d6b21eef5aae940b13226edc3fc6ad07eecc8f"
+    }
+  },
+  "negativeClaims": {
+    "liveNetworkObserved": false,
+    "walletAccessed": false,
+    "signerPresent": false,
+    "transactionConstructed": false,
+    "transactionSubmitted": false,
+    "chainInclusionClaimedForFixture": false
+  }
+}
