@@ -10,7 +10,7 @@
   ],
   "independentVerifier": {
     "path": "test/independent-vectors.test.mjs",
-    "sha256": "fc636c64334fe2f0cff5053b48baea88a42058be7bcb76e930d32e518e4260fa",
+    "sha256": "6fd694136f7dcab02972f283816b4a080790ffe2add3d20da955878ed5f0d53d",
     "command": "node --test test/independent-vectors.test.mjs"
   },
   "rejectionCoverage": [

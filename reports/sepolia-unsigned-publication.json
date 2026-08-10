@@ -1,0 +1,132 @@
+{
+  "artifacts": [
+    {
+      "bytes": 664,
+      "path": "artifacts/sepolia-unsigned-publication-v1/batch.bin",
+      "sha256": "ec7ef73b8e54113c9be08126942e079caca2097ccd81baadcc841f578ed59331"
+    },
+    {
+      "bytes": 131072,
+      "path": "artifacts/sepolia-unsigned-publication-v1/blob-0.bin",
+      "sha256": "1fb70e9fc9e21d88dfd741125acf7102a428eb53228879d30366c39c951c4551"
+    },
+    {
+      "bytes": 685,
+      "path": "artifacts/sepolia-unsigned-publication-v1/blob-sidecar.json",
+      "sha256": "9006d46a642e6f40497b698c5f8c488144ce9797d8316a75785b04dd80950457"
+    },
+    {
+      "bytes": 501,
+      "path": "artifacts/sepolia-unsigned-publication-v1/unsigned-request.json",
+      "sha256": "21725a2730b0987145d95d305b6ad3844b80151544be12377630d4f69765ac1d"
+    },
+    {
+      "bytes": 5032,
+      "path": "artifacts/sepolia-unsigned-publication-v1/manifest.json",
+      "sha256": "748cace8985c2ac65d269eb650908c3b59dd618bd465971cafe9d9c05c5dbdf1"
+    },
+    {
+      "bytes": 1192,
+      "path": "vectors/sepolia-publication-input-v1.json",
+      "sha256": "4f50019cf4c037a1041e14763410a9fe8d6ecf050df9cbafa0f0b8742f3c00d9"
+    },
+    {
+      "bytes": 1242,
+      "path": "reports/sepolia-unsigned-source-provenance.json",
+      "sha256": "bb6ba4f1336a64b93e152716ffb94a19b973ebb4d06d6931ec4dc51afd74df1f"
+    },
+    {
+      "bytes": 917,
+      "path": "src/publication/canonical-json.js",
+      "sha256": "5d6a8bc2758b04fb41f1ce14ac0bdcade7dd2277950511be8e4aaf5835e9bcc1"
+    },
+    {
+      "bytes": 5135,
+      "path": "src/publication/cost.js",
+      "sha256": "5b6ef3d44fb4082f350ec04e071fcc0f84fc22e1bfa34174638fa9aa980ba87b"
+    },
+    {
+      "bytes": 9732,
+      "path": "src/publication/package.js",
+      "sha256": "bc06c743f8cc61f22196c30588cfd9891c297f4abff0a097066dd830a308a3b3"
+    },
+    {
+      "bytes": 3884,
+      "path": "scripts/generate-sepolia-unsigned-publication.mjs",
+      "sha256": "fbe40e62c24d70472140117073dfa4634f613375dd2404111fb7f083f62a96d4"
+    }
+  ],
+  "batchId": "43792fb37c6a9a9d5d2822897367e06bbe2121a34f64bc234fdb1f6a8602853f",
+  "blobVersionedHashes": [
+    "0x0157933e1b616dfd3392622c363412097ebf323541cdc581508aef16e61b2439"
+  ],
+  "branch": "codex/7-unsigned-sepolia-package",
+  "caps": {
+    "maxBlobCostWei": "262144000000000",
+    "maxExecutionCostWei": "42000000000000",
+    "maxTotalExposureWei": "304144000000000"
+  },
+  "chainId": "11155111",
+  "command": "pnpm run package:sepolia:unsigned",
+  "costs": {
+    "blobGasUsed": "131072",
+    "blobUpperBoundWei": "262144000000000",
+    "executionUpperBoundWei": "42000000000000",
+    "referenceBlobWei": "131072000000000",
+    "referenceExecutionWei": "23100000000000",
+    "referenceTotalWei": "154172000000000",
+    "totalUpperBoundWei": "304144000000000"
+  },
+  "deterministic": true,
+  "expectedPublisherAddress": "0x1111111111111111111111111111111111111111",
+  "expiry": {
+    "validThroughBlock": "9000100",
+    "validThroughUnixSeconds": "1786379400"
+  },
+  "issue": "https://github.com/bonklek/blobmail/issues/7",
+  "kzgProofVerified": true,
+  "result": "PASS",
+  "safety": {
+    "containsAuthenticatedEndpoint": false,
+    "containsSecretMaterial": false,
+    "containsSignature": false,
+    "containsSubmissionCapability": false,
+    "fixturePublisherOnly": true,
+    "unsigned": true
+  },
+  "schema": "blobmail.sepolia-unsigned-publication-report.v1",
+  "tests": {
+    "total": 76,
+    "failures": 0
+  },
+  "safetyAudit": {
+    "passed": true,
+    "findings": 0
+  },
+  "acceptanceArtifacts": [
+    {
+      "path": "docs/sepolia-unsigned-publication.md",
+      "sha256": "67660b56a94dc645d287effd418ba8eef6226b7dc9f14534a1bb9fc4622bf6fe"
+    },
+    {
+      "path": "test/publication-cost.test.mjs",
+      "sha256": "0aacc3a35a3a3ec42ab8ab5b16f5c93ad67c87145d4547221a5d6d3d451221ec"
+    },
+    {
+      "path": "test/publication-package.test.mjs",
+      "sha256": "224efa82d035baf8398303075f5f746034dbca076c8d1c1e7baed6811fe7371b"
+    },
+    {
+      "path": "test/sepolia-unsigned-publication-receipt.test.mjs",
+      "sha256": "401bfa5fa2cd787b1244a9fde5135e7543cbabf4a44277fedb0217b4c7a6cc4b"
+    },
+    {
+      "path": "reports/safety-audit.json",
+      "sha256": "2b44b5e247ee663b56d4c142cd609c140755fa1d7a05be3f8452547ef1b16cf8"
+    },
+    {
+      "path": "reports/test-results.xml",
+      "sha256": "4f1c0d6c8c8f8372529a3780e0a7d39f64f1c86b220a8dd8838d12b64a7c8b22"
+    }
+  ]
+}

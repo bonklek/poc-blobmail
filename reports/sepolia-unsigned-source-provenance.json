@@ -1,0 +1,18 @@
+{
+  "schema": "blobmail.sepolia-unsigned-source-provenance.v1",
+  "upstream": {
+    "repository": "https://github.com/bonklek/eth-radio",
+    "commit": "b465e02f88bbca85932344228c1cfe5abfb51253",
+    "license": "VPL",
+    "notice": "THIRD_PARTY_NOTICES.md",
+    "files": [
+      { "path": "scripts/publish-blob-chunk.mjs", "gitBlobSha": "2214cd638a017425cfe30297524f38f406d21453" },
+      { "path": "scripts/chains.mjs", "gitBlobSha": "84e71ec62f6dcdae85c0e47fb670a025f8778689" },
+      { "path": "scripts/lib/tx-env.mjs", "gitBlobSha": "a4561940eaea58b69795a52f5afaae76f6607094" },
+      { "path": "scripts/lib/cost-preflight.mjs", "gitBlobSha": "71c7e7db9f70e3e4ef5fb7bc4542402801276ec2" },
+      { "path": "scripts/test-publisher-dry-run.mjs", "gitBlobSha": "58feb30b1e1ae1d76afd74bdeab10b0b5034758b" }
+    ]
+  },
+  "adaptedConcepts": ["strict chain mismatch guard", "bounded blob count", "integer fee parsing", "worst-case component and total cost preflight", "dry-run manifest and digest evidence"],
+  "excludedCapabilities": ["dotenv credential loading", "privateKeyToAccount", "createWalletClient", "wallet balance inspection", "transaction signing", "sendTransaction", "receipt polling", "private transaction or bundle submission"]
+}

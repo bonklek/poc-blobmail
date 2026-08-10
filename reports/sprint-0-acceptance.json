@@ -31,7 +31,7 @@
     "no production privacy, settlement, delivery, read, or acknowledgement claim"
   ],
   "tests": {
-    "total": 66,
+    "total": 76,
     "failures": 0
   },
   "safety": {
@@ -41,23 +41,23 @@
   "artifacts": [
     {
       "path": "README.md",
-      "sha256": "2b4d9394dc68ba8789e98892abeeda1da81b59e0159d2bb9eb9e6c4d06d1fd75"
+      "sha256": "d62f7ee6fe05e44ea1d87d270273e2809acac74bf2e8a75bd8210ead5191d4c5"
     },
     {
       "path": "docs/SPRINT_0_AGENT_PROMPT.md",
-      "sha256": "19a63b9fa81bdd5c2d824ce4c5c6a4a9b87fb0cbfddcbd0176c84774d586e0df"
+      "sha256": "879453f01b597e2399ca46ceb42b8d558787108ed95a5af57ef10115ead224ae"
     },
     {
       "path": "docs/core-protocol-v0.md",
-      "sha256": "c762b22f7ec009fb21cd656de0bd3dbfd866c2fb71605094b0b412e29603dfb0"
+      "sha256": "48cb64ee59b89e25204776cd4581fae75d07d4f7f501ed2cc16ef83e86cf01e6"
     },
     {
       "path": "docs/rfe-transport-provenance.md",
-      "sha256": "ce304e777238a7d5dd25d4a6bfbac01f7c40fbccaacad8bd739b7170abb566a3"
+      "sha256": "57d6e8509ae673e17cc2a92c6a295e904f7a57a23cecddeffdbe4a519fe08e3b"
     },
     {
       "path": "docs/milxdy-adapter-boundary.md",
-      "sha256": "d00bdd98a2b9b08ef22a55b8a6c105f927c617ffb3c43c3546ecbecc871d7d1a"
+      "sha256": "84036a7ddb3683eab5512cd80c3d9106f89ab12fe9c73230a2a95cdb61a71929"
     },
     {
       "path": "docs/sprint-0-handoff.md",
@@ -69,11 +69,11 @@
     },
     {
       "path": "vectors/manifest.json",
-      "sha256": "1466ff460ea8a50a953e5aa6c87b9a2fc42ac9b4af621c285043d512787034e8"
+      "sha256": "0b2e446257f4d0bf46eca21e5a5a7eea49855556033436a3e41a3adc1711c07e"
     },
     {
       "path": "reports/planning-authority.json",
-      "sha256": "f31b5664db9f751f6df34d2a7c36c64be99604b6b8a8067f00794c4a79c17f8f"
+      "sha256": "2d2d50976945d13ff9a5ddbf16115ba4bb259a11bc2b48c2b748c604730ffea9"
     },
     {
       "path": "reports/crypto-encoding-probe.json",
@@ -81,39 +81,39 @@
     },
     {
       "path": "reports/no-broadcast-audit.json",
-      "sha256": "cb5d59d021cb1c5c0efb1435a29cd266d1f4cf8beed74aef98b20c080ac41530"
+      "sha256": "5ff940dd4cf347aa25cc395096d4c222e0d1e9e6ded40f06786980ffb7e208ea"
     },
     {
       "path": "reports/protocol-core-tests.json",
-      "sha256": "d730bc2e22a35467e26f3421cf9cf72289610947cd3be47633fbdae2bbe4d119"
+      "sha256": "2a3e90b5cfae035839d6551704a769f9afb2d6dd7f5f9b8705d3a722f974a23a"
     },
     {
       "path": "reports/browser-loopback.json",
-      "sha256": "d80f8ced81304edb1927f06cbcc250a8fb13ac9b91736fbf5fddf683828cabd2"
+      "sha256": "ed5426455ae5a065270662ab49ee96ad2d3d01743ab5fa35899468000a2e4da8"
     },
     {
       "path": "reports/sprint-0-adversarial.json",
-      "sha256": "58e46f2a5432d18da6adef0067531ef708539ff6e84485a8de1e6fce7a5f1cfe"
+      "sha256": "a2390353aec160d286b1b67238094873ba89bcf28b1cb158d8a948b3a5142387"
     },
     {
       "path": "reports/safety-audit.json",
-      "sha256": "745df3e723828ca734e598b7444e77e53ba64d6a3e0e64787c53de3f3c184300"
+      "sha256": "2b44b5e247ee663b56d4c142cd609c140755fa1d7a05be3f8452547ef1b16cf8"
     },
     {
       "path": "reports/dev-server-probe.json",
-      "sha256": "08d7fac50cbd7d56f9b0a1d229be88ef6bf33742f1c9bb698d22944507312c39"
+      "sha256": "a6373715b4a6be15a406cba4c12f901160e6a7c324208966744272959619f3d8"
     },
     {
       "path": "dist/index.html",
-      "sha256": "61360718804742a42dc35e3572005a92fdc4599bb501af63e8c5d1b5190c1828"
+      "sha256": "41c2e4b9d651e2aa6b4e75d40aea2e7062f95543bc4dfbaa1d0f7fbeba2e2c48"
     },
     {
       "path": "reports/milxdy-package-verification.json",
-      "sha256": "a0cadbb71ed1b191ca635d51ebff457b0fbca7ee6b70b426fa58ca80225ec9e3"
+      "sha256": "d325bce44bc8bdfb71279197e22ccd3f727498d92969910aa59e6823d2cf74e9"
     },
     {
       "path": "examples/milxdy-blobmail/milxdy.app.json",
-      "sha256": "4cb19ef6034139086e1a799bdbe19080982537e98aee38f5933d46b514d17603"
+      "sha256": "9c147ebd0ab5dd6e407280b275d322998b0bad58ddda6afa06dc30fe7469f337"
     },
     {
       "path": "examples/milxdy-blobmail/dist/content.js",
