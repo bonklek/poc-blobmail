@@ -33,6 +33,15 @@ suite, performs the no-broadcast safety scan, builds both the standalone client
 and fixture-only milXdy package, runs the offline package verifier, and
 regenerates machine-readable acceptance reports.
 
+## Optional read-only Sepolia probe
+
+The application remains offline by default. An explicit Node-only provider
+probe can validate Sepolia execution and Beacon identities and bounded read
+capabilities without loading a wallet or constructing a transaction. See the
+[Sepolia provider profile](./docs/sepolia-provider-profile.md) for environment
+setup, fixed limits, live receipt, public eth-radio provenance, and the
+human-only funded-wallet boundary.
+
 ## What runs
 
 - HPKE base mode: X25519/HKDF-SHA-256 with AES-128-GCM
@@ -52,6 +61,7 @@ The UI therefore records `selectedSenderIdentityId`, not a provenance claim.
 - [Sprint agent prompt](./docs/SPRINT_0_AGENT_PROMPT.md)
 - [Normative protocol profile](./docs/core-protocol-v0.md)
 - [Public eth-radio provenance](./docs/rfe-transport-provenance.md)
+- [Read-only Sepolia provider profile](./docs/sepolia-provider-profile.md)
 - [milXdy adapter boundary](./docs/milxdy-adapter-boundary.md)
 - [Golden vector](./vectors/blobmail-v0.json)
 - [Sprint acceptance report](./reports/sprint-0-acceptance.json)
@@ -108,5 +118,7 @@ Feedback is especially useful on:
 ## Status
 
 Sprint 0 local loopback implementation. RFC topics involving registries,
-ERC-4337, paymasters, Paraclete, settlement, live sidecar retrieval, and
-production privacy remain future work and are intentionally absent here.
+ERC-4337, paymasters, Paraclete, settlement, verified sidecar reconstruction,
+and production privacy remain future work and are intentionally absent here.
+The optional Node-only Sepolia command probes bounded read capabilities; it is
+not wired into the application or transport runtime.

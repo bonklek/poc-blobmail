@@ -20,6 +20,18 @@
 	<testcase name="verified local loopback encrypts, blob-packs, reconstructs, scans, and decrypts" classname="test" file="test/integration-loopback.test.mjs"/>
 	<testcase name="deterministic test identities are stable and distinct" classname="test" file="test/integration-loopback.test.mjs"/>
 	<testcase name="loopback rejects invalid identity routing and invalid UTF-8" classname="test" file="test/integration-loopback.test.mjs"/>
+	<testcase name="probe verifies both identities before bounded independent capability checks" classname="test" file="test/network-probe.test.mjs"/>
+	<testcase name="chain mismatch stops after the two identity requests and emits no capability claim" classname="test" file="test/network-probe.test.mjs"/>
+	<testcase name="unsupported blob endpoints are reported as an independent capability gap" classname="test" file="test/network-probe.test.mjs"/>
+	<testcase name="offline profile rejects before invoking a request adapter" classname="test" file="test/network-probe.test.mjs"/>
+	<testcase name="unexpected request failures persist only allowlisted diagnostics" classname="test" file="test/network-probe.test.mjs"/>
+	<testcase name="execution JSON-RPC allowlist contains reads only" classname="test" file="test/network-probe.test.mjs"/>
+	<testcase name="network profile is offline by default and carries pinned Sepolia identity" classname="test" file="test/network-profile.test.mjs"/>
+	<testcase name="read-only profile separates execution and beacon providers with deterministic redacted IDs" classname="test" file="test/network-profile.test.mjs"/>
+	<testcase name="unknown network and non-read-only modes fail before a provider can be used" classname="test" file="test/network-profile.test.mjs"/>
+	<testcase name="read-only mode requires separate environment-provided endpoints" classname="test" file="test/network-profile.test.mjs"/>
+	<testcase name="provider URL policy rejects plaintext, embedded authority, paths, queries, and unlisted hosts" classname="test" file="test/network-profile.test.mjs"/>
+	<testcase name="additional provider hostnames require an explicit bounded allowlist" classname="test" file="test/network-profile.test.mjs"/>
 	<testcase name="deterministic identities and HPKE fixtures round trip" classname="test" file="test/protocol-v0.test.mjs"/>
 	<testcase name="text is NFC-normalized and strictly bounded" classname="test" file="test/protocol-v0.test.mjs"/>
 	<testcase name="plaintext decoder rejects noncanonical version, UTF-8, and padding" classname="test" file="test/protocol-v0.test.mjs"/>
@@ -28,6 +40,9 @@
 	<testcase name="exporter-tag mismatch and authenticated-open failure stay distinct" classname="test" file="test/protocol-v0.test.mjs"/>
 	<testcase name="batch rejects corrupt, duplicate, reordered, and unknown-version fixtures" classname="test" file="test/protocol-v0.test.mjs"/>
 	<testcase name="deduplication retains first verified entry" classname="test" file="test/protocol-v0.test.mjs"/>
+	<testcase name="checked-in live receipt is a redacted successful Sepolia capability observation" classname="test" file="test/sepolia-probe-receipt.test.mjs"/>
+	<testcase name="source provenance pins public eth-radio files and excludes wallet behavior" classname="test" file="test/sepolia-probe-receipt.test.mjs"/>
+	<testcase name="browser-importable network core has no ambient environment or network adapter" classname="test" file="test/sepolia-probe-receipt.test.mjs"/>
 	<testcase name="31-byte field-element encoding round-trips across a blob boundary" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="decoder rejects a non-zero field-element prefix" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="encoder and decoder enforce explicit bounded work" classname="test" file="test/transport-rfe.test.mjs"/>
@@ -36,9 +51,9 @@
 	<testcase name="strict sidecar selection rejects commitment mismatch, duplicates, and missing sidecars" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="reconstruction emits staged evidence only after each check succeeds" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="cache keys are deterministic, ordered, and do not depend on mutable storage" classname="test" file="test/transport-rfe.test.mjs"/>
-	<!-- tests 36 -->
+	<!-- tests 51 -->
 	<!-- suites 0 -->
-	<!-- pass 36 -->
+	<!-- pass 51 -->
 	<!-- fail 0 -->
 	<!-- cancelled 0 -->
 	<!-- skipped 0 -->

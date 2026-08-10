@@ -24,7 +24,7 @@
     "senderAuthenticated": false
   },
   "checks": {
-    "fullSuiteTests": 36,
+    "fullSuiteTests": 51,
     "fullSuiteFailures": 0,
     "localHttp": {
       "rootHttp200": true,
@@ -59,7 +59,7 @@
   "artifacts": [
     {
       "path": "reports/test-results.xml",
-      "sha256": "366b601eb779799f08362d9a2fa2e5581da1c1be2ebd0d3742ae5ac101b651b3"
+      "sha256": "4959e5185b2330dba0c01a0cc4abe01ea49f3819a8105b320369e2d97c34427c"
     },
     {
       "path": "reports/dev-server-probe.json",

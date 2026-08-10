@@ -5,6 +5,7 @@ This directory contains the current BlobMail architecture notes.
 Start here:
 
 - [Master architecture](./master-architecture.md)
+- [Read-only Sepolia provider profile](./sepolia-provider-profile.md)
 - [Privacy technology options](./privacy-tech.md)
 - [Posting client](./posting-client.md)
 - [Receiving client](./receiving-client.md)

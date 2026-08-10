@@ -1,0 +1,51 @@
+{
+  "schema": "blobmail.sepolia-source-provenance.v0",
+  "source": {
+    "repository": "https://github.com/bonklek/eth-radio",
+    "commit": "b465e02f88bbca85932344228c1cfe5abfb51253",
+    "files": [
+      {
+        "path": "scripts/chains.mjs",
+        "gitBlob": "84e71ec62f6dcdae85c0e47fb670a025f8778689",
+        "adapted": [
+          "supported-chain selection",
+          "execution chain mismatch rejection"
+        ]
+      },
+      {
+        "path": ".env.example",
+        "gitBlob": "4dc161ce326f6a25b8aec15f087eb3daf47bdfc3",
+        "adapted": [
+          "separate execution and beacon endpoint configuration",
+          "Sepolia-first operator ergonomics"
+        ]
+      },
+      {
+        "path": "scripts/check-wallet.mjs",
+        "gitBlob": "6d1716e2cea4de51f78850112065e3249ce7556a",
+        "adapted": [
+          "concurrent read-only chain and block observations"
+        ],
+        "excluded": [
+          "account derivation",
+          "balance lookup",
+          "signer import",
+          "key environment access"
+        ]
+      }
+    ]
+  },
+  "networkAuthorities": [
+    "https://github.com/eth-clients/sepolia",
+    "https://github.com/ethereum/beacon-APIs"
+  ],
+  "excludedRepositories": [
+    "eth-radio-private-unsafe-history"
+  ],
+  "negativeClaims": {
+    "walletCodeCopied": false,
+    "keyMaterialAccessed": false,
+    "signingCodeCopied": false,
+    "submissionCodeCopied": false
+  }
+}

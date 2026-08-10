@@ -1,0 +1,187 @@
+{
+  "schema": "blobmail.sepolia-provider-probe.v0",
+  "generatedAt": "2026-08-10T13:57:26.583Z",
+  "result": "PASS",
+  "mode": "readonly",
+  "network": "sepolia",
+  "expectedIdentity": {
+    "executionChainId": 11155111,
+    "beaconGenesis": {
+      "time": "1655733600",
+      "forkVersion": "0x90000069",
+      "validatorsRoot": "0xd8ea171f3c94aea21ebc42a1ed61052acf3f9209c00e4efbaaddac09ed9b8078"
+    }
+  },
+  "limits": {
+    "timeoutMs": 8000,
+    "executionResponseBytes": 1048576,
+    "beaconResponseBytes": 393216,
+    "maxConcurrency": 2,
+    "maxRequests": 9
+  },
+  "accounting": {
+    "requestCount": 9,
+    "observedMaxConcurrency": 2
+  },
+  "providers": {
+    "execution": {
+      "providerId": "blobmail-sepolia-v0:execution:ethereum-sepolia-rpc.publicnode.com",
+      "hostname": "ethereum-sepolia-rpc.publicnode.com",
+      "result": "PASS",
+      "identity": {
+        "chainId": 11155111
+      },
+      "capabilities": {
+        "blockNumber": 11459643,
+        "latestBlock": {
+          "number": 11459643,
+          "hash": "0x9ae4d534ef13793c4751989ad44c10f3b49fac4a6e5de79aeebe1e692a32eda8"
+        },
+        "blockLagAtProbe": 0,
+        "blobAwareBlockRead": true,
+        "blobHeaderFields": {
+          "blobGasUsed": true,
+          "excessBlobGas": true,
+          "parentBeaconBlockRoot": true
+        },
+        "fullTransactionObjectsRead": 151,
+        "blobTransactionsObserved": 6,
+        "blobTransactionRead": "observed_in_latest_block",
+        "transactionReadMethod": "supported_null_sentinel"
+      },
+      "diagnostic": null
+    },
+    "beacon": {
+      "providerId": "blobmail-sepolia-v0:beacon:ethereum-sepolia-beacon-api.publicnode.com",
+      "hostname": "ethereum-sepolia-beacon-api.publicnode.com",
+      "result": "PASS",
+      "identity": {
+        "time": "1655733600",
+        "forkVersion": "0x90000069",
+        "validatorsRoot": "0xd8ea171f3c94aea21ebc42a1ed61052acf3f9209c00e4efbaaddac09ed9b8078"
+      },
+      "capabilities": {
+        "headSlot": 10886387,
+        "finalizedSlot": 10886304,
+        "finalityDistanceSlots": 83,
+        "legacySidecars": {
+          "statusCode": 200,
+          "outcome": "available_data",
+          "itemCount": 1
+        },
+        "currentBlobs": {
+          "statusCode": 200,
+          "outcome": "available_empty",
+          "itemCount": 0
+        }
+      },
+      "diagnostic": null
+    }
+  },
+  "redaction": {
+    "providerUrlsPersisted": false,
+    "queryStringsPersisted": false,
+    "responseBodiesPersisted": false,
+    "diagnosticsAllowlisted": true
+  },
+  "negativeClaims": {
+    "walletAccess": false,
+    "signing": false,
+    "transactionConstruction": false,
+    "transactionBroadcast": false,
+    "kzgProofVerified": false,
+    "chainInclusionVerified": false
+  },
+  "runtime": {
+    "node": "v24.14.0",
+    "v8": "13.6.233.17-node.41",
+    "openssl": "3.5.5",
+    "packageManager": "pnpm@11.16.0",
+    "adapter": "node:https"
+  },
+  "commands": {
+    "live": "pnpm run probe:sepolia",
+    "fixture": "node --test test/network-profile.test.mjs test/network-probe.test.mjs test/sepolia-probe-receipt.test.mjs",
+    "workspace": "pnpm verify"
+  },
+  "activationEnvironment": [
+    "BLOBMAIL_NETWORK_MODE",
+    "BLOBMAIL_NETWORK",
+    "BLOBMAIL_SEPOLIA_EXECUTION_RPC_URL",
+    "BLOBMAIL_SEPOLIA_BEACON_RPC_URL",
+    "BLOBMAIL_SEPOLIA_ALLOWED_HOSTS"
+  ],
+  "publicSourceProvenance": {
+    "repository": "https://github.com/bonklek/eth-radio",
+    "commit": "b465e02f88bbca85932344228c1cfe5abfb51253",
+    "files": [
+      {
+        "path": "scripts/chains.mjs",
+        "gitBlob": "84e71ec62f6dcdae85c0e47fb670a025f8778689"
+      },
+      {
+        "path": ".env.example",
+        "gitBlob": "4dc161ce326f6a25b8aec15f087eb3daf47bdfc3"
+      },
+      {
+        "path": "scripts/check-wallet.mjs",
+        "gitBlob": "6d1716e2cea4de51f78850112065e3249ce7556a"
+      }
+    ],
+    "excludedRepositories": [
+      "eth-radio-private-unsafe-history"
+    ],
+    "reuseNegativeClaims": {
+      "walletCodeCopied": false,
+      "keyMaterialAccessed": false,
+      "signingCodeCopied": false,
+      "submissionCodeCopied": false
+    }
+  },
+  "failures": [],
+  "evidence": {
+    "observationSha256": "22b40ca44e6f391ad49cf1fd1dc205c51bdff73372b150340dc7507819fb5361",
+    "artifacts": [
+      {
+        "path": ".env.example",
+        "sha256": "846aec0939b3b109ca6ceffdd97b0b0a48ccc076c3c3b79af28da34ff61a5bb9"
+      },
+      {
+        "path": "src/network/index.js",
+        "sha256": "75fc894a95baebdf3cd1fe1c56c2939f6da1d3fc2e87d5dba3b3ec959cd8b6d7"
+      },
+      {
+        "path": "src/network/profile.js",
+        "sha256": "199010ff2b052890245144d8d2a404aaaa5e9ec50a4501424551754694d97566"
+      },
+      {
+        "path": "src/network/probe.js",
+        "sha256": "6a59c8b7ff9a0bc9a4199fac7f163ffc70cf79b25a033654b7ea95167e5f0076"
+      },
+      {
+        "path": "scripts/probe-sepolia-providers.mjs",
+        "sha256": "1a666996ffd0e5cb4642c03eae5eda117c6b6356acb11f132d8c91dfbd1ee8ff"
+      },
+      {
+        "path": "reports/sepolia-source-provenance.json",
+        "sha256": "9de5f2ee2988e52bd9fe96ab261636adc83b443d7104d4835ab48687c5163af8"
+      },
+      {
+        "path": "docs/sepolia-provider-profile.md",
+        "sha256": "411db452613ae85575d05abd3c2c4d378850fea21f0713ba42011e51bb484e04"
+      },
+      {
+        "path": "test/network-profile.test.mjs",
+        "sha256": "d4d5e29faba98dd33147ce6523843650de4d3d87990d11f1b19fb80887460b18"
+      },
+      {
+        "path": "test/network-probe.test.mjs",
+        "sha256": "d412f7e11267d7a01b6b84da3235daf4b9110f131c711ae6f14c1985c12cd263"
+      },
+      {
+        "path": "test/sepolia-probe-receipt.test.mjs",
+        "sha256": "88c0a313e9c52296c309ab79ef724b83a6a4646af288345615b9dd9bcded3cc5"
+      }
+    ]
+  }
+}

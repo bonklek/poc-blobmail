@@ -31,7 +31,7 @@
     "no production privacy, settlement, delivery, read, or acknowledgement claim"
   ],
   "tests": {
-    "total": 36,
+    "total": 51,
     "failures": 0
   },
   "safety": {
@@ -41,7 +41,7 @@
   "artifacts": [
     {
       "path": "README.md",
-      "sha256": "5271e8090e04dba78b0ec70ffa10aca588ee0ae30de02e8ac9cd05a4743ce84e"
+      "sha256": "c0183660d3405a66cab3d719d9757aa1eb46381649392980d9c35ebcbfc42669"
     },
     {
       "path": "docs/SPRINT_0_AGENT_PROMPT.md",
@@ -85,19 +85,19 @@
     },
     {
       "path": "reports/protocol-core-tests.json",
-      "sha256": "64d84a757de1e6fc6a07dde14d4d49e5873468371b68e53245e2f97e567c9157"
+      "sha256": "3cf96bf842d73a3856221ca1e19b7db4c84239156d6b49cfea9ca8ea750c3b5f"
     },
     {
       "path": "reports/browser-loopback.json",
-      "sha256": "eb5172fa5c318e64bfce015256141cb91e48e055f06cdf84e619fad594929b58"
+      "sha256": "5560ef68d035485f8bea60dee871aba5f432cc4ff69194b01e2ab679c8f5d8b7"
     },
     {
       "path": "reports/sprint-0-adversarial.json",
-      "sha256": "d4a6ff014b337a4a30ab2e64a0f447dd7013bd9f8d98b1a32f545340acd15aa1"
+      "sha256": "8a48884d6f4afa27ece5e165ed237a929b00cb5fbdaae190a6ff9489c661fab1"
     },
     {
       "path": "reports/safety-audit.json",
-      "sha256": "2ab32157ee77de4131dc3838f35ba472db4a321c2f4f05b5d51653634dcabf8b"
+      "sha256": "cb33b632686ecc008b30cb4ca91d06a559d1487d56fcea21bdf8d28d73fa79aa"
     },
     {
       "path": "reports/dev-server-probe.json",
