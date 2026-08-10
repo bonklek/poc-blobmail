@@ -1,10 +1,70 @@
 # BlobMail
 
-BlobMail is an RFC-stage private messaging architecture for sending recipient-private encrypted byte payloads through shared Ethereum blob batches.
+BlobMail now includes a runnable, local-only proof of its core mail loop. The
+first-pass browser client composes a bounded text message, encrypts it for a
+deterministic test recipient, packs the entry into an Ethereum-blob-shaped
+memory fixture, reconstructs and verifies it, decrypts it, and stores a bounded
+local mailbox with separate Inbox and Sent views.
 
-The initial client target is a browser extension integrated with [milXdy](https://github.com/bonklek/milXdy) on X/Twitter. The protocol explores recipient-key encryption, padded and chunked payloads, arbitrary private content types, ERC-4337 UserOperations, paymaster sponsorship, Paraclete-style gossip collection, and blob-aware bundlers.
+It does **not** broadcast, construct transactions, connect a wallet, submit a
+bundle, prove KZG, or claim chain inclusion. It remains an experimental
+protocol and architecture workspace, not a production messaging system.
 
-This repository is currently an architecture and design workspace. It is not a production implementation.
+## Run the first client
+
+Requirements: Node.js 24 or newer and pnpm 11.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm verify
+pnpm dev
+```
+
+Open <http://127.0.0.1:5173>, choose the local Alice fixture profile, compose a
+message, review the exact UTF-8 byte length, and send it to Bob. Alice's Sent
+view retains the reconstructed local copy. Switch to the Bob fixture profile to
+see the same message in Bob's Inbox with its staged evidence. A second terminal
+can verify the running server:
+
+```sh
+pnpm probe:client
+```
+
+`pnpm verify` regenerates the deterministic golden vector, runs the full test
+suite, performs the no-broadcast safety scan, builds both the standalone client
+and fixture-only milXdy package, runs the offline package verifier, and
+regenerates machine-readable acceptance reports.
+
+## What runs
+
+- HPKE base mode: X25519/HKDF-SHA-256 with AES-128-GCM
+- Canonical 512-byte padded plaintext and 616-byte encrypted entry
+- Recipient-private 16-byte HPKE exporter tag
+- Canonically sorted, bounded batches
+- 31-byte payload packing into EIP-4844-shaped field elements
+- Digest-checked reconstruction, recipient scan, and strict UTF-8 decryption
+- Bounded browser storage: 12 messages and 32 KiB serialized state
+- Signed-out startup with an explicit local fixture-profile chooser
+- Separate per-profile Inbox and Sent views over the bounded local message store
+
+The local Alice/Bob identities and deterministic test vectors exist only for
+replayable fixtures. HPKE base mode does not authenticate the selected sender.
+The UI therefore records `selectedSenderIdentityId`, not a provenance claim.
+The profile chooser is not account authentication: it has no password, wallet,
+remote session, recovery flow, or persisted signed-in state.
+
+## Evidence and integration
+
+- [Sprint agent prompt](./docs/SPRINT_0_AGENT_PROMPT.md)
+- [Normative protocol profile](./docs/core-protocol-v0.md)
+- [Public eth-radio provenance](./docs/rfe-transport-provenance.md)
+- [milXdy adapter boundary](./docs/milxdy-adapter-boundary.md)
+- [Golden vector](./vectors/blobmail-v0.json)
+- [Sprint acceptance report](./reports/sprint-0-acceptance.json)
+
+The public `bonklek/eth-radio` transport concepts are adapted at the exact
+commit and file hashes recorded in the provenance document. No private or
+unsafe-history repository was used.
 
 ## Why this exists
 
@@ -53,6 +113,6 @@ Feedback is especially useful on:
 
 ## Status
 
-RFC / architecture draft.
-
-The first implementation target should be a testnet or local devnet flow, not mainnet production settlement.
+Sprint 0 local loopback implementation. RFC topics involving registries,
+ERC-4337, paymasters, Paraclete, settlement, live sidecar retrieval, and
+production privacy remain future work and are intentionally absent here.

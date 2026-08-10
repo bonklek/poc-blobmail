@@ -1,0 +1,77 @@
+{
+  "schema": "blobmail.no-broadcast-audit.v1",
+  "generatedAt": "2026-08-09T21:16:23-04:00",
+  "branch": "codex/3-blobmail-loopback",
+  "result": "PASS",
+  "scope": {
+    "description": "Sprint 0 read-only transport implementation and its targeted fixture suite",
+    "runtimeFiles": [
+      {
+        "path": "src/transport/blob-codec.js",
+        "sha256": "2f2d658e869850e4e1187d81634396c0d62d1e35ec3ce537964921dd426cd849"
+      },
+      {
+        "path": "src/transport/integrity.js",
+        "sha256": "ecc6ea17137264ab4c73fb8539ab1dd080e1ac2c186d007d5dd0c9630b7fb614"
+      },
+      {
+        "path": "src/transport/index.js",
+        "sha256": "971f89d338500386c9fef16b8caed4bfb0ba3205b8f8903fcd7f2f9f62aab7e4"
+      }
+    ],
+    "testFiles": [
+      {
+        "path": "test/transport-rfe.test.mjs",
+        "sha256": "53dd72733c821c71c8b805dc2b7c51b57a0775a8de4be2ebdd59e5098b4e5c70"
+      }
+    ]
+  },
+  "sourceProvenance": {
+    "repository": "https://github.com/bonklek/eth-radio.git",
+    "commit": "b465e02f88bbca85932344228c1cfe5abfb51253",
+    "details": "docs/rfe-transport-provenance.md",
+    "excludedRepository": "eth-radio-private-unsafe-history"
+  },
+  "checks": [
+    {
+      "name": "forbidden-capability text scan",
+      "command": "rg -n -i 'fetch\\s*\\(|WebSocket|XMLHttpRequest|eth_send|sendRawTransaction|sendTransaction|signTransaction|private.?transaction|bundle|wallet|secret|mnemonic|private.?key' src/transport",
+      "exitCode": 1,
+      "meaning": "ripgrep found no forbidden-capability token in runtime transport files"
+    },
+    {
+      "name": "runtime import boundary",
+      "command": "rg -n '^(?:import|export).*from' src/transport",
+      "exitCode": 0,
+      "matches": [
+        "src/transport/integrity.js imports only ./blob-codec.js",
+        "src/transport/index.js only re-exports ./blob-codec.js and ./integrity.js"
+      ]
+    },
+    {
+      "name": "targeted transport fixtures",
+      "command": "node --test test/transport-rfe.test.mjs",
+      "exitCode": 0,
+      "tests": 8,
+      "passed": 8,
+      "failed": 0
+    }
+  ],
+  "assertions": {
+    "networkRequests": false,
+    "transactionConstruction": false,
+    "transactionBroadcast": false,
+    "privateTransactionSubmission": false,
+    "bundleSubmission": false,
+    "walletOrSignerIntegration": false,
+    "fundedOrPersistentKeys": false,
+    "secretRequests": false,
+    "filesystemOrDatabaseWritesAtRuntime": false,
+    "inputs": "synthetic local fixtures supplied by the caller"
+  },
+  "knownLimits": [
+    "The audit scope is the Sprint 0 src/transport runtime boundary, not every architectural document in the repository.",
+    "Commitment-derived versioned hashes are checked; KZG proofs and blob openings are not verified.",
+    "Network acquisition, finality, delivery, decryption, read receipts, and settlement are not claimed."
+  ]
+}

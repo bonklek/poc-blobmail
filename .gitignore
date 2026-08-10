@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+*.log
+
+# Papertiger runtime authority is local and never merged through Git.
+/state/papertiger.sqlite
+/state/papertiger.sqlite-journal
+/state/papertiger.sqlite-shm
+/state/papertiger.sqlite-wal

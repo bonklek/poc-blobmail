@@ -1,0 +1,29 @@
+{
+  "schema": "blobmail.dev-server-probe.v1",
+  "generatedAt": "2026-08-10T01:29:25.019Z",
+  "origin": "http://127.0.0.1:5173",
+  "scope": "hard-coded loopback HTTP probe only; no external request",
+  "checks": {
+    "rootHttp200": true,
+    "entryHttp200": true,
+    "appRootPresent": true,
+    "verifiedEntryPresent": true
+  },
+  "responses": [
+    {
+      "pathname": "/",
+      "statusCode": 200,
+      "contentType": "text/html",
+      "sha256": "d0ba40532758e657797c296d1d7022d6edc765bcc9eaa3e500956ad9c8116a56",
+      "bytes": 551
+    },
+    {
+      "pathname": "/src/main.js",
+      "statusCode": 200,
+      "contentType": "text/javascript",
+      "sha256": "833b6c0d22578b8ee9366ef588b8d46a68db7515fdec04389f80963aa1cbcb92",
+      "bytes": 1906
+    }
+  ],
+  "passed": true
+}

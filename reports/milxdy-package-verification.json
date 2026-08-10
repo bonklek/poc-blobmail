@@ -1,0 +1,96 @@
+{
+  "schema": "blobmail.milxdy-package-verification.v1",
+  "generatedAt": "2026-08-10T01:31:52.018Z",
+  "result": "PASS",
+  "package": {
+    "path": "examples/milxdy-blobmail",
+    "id": "blobmail-loopback",
+    "version": "0.0.1",
+    "sdkMinVersion": "0.2.4",
+    "sdkTargetVersion": "0.2.4",
+    "defaultEnabled": false,
+    "reviewStatus": "local",
+    "consentRequired": true
+  },
+  "upstream": {
+    "repository": "https://github.com/bonklek/milXdy",
+    "branch": "main",
+    "commitObserved": "c0e94fc1f9477450e4962155a34867325bb751d7",
+    "contractSources": [
+      "docs/schemas/local-app-package.schema.json",
+      "docs/sdk/APP_SDK.md",
+      "sdk/templates/docked-app/milxdy.app.json",
+      "sdk/templates/docked-app/content.js",
+      "sdk/templates/docked-app/styles/theme.css",
+      "sdk/templates/docked-app/styles/overlay.css",
+      "examples/packages/local-dev/README.md"
+    ],
+    "exactGitBlobShasRecordedAt": "examples/milxdy-blobmail/UPSTREAM_PROVENANCE.json",
+    "fullLicenseRetainedAt": "examples/milxdy-blobmail/UPSTREAM_LICENSE_VPL.txt",
+    "verbatimCopiedThemeGitBlobSha1": "c361b24fe7db9be6ae8bb036fa8db89b91a6018f"
+  },
+  "build": {
+    "command": "pnpm exec vite build --config examples/milxdy-blobmail/vite.config.js",
+    "result": "pass",
+    "modulesTransformed": 62,
+    "contentEntry": "examples/milxdy-blobmail/dist/content.js",
+    "contentEntryBytes": 115817,
+    "runtimeImports": 0,
+    "contentEntrySha256": "46dedaf528b269ef1148708dc6da1545f1376a5a36a1f8dcd6e7245e11d19802",
+    "repeatBuildSameSha256": true,
+    "note": "The HPKE dependency exposes a Node crypto fallback that Vite externalizes, but the browser bundle selects globalThis.crypto; the generated package has no runtime import."
+  },
+  "verifier": {
+    "command": "node examples/milxdy-blobmail/tools/verify.mjs",
+    "result": "PASS",
+    "checksPassed": 49,
+    "checksTotal": 49,
+    "failures": [],
+    "manifestSha256": "4cb19ef6034139086e1a799bdbe19080982537e98aee38f5933d46b514d17603"
+  },
+  "capabilityAudit": {
+    "hostPermissions": [],
+    "optionalPermissions": [],
+    "backgroundMessageTypes": [],
+    "backgroundServices": [],
+    "remoteServices": [],
+    "siteScopesDeclared": false,
+    "networkCost": "none",
+    "workerCost": "none",
+    "wallet": false,
+    "onchain": false,
+    "signing": false,
+    "transactions": false,
+    "fundedKeys": false,
+    "broadcast": false
+  },
+  "storage": {
+    "area": "local",
+    "syncKeys": 0,
+    "declaredLocalKeys": 3,
+    "fixtureHistoryDefault": false,
+    "maxPersistedMessages": 12,
+    "content": "plaintext decrypted fixtures",
+    "userClearAction": true
+  },
+  "artifactSha256": {
+    "examples/milxdy-blobmail/src/content.js": "d3aa74a816a2903061195093dd1a331aa84f9e54f67c915a59e6bf43a43ebc9c",
+    "examples/milxdy-blobmail/vite.config.js": "335c0f1d326f350eecfc16cbab42ee18f55c2308f3604e716c72d733cc2871e0",
+    "examples/milxdy-blobmail/tools/verify.mjs": "f54602115a75847d935f7e97b89f919582d61628cac7ebc95480b5768846ee88",
+    "examples/milxdy-blobmail/README.md": "2f274a38249c6510bf2a612f357e6e022a1465bc311717b502f3a9b27eb4c833",
+    "examples/milxdy-blobmail/UPSTREAM_PROVENANCE.json": "1ebe74593c628ff232f7b8530913449baa7e010d722165e5a44237f144e6ecb6",
+    "examples/milxdy-blobmail/UPSTREAM_LICENSE_VPL.txt": "145f5a008fee1ff432a007b832b5c20ba5f1f1e39079b0d94c258aee20aaaa10",
+    "examples/milxdy-blobmail/assets/icon.svg": "0feeb79e70a6a70f7695d932f77a9a9de601dd488e87335f1ff1112c96e33f98",
+    "examples/milxdy-blobmail/styles/theme.css": "b4aaad48e474d8669069ebbc6b25761e77cdaa5013b14164ed171fb3247d2b7f",
+    "examples/milxdy-blobmail/styles/overlay.css": "df71331cc1bda822857fd675d52ec3508302fadedb11a80e33c270707db4abbf"
+  },
+  "targetMilxdyVerification": {
+    "result": "NOT_RUN_IN_THIS_REPOSITORY",
+    "reason": "This task did not authorize editing or installing into a milXdy checkout.",
+    "documentedCommand": "pnpm.cmd run verify:local-app-package -- --package=local-addons/manual/blobmail-loopback --allow-local-review --acknowledge-package-consent",
+    "rebuildCommands": [
+      "pnpm.cmd run addons:status",
+      "pnpm.cmd run addons:rebuild"
+    ]
+  }
+}

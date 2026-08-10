@@ -1,0 +1,22 @@
+{
+  "schema": "blobmail.safety-audit.v1",
+  "scope": [
+    "src",
+    "scripts"
+  ],
+  "guarantees": [
+    "no transaction-submission API in project source",
+    "no funded-key environment access in project source",
+    "no credential-shaped literals in project source",
+    "no wallet-injection access in project source",
+    "no external runtime network or peer API in application source",
+    "the only verification-network exception is a hard-coded 127.0.0.1 client probe"
+  ],
+  "filesScanned": 25,
+  "renderingChecks": {
+    "decryptedMessageUsesTextContent": true,
+    "evidenceDetailUsesTextContent": true
+  },
+  "findings": [],
+  "passed": true
+}

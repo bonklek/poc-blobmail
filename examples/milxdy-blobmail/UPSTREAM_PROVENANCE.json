@@ -1,0 +1,43 @@
+{
+  "schema": "blobmail.milxdy-upstream-provenance.v1",
+  "repository": "https://github.com/bonklek/milXdy",
+  "branchObserved": "main",
+  "commit": "c0e94fc1f9477450e4962155a34867325bb751d7",
+  "observedAt": "2026-08-10T01:25:00.000Z",
+  "license": {
+    "path": "LICENSE",
+    "retainedAs": "UPSTREAM_LICENSE_VPL.txt"
+  },
+  "sources": [
+    {
+      "path": "sdk/templates/docked-app/milxdy.app.json",
+      "gitBlobSha1": "2890e2b14500ae3e365572ea0e4086b38b004291",
+      "use": "Adapted manifest field ordering, docked overlay lifecycle metadata, disclosure sections, and local review shape."
+    },
+    {
+      "path": "sdk/templates/docked-app/content.js",
+      "gitBlobSha1": "11a6bac52396ea58277de491d93cf190e9a8eb4c",
+      "use": "Adapted runtime-owned boot/open/close/disable/dispose lifecycle, abort checks, declared storage access, focus restore, and diagnostics shape."
+    },
+    {
+      "path": "sdk/templates/docked-app/styles/theme.css",
+      "gitBlobSha1": "c361b24fe7db9be6ae8bb036fa8db89b91a6018f",
+      "use": "Copied verbatim as styles/theme.css."
+    },
+    {
+      "path": "sdk/templates/docked-app/styles/overlay.css",
+      "gitBlobSha1": "17f7d7dcde53e33248d79c9437d5d3b5e02fdb89",
+      "use": "Adapted accessible fixed overlay, semantic tokens, responsive bounds, focus treatment, and forced-colors structure."
+    },
+    {
+      "path": "docs/schemas/local-app-package.schema.json",
+      "gitBlobSha1": "6582c64ed8e56debc043d3a8bec709be01f3c9dc",
+      "use": "Used as the normative manifest field and enum contract; not copied into the package."
+    },
+    {
+      "path": "examples/packages/local-dev/README.md",
+      "gitBlobSha1": "b67fcd54980647c51d3882a8cd1b86e83b90b83e",
+      "use": "Adapted the local package verification command and consent acknowledgement handoff."
+    }
+  ]
+}

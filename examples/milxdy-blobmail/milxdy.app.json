@@ -1,0 +1,149 @@
+{
+  "$schema": "../../../docs/schemas/local-app-package.schema.json",
+  "manifestVersion": 1,
+  "id": "blobmail-loopback",
+  "name": "BlobMail Loopback",
+  "version": "0.0.1",
+  "description": "Fixture-only BlobMail composer, verified local blob reconstruction, and decrypted inbox for protocol review.",
+  "packageKind": "app",
+  "sdk": {
+    "minVersion": "0.2.4",
+    "targetVersion": "0.2.4",
+    "notes": [
+      "Uses the public content-app context, guarded local storage, diagnostics, and dock lifecycle only.",
+      "Bundles the BlobMail Sprint 0 protocol and RFE-derived local transport; no runtime import leaves the package."
+    ]
+  },
+  "contentEntry": "dist/content.js",
+  "css": [
+    { "id": "blobmail-loopback.theme", "path": "styles/theme.css" },
+    { "id": "blobmail-loopback.overlay", "path": "styles/overlay.css" }
+  ],
+  "dock": {
+    "label": "BlobMail",
+    "icon": "assets/icon.svg",
+    "defaultSide": "right"
+  },
+  "defaultEnabled": false,
+  "storageKeys": {
+    "local": [
+      "milxdy.local.blobmail-loopback.enabled",
+      "milxdy.local.blobmail-loopback.persistFixtureHistory",
+      "milxdy.local.blobmail-loopback.state.v1"
+    ]
+  },
+  "settings": [
+    {
+      "id": "blobmail-loopback.enabled",
+      "label": "BlobMail Loopback",
+      "description": "Enable the fixture-only BlobMail app in this custom build.",
+      "scope": "app",
+      "location": "appsAndFeatures",
+      "role": "enablement",
+      "storage": { "area": "local", "key": "milxdy.local.blobmail-loopback.enabled" },
+      "defaultValue": false,
+      "control": { "type": "toggle" },
+      "reset": { "behavior": "restoreDefault" },
+      "presets": []
+    },
+    {
+      "id": "blobmail-loopback.persistFixtureHistory",
+      "label": "Save fixture inbox",
+      "description": "Keep up to 12 decrypted fixture messages as plaintext in local extension storage. Off by default.",
+      "scope": "app",
+      "location": "appSurface",
+      "role": "preference",
+      "storage": { "area": "local", "key": "milxdy.local.blobmail-loopback.persistFixtureHistory" },
+      "defaultValue": false,
+      "control": { "type": "toggle" },
+      "reset": {
+        "behavior": "restoreDefault",
+        "warning": "Turning persistence off does not remove prior fixture history; use Clear local fixture data in the app."
+      },
+      "presets": []
+    }
+  ],
+  "surfaces": ["overlayApp"],
+  "lifecycle": {
+    "mode": "runtime",
+    "localOnly": true,
+    "notes": [
+      "Exports boot, open, close, disable, and dispose and checks the runtime abort signal before asynchronous writes.",
+      "The only message action runs deterministic fixtures in memory after explicit review."
+    ]
+  },
+  "cost": {
+    "startup": "cheap",
+    "perSurface": "cheap",
+    "network": "none",
+    "worker": "none",
+    "domWrite": "small"
+  },
+  "loadTriggers": ["dockOpen"],
+  "chrome": {
+    "nativeStyle": "native",
+    "supportedStyles": ["native", "reminet", "classic"],
+    "notes": ["Uses milXdy semantic overlay tokens and contains no host-page selectors."]
+  },
+  "hub": {
+    "category": "social",
+    "shortDescription": "Compose and decrypt local BlobMail fixtures with replayable evidence.",
+    "longDescription": "A text-only protocol lab. It encrypts to deterministic test identities, packs an Ethereum-blob-shaped fixture in memory, reconstructs and verifies bytes, and decrypts locally. It does not publish, deliver, connect a wallet, or use a network.",
+    "rail": { "supported": true, "defaultPinned": false },
+    "presets": ["full"],
+    "permissionNotes": [
+      "Requests no host, optional, network, wallet, onchain, signing, transaction, or background capability."
+    ],
+    "dataNotes": [
+      "Processes bounded message text locally against deterministic Alice and Bob fixture identities.",
+      "Decrypted bytes are validated as strict UTF-8 and rendered as inert text."
+    ],
+    "remoteServices": [],
+    "localStorageNotes": [
+      "Enablement and persistence consent use declared local keys.",
+      "When opted in, stores at most 12 decrypted fixture messages in plaintext; clear is user-controlled."
+    ],
+    "privacyLabels": ["local-only", "diagnostics"]
+  },
+  "permissions": {
+    "hosts": [],
+    "optional": []
+  },
+  "background": {
+    "messageTypes": [],
+    "services": []
+  },
+  "privacy": {
+    "permissionNotes": [
+      "No host, network, background, wallet, onchain, signing, transaction, funded-key, or secret access."
+    ],
+    "dataNotes": [
+      "Message text never leaves the local fixture engine.",
+      "Deterministic test private keys are derived in memory and are not user identities, funded keys, or production secrets.",
+      "Local decryption proves only fixture reconstruction and recipient authentication, not public delivery or availability."
+    ],
+    "localStorageNotes": [
+      "Persistence is off by default and requires an explicit app-surface choice.",
+      "Opt-in state is bounded to 12 plaintext fixture messages and can be cleared inside the app."
+    ],
+    "remoteServices": [],
+    "privacyLabels": ["local-only", "diagnostics"],
+    "consentRequired": true
+  },
+  "package": {
+    "assets": [
+      { "id": "blobmail-loopback.icon", "path": "assets/icon.svg", "kind": "icon", "webAccessible": true, "sha256": "0feeb79e70a6a70f7695d932f77a9a9de601dd488e87335f1ff1112c96e33f98" },
+      { "id": "blobmail-loopback.theme", "path": "styles/theme.css", "kind": "style", "webAccessible": false, "sha256": "b4aaad48e474d8669069ebbc6b25761e77cdaa5013b14164ed171fb3247d2b7f" },
+      { "id": "blobmail-loopback.overlay", "path": "styles/overlay.css", "kind": "style", "webAccessible": false, "sha256": "df71331cc1bda822857fd675d52ec3508302fadedb11a80e33c270707db4abbf" }
+    ],
+    "webAccessibleAssets": ["assets/icon.svg"]
+  },
+  "review": {
+    "status": "local",
+    "sourceUrl": "https://github.com/bonklek/blobmail",
+    "notes": [
+      "Fixture-only Sprint 0 handoff; local composition requires explicit package-consent acknowledgement.",
+      "Not reviewed for testnet or production use."
+    ]
+  }
+}

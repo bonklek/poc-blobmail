@@ -1,0 +1,97 @@
+{
+  "schema": "blobmail.browser-client-qa.v1",
+  "generatedAt": "2026-08-10T14:41:00.000-04:00",
+  "scope": "verified local loopback browser client with fixture-profile switching and per-profile mailboxes",
+  "result": "PASS",
+  "safety": {
+    "walletSurface": false,
+    "networkClientSurface": false,
+    "transactionSurface": false,
+    "signingSurface": false,
+    "fundedKeySurface": false,
+    "activeContentRendering": false,
+    "liveDeliveryClaim": false,
+    "fixtureProfileChooserMarkedNonAuthentication": true,
+    "signedInStatePersisted": false
+  },
+  "bounds": {
+    "maxTextUtf8Bytes": 480,
+    "maxInboxMessages": 12,
+    "maxSerializedStateBytes": 32768,
+    "storageKey": "blobmail.loopback.client.v1"
+  },
+  "checks": [
+    {
+      "name": "full verification",
+      "command": "pnpm verify",
+      "result": "pass",
+      "tests": 37,
+      "standaloneModulesTransformed": 71,
+      "milxdyModulesTransformed": 62
+    },
+    {
+      "name": "focused client tests",
+      "command": "node --test test/client-state.test.mjs test/client-storage.test.mjs test/client-adapter.test.mjs test/client-dom-integration.test.mjs",
+      "result": "pass",
+      "tests": 14
+    },
+    {
+      "name": "development server root",
+      "command": "Invoke-WebRequest http://127.0.0.1:5173/",
+      "result": "pass",
+      "statusCode": 200,
+      "contentType": "text/html",
+      "hasAppRoot": true
+    },
+    {
+      "name": "in-app browser interaction probe",
+      "result": "pass",
+      "path": [
+        "signed-out startup",
+        "Alice fixture-profile sign-in",
+        "compose and review",
+        "verified local loopback",
+        "Alice Sent copy",
+        "switch to Bob",
+        "Bob Inbox copy",
+        "reload starts signed out",
+        "Bob Inbox restores bounded message"
+      ],
+      "consoleWarningsOrErrors": 0
+    },
+    {
+      "name": "patch whitespace",
+      "command": "git diff --check",
+      "result": "pass"
+    }
+  ],
+  "requiredEvidenceOrder": [
+    "LOCAL_BATCH_CREATED",
+    "BATCH_RECONSTRUCTED",
+    "PAYLOAD_SHA256_VERIFIED",
+    "ENTRY_BYTES_VERIFIED",
+    "DECRYPTED"
+  ],
+  "integration": {
+    "factory": "createClientAdapter({ executeLoopback, runtimeLabel })",
+    "method": "adapter.sendToLocalBatch({ senderId, recipientId, plaintextBytes })",
+    "bootstrap": "startBlobMailClient({ adapter })",
+    "indexEntry": "/src/main.js",
+    "runtime": "verified deterministic local loopback"
+  },
+  "artifacts": [
+    { "path": "index.html", "sha256": "928a0e163fb3e527a513b48be3c32704b74173f5148c0c372ccc7397b968454f" },
+    { "path": "src/main.js", "sha256": "d842936558a2a6ebb47892a5e6d341288317a3152ccb325af720522c7f9f3d0f" },
+    { "path": "src/client/adapter.js", "sha256": "17887a31199f95b52e2f5301ebe29666c67982c76a0c60a857f341daf1fe39da" },
+    { "path": "src/client/constants.js", "sha256": "b677005fb706a62a9ccb4db32c0558743c1528187f05f602e60278108599feb0" },
+    { "path": "src/client/main.js", "sha256": "971d3a9c389ee839c6f43e4d2b982d6f255f07d5956ce8e58e42fece92541f26" },
+    { "path": "src/client/state.js", "sha256": "6a7dea609c90670fd48b89b726ee1772ab0ded5b8853d6b1329bbf48c6f9872a" },
+    { "path": "src/client/storage.js", "sha256": "d28d6e0d5bc0912fdb1ae42eb29a54f4542325dccdcab6576c6f1728a26eb3f0" },
+    { "path": "src/client/styles.css", "sha256": "6fccbed8a6dd854f95322521b82524e3c29897bb15482f13e549b159c2ad173c" },
+    { "path": "test/client-adapter.test.mjs", "sha256": "567c34b427635b893296f729a0a1d5d33342c53470d0c9b79fc3efc0b5706458" },
+    { "path": "test/client-dom-integration.test.mjs", "sha256": "81f8db6b27a477c6aa8c6f6825e62f7016e2a4a8d2914bb4a4b2ec04013063ea" },
+    { "path": "test/client-state.test.mjs", "sha256": "61b3f9ae8baba2499268f892ae0acbbd751eabb42433187ba04a3a92a71789dc" },
+    { "path": "test/client-storage.test.mjs", "sha256": "5fda0bc39b3c7a055b969f0df80c1d963973df5a1ad5725149fb9d4535efec3f" },
+    { "path": "docs/milxdy-adapter-boundary.md", "sha256": "d00bdd98a2b9b08ef22a55b8a6c105f927c617ffb3c43c3546ecbecc871d7d1a" }
+  ]
+}

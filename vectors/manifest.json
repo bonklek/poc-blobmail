@@ -1,0 +1,23 @@
+{
+  "schema": "blobmail.vector-manifest.v0",
+  "generator": "scripts/generate-vectors.mjs",
+  "command": "pnpm run vectors",
+  "artifacts": [
+    {
+      "path": "vectors/blobmail-v0.json",
+      "sha256": "f7094666e5f8fa00683a0ebd1d097ef1434d1e76814e4dd0e8c6fec7a4c5d648"
+    }
+  ],
+  "independentVerifier": {
+    "path": "test/independent-vectors.test.mjs",
+    "sha256": "fc636c64334fe2f0cff5053b48baea88a42058be7bcb76e930d32e518e4260fa",
+    "command": "node --test test/independent-vectors.test.mjs"
+  },
+  "rejectionCoverage": [
+    "corrupted entry and batch commitments",
+    "oversized UTF-8 and batch inputs",
+    "unknown plaintext, entry, and batch versions",
+    "duplicate and noncanonical batch entries"
+  ],
+  "fixtureWarning": "All seeds and keys in this file are public deterministic test fixtures. Never use them for value or private messages."
+}

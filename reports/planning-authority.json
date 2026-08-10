@@ -1,0 +1,30 @@
+{
+  "schema": "blobmail.planning-authority.v1",
+  "capturedAt": "2026-08-09T21:07:30-04:00",
+  "repository": "bonklek/blobmail",
+  "epic": {
+    "number": 2,
+    "url": "https://github.com/bonklek/blobmail/issues/2"
+  },
+  "implementationTicket": {
+    "number": 3,
+    "url": "https://github.com/bonklek/blobmail/issues/3",
+    "state": "OPEN",
+    "labels": [
+      "agent-ready",
+      "enhancement"
+    ],
+    "blocked": false
+  },
+  "branch": "codex/3-blobmail-loopback",
+  "milxdyDependencies": [
+    136,
+    137,
+    139,
+    148,
+    149,
+    150
+  ],
+  "roadmapObservation": "The live milXdy milestones and BlobMail issues are newer than the checked-in roadmap. Sprint 0 records that drift but does not change milXdy release scope while proving the local client.",
+  "safety": "Local fixtures and read-only replay only; no broadcasting, funded keys, signatures, bundles, AA, paymasters, Paraclete, registry publication, or active attachments."
+}
