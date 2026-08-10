@@ -20,9 +20,11 @@ pnpm probe:client
 pnpm reports
 ```
 
-The UI uses only deterministic fixture identities. Compose as Alice, review,
-send to Bob, and inspect the ordered evidence timeline and receipt. Refreshing
-the page restores the bounded inbox from local storage.
+The UI uses only deterministic fixture identities. Choose Alice on the local
+profile screen, compose, review, send to Bob, and inspect Alice's Sent copy.
+Switch to Bob to inspect the ordered evidence timeline and receipt in Bob's
+Inbox. Refreshing restores the bounded mailbox but starts signed out; no local
+profile selection is treated as or persisted as an authenticated session.
 
 ## Design choices
 
@@ -32,6 +34,8 @@ the page restores the bounded inbox from local storage.
 - Entries and batches have canonical framing, ordering, and SHA-256 IDs.
 - Blob packing stores 31 payload bytes per field element and checks prefixes.
 - The client integrates through a narrow milXdy-compatible adapter boundary.
+- The first-pass client separates per-profile Inbox and Sent views while using
+  one bounded local fixture-message store.
 - Public eth-radio RFE concepts were adapted with exact source provenance.
 
 The transport source is public `bonklek/eth-radio` commit
@@ -59,10 +63,9 @@ no authenticated-sender provenance. `reconstructed`, `entry verified`, and
 `decrypted` remain separate states; none means delivered, read, acknowledged,
 or settled.
 
-The in-app visual browser backend was unavailable during this run. The client
-was covered by state/storage/adapter tests, an integrated DOM interaction test,
-a production build, and an HTTP probe of the running Vite development server;
-no visual-pass claim is made.
+The client is covered by state/storage/adapter tests, an integrated DOM
+interaction test, a production build, an HTTP probe, and an in-app browser pass
+through Alice sign-in, Sent, account switching, and Bob Inbox.
 
 ## Next-sprint cut line
 

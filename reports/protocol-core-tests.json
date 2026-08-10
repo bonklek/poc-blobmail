@@ -3,7 +3,7 @@
   "generatedAt": "2026-08-10T01:29:25.019Z",
   "result": "PASS",
   "command": "pnpm run test:receipt",
-  "tests": 51,
+  "tests": 52,
   "failures": 0,
   "coverage": [
     "deterministic HPKE vectors and independent HPKE reproduction",
@@ -14,7 +14,7 @@
   "artifacts": [
     {
       "path": "reports/test-results.xml",
-      "sha256": "4959e5185b2330dba0c01a0cc4abe01ea49f3819a8105b320369e2d97c34427c"
+      "sha256": "7d3cc7c5dbb8e8d32fc619879fcb3954b23b6210da7783da53b69a05697f68f0"
     },
     {
       "path": "vectors/blobmail-v0.json",

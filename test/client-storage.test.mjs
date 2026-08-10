@@ -45,6 +45,7 @@ test("storage roundtrip retains only bounded, allowlisted client state", () => {
   assert.equal(
     saveClientState(storage, {
       activeIdentity: "bob",
+      signedIn: true,
       draft: { body: "bounded draft" },
       inbox,
     }),
@@ -55,6 +56,7 @@ test("storage roundtrip retains only bounded, allowlisted client state", () => {
   assert.equal(loaded.draftBody, "bounded draft");
   assert.equal(loaded.inbox.length, MAX_INBOX_MESSAGES);
   assert.deepEqual(loaded.inbox[0].receipt, {});
+  assert.equal(Object.hasOwn(JSON.parse(storage.getItem(STORAGE_KEY)), "signedIn"), false);
 });
 
 test("malformed, oversized, and unknown-version state fail closed", () => {

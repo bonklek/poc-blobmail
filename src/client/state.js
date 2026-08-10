@@ -19,7 +19,8 @@ export function createInitialState(restored = {}) {
 
   return {
     activeIdentity,
-    view: "compose",
+    signedIn: false,
+    view: "signin",
     draft: {
       recipientId: counterpart(activeIdentity),
       body: utf8ByteLength(draftBody) <= MAX_MESSAGE_BYTES ? draftBody : "",
@@ -62,19 +63,33 @@ export function setDraftBody(state, body) {
   };
 }
 
-export function selectIdentity(state, identityId) {
+export function signIn(state, identityId) {
   if (!IDENTITIES[identityId] || state.view === "sending") return state;
   return {
     ...state,
     activeIdentity: identityId,
-    view: "compose",
+    signedIn: true,
+    view: "inbox",
     draft: { body: "", recipientId: counterpart(identityId) },
     evidence: [],
     error: null,
   };
 }
 
+export function signOut(state) {
+  if (state.view === "sending") return state;
+  return {
+    ...state,
+    signedIn: false,
+    view: "signin",
+    draft: { body: "", recipientId: counterpart(state.activeIdentity) },
+    evidence: [],
+    error: null,
+  };
+}
+
 export function openReview(state) {
+  if (!state.signedIn) return { ...state, error: "Choose a local fixture profile first." };
   const validation = validateDraft(state.draft);
   if (!validation.ok) return { ...state, error: validation.error };
   return { ...state, view: "review", error: null, evidence: [] };
@@ -102,9 +117,8 @@ export function finishSend(state, result) {
   };
   return {
     ...state,
-    activeIdentity: message.recipientId,
-    view: "inbox",
-    draft: { recipientId: counterpart(message.recipientId), body: "" },
+    view: "sent",
+    draft: { recipientId: counterpart(message.senderId), body: "" },
     inbox: [message, ...state.inbox.filter((item) => item.id !== message.id)].slice(
       0,
       MAX_INBOX_MESSAGES,
@@ -125,9 +139,15 @@ export function failSend(state, error) {
 }
 
 export function showInbox(state) {
-  return { ...state, view: "inbox", error: null };
+  return state.signedIn ? { ...state, view: "inbox", error: null } : state;
+}
+
+export function showSent(state) {
+  return state.signedIn ? { ...state, view: "sent", error: null } : state;
 }
 
 export function showComposer(state) {
-  return { ...state, view: "compose", error: null, evidence: [] };
+  return state.signedIn
+    ? { ...state, view: "compose", error: null, evidence: [] }
+    : state;
 }

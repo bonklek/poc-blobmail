@@ -6,10 +6,12 @@ import {
   finishSend,
   openReview,
   returnToCompose,
-  selectIdentity,
   setDraftBody,
   showComposer,
   showInbox,
+  showSent,
+  signIn,
+  signOut,
   utf8ByteLength,
 } from "./state.js";
 import { clearClientState, loadClientState, saveClientState } from "./storage.js";
@@ -27,11 +29,13 @@ const icon = (name) => {
   const paths = {
     compose: '<path d="M4 20h4L19 9l-4-4L4 16v4Zm10-13 4 4"/>',
     inbox: '<path d="M4 5h16v14H4zM4 14h4l2 2h4l2-2h4"/>',
+    sent: '<path d="m4 5 16 7-16 7 3-7-3-7Zm3 7h13"/>',
     check: '<path d="m5 12 4 4L19 6"/>',
     shield: '<path d="M12 3 5 6v5c0 4.5 2.8 8.1 7 10 4.2-1.9 7-5.5 7-10V6l-7-3Zm-3 9 2 2 4-5"/>',
     trash: '<path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5"/>',
     arrow: '<path d="m9 18 6-6-6-6"/>',
     lock: '<rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+    switch: '<path d="M7 7h11l-3-3m3 3-3 3M17 17H6l3 3m-3-3 3-3"/>',
   };
   return `<svg aria-hidden="true" viewBox="0 0 24 24">${paths[name]}</svg>`;
 };
@@ -39,7 +43,32 @@ const icon = (name) => {
 function shellMarkup(adapter) {
   const preview = adapter.runtime.mode === "preview";
   return `
-    <div class="app-shell">
+    <section class="signin-shell" data-signin-shell>
+      <div class="signin-card">
+        <div class="signin-brand" aria-label="BlobMail">
+          <span class="brand-mark"><i></i><i></i><i></i></span>
+          <span><strong>BlobMail</strong><small>LOOPBACK / 0</small></span>
+        </div>
+        <p class="eyebrow">LOCAL FIXTURE PROFILES</p>
+        <h1>Sign in to BlobMail</h1>
+        <p class="signin-intro">Choose a deterministic test identity to open its local mailbox. This is a profile switcher, not production authentication.</p>
+        <div class="profile-grid" role="group" aria-label="Local fixture profiles">
+          <button class="profile-option" data-sign-in="alice">
+            <i class="avatar coral">A</i>
+            <span><strong>Alice</strong><small>7E2A:49D4:01AC</small></span>
+            <b>Sign in ${icon("arrow")}</b>
+          </button>
+          <button class="profile-option" data-sign-in="bob">
+            <i class="avatar violet">B</i>
+            <span><strong>Bob</strong><small>B193:8C0F:72EE</small></span>
+            <b>Sign in ${icon("arrow")}</b>
+          </button>
+        </div>
+        <div class="signin-safety">${icon("shield")} No password, wallet, account recovery, or remote session is created.</div>
+      </div>
+    </section>
+
+    <div class="app-shell" data-app-shell hidden>
       <aside class="sidebar">
         <div class="brand" aria-label="BlobMail">
           <span class="brand-mark"><i></i><i></i><i></i></span>
@@ -48,7 +77,8 @@ function shellMarkup(adapter) {
 
         <nav class="primary-nav" aria-label="Mailbox">
           <button class="nav-item active" data-action="compose">${icon("compose")}<span>Compose</span></button>
-          <button class="nav-item" data-action="inbox">${icon("inbox")}<span>Local inbox</span><b data-inbox-count>0</b></button>
+          <button class="nav-item" data-action="inbox">${icon("inbox")}<span>Inbox</span><b data-inbox-count>0</b></button>
+          <button class="nav-item" data-action="sent">${icon("sent")}<span>Sent</span><b data-sent-count>0</b></button>
         </nav>
 
         <div class="sidebar-spacer"></div>
@@ -65,10 +95,9 @@ function shellMarkup(adapter) {
             <p class="eyebrow">FIXTURE-ONLY CLIENT</p>
             <h1 data-page-title>New local message</h1>
           </div>
-          <div class="identity-switch" role="group" aria-label="Test identity">
-            <span>Acting as</span>
-            <button data-identity="alice" aria-pressed="true"><i class="avatar coral">A</i>Alice</button>
-            <button data-identity="bob" aria-pressed="false"><i class="avatar violet">B</i>Bob</button>
+          <div class="account-session" aria-label="Signed-in local profile">
+            <div data-session-chip></div>
+            <button class="switch-account" data-action="switch-account">${icon("switch")} Switch</button>
           </div>
         </header>
 
@@ -89,7 +118,7 @@ function shellMarkup(adapter) {
             <span>To</span><div data-to-chip></div>
           </div>
           <label class="message-label" for="message-body">Message</label>
-          <textarea id="message-body" rows="9" placeholder="Write a short message for the local loopback…" spellcheck="true"></textarea>
+          <textarea id="message-body" rows="9" placeholder="Write a short message for the local loopback..." spellcheck="true"></textarea>
           <div class="composer-meta">
             <span>Decrypted text is treated as untrusted and rendered inertly.</span>
             <span data-byte-count>0 / ${MAX_MESSAGE_BYTES} bytes</span>
@@ -107,7 +136,7 @@ function shellMarkup(adapter) {
             <span class="plain-badge">NO BROADCAST</span>
           </div>
           <div class="review-route"><div data-review-from></div><span>${icon("arrow")}</span><div data-review-to></div></div>
-          <div class="review-message"><span>MESSAGE · <b data-review-bytes></b></span><p data-review-body></p></div>
+          <div class="review-message"><span>MESSAGE - <b data-review-bytes></b></span><p data-review-body></p></div>
           <div class="expectation">
             <strong>What this action proves</strong>
             <p>The connected engine must encrypt, pack, reconstruct, verify, scan, and decrypt these bytes. It does not prove public availability or delivery.</p>
@@ -119,22 +148,22 @@ function shellMarkup(adapter) {
           </div>
         </section>
 
-        <section data-view="inbox" hidden>
+        <section data-view="mailbox" hidden>
           <div class="inbox-layout">
             <div class="panel inbox-panel">
-              <div class="panel-heading"><div><p class="step-label">LOCAL-ONLY</p><h2>Reconstructed inbox</h2></div></div>
-              <div class="inbox-list" data-inbox-list></div>
+              <div class="panel-heading"><div><p class="step-label" data-mailbox-label>LOCAL-ONLY</p><h2 data-mailbox-heading>Inbox</h2></div></div>
+              <div class="inbox-list" data-mailbox-list></div>
             </div>
             <aside class="panel evidence-panel">
               <div class="panel-heading compact"><div><p class="step-label">LATEST RUN</p><h2>Evidence</h2></div></div>
               <div class="evidence-list" data-evidence-list></div>
-              <p class="evidence-footnote">“Decrypted” is local cryptographic evidence. It is not a delivery receipt, acknowledgement, settlement, or onchain inclusion claim.</p>
+              <p class="evidence-footnote">"Decrypted" is local cryptographic evidence. It is not a delivery receipt, acknowledgement, settlement, or onchain inclusion claim.</p>
             </aside>
           </div>
           <button class="primary-button compose-again" data-action="compose">${icon("compose")} Compose another</button>
         </section>
 
-        <footer><span>BlobMail Loopback · Development surface</span><span>Stored locally · 12 messages maximum · 32 KiB state ceiling</span></footer>
+        <footer><span>BlobMail Loopback - Development surface</span><span>Stored locally - 12 messages maximum - 32 KiB state ceiling</span></footer>
       </main>
     </div>`;
 }
@@ -164,7 +193,7 @@ function evidenceNode(item) {
   row.className = `evidence-item ${item.status === "preview" ? "preview" : "verified"}`;
   const marker = document.createElement("span");
   marker.className = "evidence-marker";
-  marker.innerHTML = item.status === "preview" ? "·" : icon("check");
+  marker.innerHTML = item.status === "preview" ? "-" : icon("check");
   const copy = document.createElement("div");
   const title = document.createElement("strong");
   const mapped = evidenceLabels[item.code];
@@ -172,30 +201,35 @@ function evidenceNode(item) {
   const detail = document.createElement("p");
   detail.textContent = item.detail || mapped?.[1] || "Evidence recorded by the local engine.";
   const code = document.createElement("code");
-  code.textContent = item.status === "preview" ? "PREVIEW · NOT EXECUTED" : item.code;
+  code.textContent = item.status === "preview" ? "PREVIEW - NOT EXECUTED" : item.code;
   copy.append(title, detail, code);
   row.append(marker, copy);
   return row;
 }
 
-function emptyInboxNode(identity) {
+function emptyMailboxNode(identity, mode) {
   const empty = document.createElement("div");
   empty.className = "empty-inbox";
   const mark = document.createElement("span");
-  mark.innerHTML = icon("inbox");
+  mark.innerHTML = icon(mode === "sent" ? "sent" : "inbox");
   const title = document.createElement("strong");
-  title.textContent = `${identity.name}’s local inbox is empty`;
+  title.textContent = mode === "sent"
+    ? `${identity.name} has not sent a local message`
+    : `${identity.name}'s local inbox is empty`;
   const body = document.createElement("p");
-  body.textContent = "Compose a bounded message and run it through the local batch fixture.";
+  body.textContent = mode === "sent"
+    ? "Composed messages appear here after the verified local loopback finishes."
+    : "Messages addressed to this fixture profile appear here after reconstruction.";
   empty.append(mark, title, body);
   return empty;
 }
 
-function inboxMessageNode(message, isLatest) {
+function mailboxMessageNode(message, isLatest, mode) {
   const article = document.createElement("article");
   article.className = `message-card${isLatest ? " latest" : ""}`;
   const header = document.createElement("header");
-  header.append(createIdentityChip(IDENTITIES[message.senderId]));
+  const peerId = mode === "sent" ? message.recipientId : message.senderId;
+  header.append(createIdentityChip(IDENTITIES[peerId], mode === "sent" ? " - recipient" : " - sender"));
   const time = document.createElement("time");
   time.dateTime = message.receivedAt;
   time.textContent = new Date(message.receivedAt).toLocaleString([], {
@@ -210,15 +244,26 @@ function inboxMessageNode(message, isLatest) {
   body.textContent = message.body;
   const meta = document.createElement("div");
   meta.className = "message-meta";
-  const state = document.createElement("span");
+  const evidenceState = document.createElement("span");
   const preview = message.evidence.some((item) => item.status === "preview");
-  state.className = preview ? "preview-state" : "verified-state";
-  state.textContent = preview ? "Preview reconstruction" : "Reconstructed + decrypted";
+  evidenceState.className = preview ? "preview-state" : "verified-state";
+  evidenceState.textContent = preview
+    ? "Preview reconstruction"
+    : mode === "sent"
+      ? "Local sent copy - reconstructed"
+      : "Reconstructed + decrypted";
   const batch = document.createElement("code");
   batch.textContent = message.batchId;
-  meta.append(state, batch);
+  meta.append(evidenceState, batch);
   article.append(header, body, meta);
   return article;
+}
+
+function noEvidenceNode() {
+  const empty = document.createElement("p");
+  empty.className = "no-evidence";
+  empty.textContent = "Run a local message to produce an evidence timeline.";
+  return empty;
 }
 
 export function startBlobMailClient({
@@ -233,6 +278,8 @@ export function startBlobMailClient({
   let state = createInitialState(loadClientState(storage) ?? {});
 
   const refs = {
+    signInShell: root.querySelector("[data-signin-shell]"),
+    appShell: root.querySelector("[data-app-shell]"),
     views: [...root.querySelectorAll("[data-view]")],
     title: root.querySelector("[data-page-title]"),
     textarea: root.querySelector("#message-body"),
@@ -244,10 +291,13 @@ export function startBlobMailClient({
     reviewBody: root.querySelector("[data-review-body]"),
     reviewBytes: root.querySelector("[data-review-bytes]"),
     errors: [...root.querySelectorAll("[data-error]")],
-    inboxList: root.querySelector("[data-inbox-list]"),
+    mailboxList: root.querySelector("[data-mailbox-list]"),
+    mailboxHeading: root.querySelector("[data-mailbox-heading]"),
+    mailboxLabel: root.querySelector("[data-mailbox-label]"),
     evidenceList: root.querySelector("[data-evidence-list]"),
     inboxCount: root.querySelector("[data-inbox-count]"),
-    identityButtons: [...root.querySelectorAll("[data-identity]")],
+    sentCount: root.querySelector("[data-sent-count]"),
+    sessionChip: root.querySelector("[data-session-chip]"),
     navButtons: [...root.querySelectorAll(".nav-item")],
     sendButton: root.querySelector('[data-action="send"]'),
     sendLabel: root.querySelector("[data-send-label]"),
@@ -260,20 +310,27 @@ export function startBlobMailClient({
   }
 
   function render() {
+    refs.signInShell.hidden = state.signedIn;
+    refs.appShell.hidden = !state.signedIn;
+    if (!state.signedIn) return;
+
     const sender = IDENTITIES[state.activeIdentity];
     const recipient = IDENTITIES[state.draft.recipientId];
     const activeView = state.view === "sending" ? "review" : state.view;
+    const visibleView = activeView === "inbox" || activeView === "sent" ? "mailbox" : activeView;
     refs.views.forEach((view) => {
-      view.hidden = view.dataset.view !== activeView;
+      view.hidden = view.dataset.view !== visibleView;
     });
-    refs.title.textContent = activeView === "inbox" ? `${sender.name}’s local inbox` : "New local message";
+    refs.title.textContent = activeView === "inbox"
+      ? `${sender.name}'s local inbox`
+      : activeView === "sent"
+        ? `Sent by ${sender.name}`
+        : "New local message";
     refs.navButtons.forEach((button) => {
-      button.classList.toggle("active", button.dataset.action === (activeView === "inbox" ? "inbox" : "compose"));
+      const selected = activeView === "inbox" || activeView === "sent" ? activeView : "compose";
+      button.classList.toggle("active", button.dataset.action === selected);
     });
-    refs.identityButtons.forEach((button) => {
-      const active = button.dataset.identity === state.activeIdentity;
-      button.setAttribute("aria-pressed", String(active));
-    });
+    replaceContent(refs.sessionChip, createIdentityChip(sender));
 
     refs.textarea.value = state.draft.body;
     const draftBytes = utf8ByteLength(state.draft.body);
@@ -290,27 +347,26 @@ export function startBlobMailClient({
       error.textContent = state.error ?? "";
     });
     refs.sendButton.disabled = state.view === "sending";
-    refs.sendLabel.textContent = state.view === "sending" ? "Running local loopback…" : "Send to local batch";
+    refs.sendLabel.textContent = state.view === "sending" ? "Running local loopback..." : "Send to local batch";
 
     const ownInbox = state.inbox.filter((message) => message.recipientId === state.activeIdentity);
+    const ownSent = state.inbox.filter((message) => message.senderId === state.activeIdentity);
     refs.inboxCount.textContent = String(ownInbox.length);
     refs.inboxCount.hidden = ownInbox.length === 0;
-    refs.inboxList.replaceChildren(
-      ...(ownInbox.length
-        ? ownInbox.map((message) => inboxMessageNode(message, message.id === state.latestMessageId))
-        : [emptyInboxNode(sender)]),
+    refs.sentCount.textContent = String(ownSent.length);
+    refs.sentCount.hidden = ownSent.length === 0;
+
+    const mailboxMode = activeView === "sent" ? "sent" : "inbox";
+    const mailbox = mailboxMode === "sent" ? ownSent : ownInbox;
+    refs.mailboxLabel.textContent = mailboxMode === "sent" ? "LOCAL OUTBOX HISTORY" : "LOCAL-ONLY";
+    refs.mailboxHeading.textContent = mailboxMode === "sent" ? "Sent messages" : "Reconstructed inbox";
+    refs.mailboxList.replaceChildren(
+      ...(mailbox.length
+        ? mailbox.map((message) => mailboxMessageNode(message, message.id === state.latestMessageId, mailboxMode))
+        : [emptyMailboxNode(sender, mailboxMode)]),
     );
     refs.evidenceList.replaceChildren(
-      ...(state.evidence.length
-        ? state.evidence.map(evidenceNode)
-        : [
-            (() => {
-              const empty = document.createElement("p");
-              empty.className = "no-evidence";
-              empty.textContent = "Run a local message to produce an evidence timeline.";
-              return empty;
-            })(),
-          ]),
+      ...(state.evidence.length ? state.evidence.map(evidenceNode) : [noEvidenceNode()]),
     );
   }
 
@@ -319,11 +375,12 @@ export function startBlobMailClient({
   });
 
   root.addEventListener("click", async (event) => {
-    const identityButton = event.target.closest("[data-identity]");
-    if (identityButton) {
-      commit(selectIdentity(state, identityButton.dataset.identity));
+    const signInButton = event.target.closest("[data-sign-in]");
+    if (signInButton) {
+      commit(signIn(state, signInButton.dataset.signIn));
       return;
     }
+
     const button = event.target.closest("[data-action]");
     if (!button) return;
     switch (button.dataset.action) {
@@ -333,6 +390,12 @@ export function startBlobMailClient({
       case "inbox":
         commit(showInbox(state));
         break;
+      case "sent":
+        commit(showSent(state));
+        break;
+      case "switch-account":
+        commit(signOut(state));
+        break;
       case "review":
         commit(openReview(state));
         break;
@@ -340,7 +403,7 @@ export function startBlobMailClient({
         commit(returnToCompose(state));
         break;
       case "clear":
-        if (globalThis.confirm?.("Clear the bounded BlobMail draft and local inbox?")) {
+        if (globalThis.confirm?.("Clear the bounded BlobMail draft and local mailbox?")) {
           clearClientState(storage);
           commit(createInitialState({ activeIdentity: state.activeIdentity }), { persist: false });
         }
