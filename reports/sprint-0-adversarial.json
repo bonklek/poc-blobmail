@@ -73,13 +73,13 @@
       "outcome": "restore only allowlisted bounded state and retain no key or wallet authority"
     }
   ],
-  "tests": 36,
+  "tests": 37,
   "failures": 0,
   "safetyFindings": 0,
   "artifacts": [
     {
       "path": "reports/test-results.xml",
-      "sha256": "366b601eb779799f08362d9a2fa2e5581da1c1be2ebd0d3742ae5ac101b651b3"
+      "sha256": "79b98928eafa15f6ba704d9f477871519ab477134c96b4a98dd8052d79abee52"
     },
     {
       "path": "reports/safety-audit.json",

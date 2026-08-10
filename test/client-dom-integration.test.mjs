@@ -27,6 +27,13 @@ test("browser client drives the verified protocol and blob loopback into the inb
     runtimeLabel: "Verified local BlobMail loopback",
   });
   const client = startBlobMailClient({ root, adapter, storage: window.localStorage });
+  assert.equal(client.getState().signedIn, false);
+  assert.match(root.textContent, /Sign in to BlobMail/);
+
+  root.querySelector('[data-sign-in="alice"]').click();
+  assert.equal(client.getState().activeIdentity, "alice");
+  assert.equal(client.getState().view, "inbox");
+  root.querySelector('[data-action="compose"]').click();
 
   const textarea = root.querySelector("#message-body");
   textarea.value = "hello from the first running BlobMail client";
@@ -35,9 +42,9 @@ test("browser client drives the verified protocol and blob loopback into the inb
   assert.equal(client.getState().view, "review");
   root.querySelector('[data-action="send"]').click();
 
-  await waitFor(() => client.getState().view === "inbox");
+  await waitFor(() => client.getState().view === "sent");
   const state = client.getState();
-  assert.equal(state.activeIdentity, "bob");
+  assert.equal(state.activeIdentity, "alice");
   assert.equal(state.inbox.length, 1);
   assert.equal(state.inbox[0].body, "hello from the first running BlobMail client");
   assert.deepEqual(
@@ -50,13 +57,23 @@ test("browser client drives the verified protocol and blob loopback into the inb
       "DECRYPTED",
     ],
   );
-  assert.match(root.textContent, /Reconstructed \+ decrypted/);
+  assert.match(root.textContent, /Local sent copy - reconstructed/);
   assert.match(root.textContent, /hello from the first running BlobMail client/);
   assert.equal(state.inbox[0].receipt.broadcast, false);
   assert.equal(state.inbox[0].receipt.chainIncluded, false);
 
+  root.querySelector('[data-action="switch-account"]').click();
+  assert.equal(client.getState().signedIn, false);
+  root.querySelector('[data-sign-in="bob"]').click();
+  assert.equal(client.getState().activeIdentity, "bob");
+  assert.equal(client.getState().view, "inbox");
+  assert.match(root.textContent, /Reconstructed \+ decrypted/);
+
   const restoredRoot = window.document.createElement("div");
   const restored = startBlobMailClient({ root: restoredRoot, adapter, storage: window.localStorage });
+  assert.equal(restored.getState().signedIn, false);
   assert.equal(restored.getState().inbox[0].body, state.inbox[0].body);
+  restoredRoot.querySelector('[data-sign-in="bob"]').click();
+  assert.match(restoredRoot.textContent, /hello from the first running BlobMail client/);
   await window.happyDOM.abort();
 });

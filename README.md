@@ -4,7 +4,7 @@ BlobMail now includes a runnable, local-only proof of its core mail loop. The
 first-pass browser client composes a bounded text message, encrypts it for a
 deterministic test recipient, packs the entry into an Ethereum-blob-shaped
 memory fixture, reconstructs and verifies it, decrypts it, and stores a bounded
-local inbox.
+local mailbox with separate Inbox and Sent views.
 
 It does **not** broadcast, construct transactions, connect a wallet, submit a
 bundle, prove KZG, or claim chain inclusion. It remains an experimental
@@ -20,9 +20,11 @@ pnpm verify
 pnpm dev
 ```
 
-Open <http://127.0.0.1:5173>, compose as Alice, review the exact UTF-8 byte
-length, and send to Bob. The inbox displays the staged local evidence. A second
-terminal can verify the running server:
+Open <http://127.0.0.1:5173>, choose the local Alice fixture profile, compose a
+message, review the exact UTF-8 byte length, and send it to Bob. Alice's Sent
+view retains the reconstructed local copy. Switch to the Bob fixture profile to
+see the same message in Bob's Inbox with its staged evidence. A second terminal
+can verify the running server:
 
 ```sh
 pnpm probe:client
@@ -42,10 +44,14 @@ regenerates machine-readable acceptance reports.
 - 31-byte payload packing into EIP-4844-shaped field elements
 - Digest-checked reconstruction, recipient scan, and strict UTF-8 decryption
 - Bounded browser storage: 12 messages and 32 KiB serialized state
+- Signed-out startup with an explicit local fixture-profile chooser
+- Separate per-profile Inbox and Sent views over the bounded local message store
 
 The local Alice/Bob identities and deterministic test vectors exist only for
 replayable fixtures. HPKE base mode does not authenticate the selected sender.
 The UI therefore records `selectedSenderIdentityId`, not a provenance claim.
+The profile chooser is not account authentication: it has no password, wallet,
+remote session, recovery flow, or persisted signed-in state.
 
 ## Evidence and integration
 
