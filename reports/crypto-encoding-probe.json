@@ -1,0 +1,52 @@
+{
+  "schema": "blobmail.crypto-encoding-probe.v0",
+  "runtimes": {
+    "executedNode": "v24.14.0",
+    "browserBundleTarget": "ES modules using globalThis.crypto; Vite build and DOM integration evidence are recorded separately",
+    "visualBrowserProbe": "unavailable; no live-browser crypto claim"
+  },
+  "packages": {
+    "@hpke/core": "1.9.0",
+    "@hpke/dhkem-x25519": "1.8.0"
+  },
+  "observedSuiteIds": {
+    "kem": 32,
+    "kdf": 1,
+    "aead": 1
+  },
+  "candidates": {
+    "selected": "RFC 9180 base mode: DHKEM(X25519, HKDF-SHA256), HKDF-SHA256, AES-128-GCM",
+    "rejected": [
+      {
+        "candidate": "P-256 KEM",
+        "reason": "V0 keeps the smaller X25519 key encoding and its verified deterministic cross-implementation fixture."
+      },
+      {
+        "candidate": "AES-256-GCM",
+        "reason": "No Sprint 0 requirement justified the larger key for the bounded local profile."
+      },
+      {
+        "candidate": "JSON or CBOR wire envelope",
+        "reason": "The fixed binary envelope has byte-exact offsets and avoids a second canonicalization dependency."
+      }
+    ]
+  },
+  "fixture": {
+    "vector": "vectors/blobmail-v0.json",
+    "entryId": "7a0ec7b90412168f3f7d6c9ca4eae6c35033373079ea854da58ae56149fd3c23",
+    "batchId": "43792fb37c6a9a9d5d2822897367e06bbe2121a34f64bc234fdb1f6a8602853f"
+  },
+  "probes": {
+    "deterministicKeyDerivation": true,
+    "exactEntrySize": true,
+    "decryptRoundTrip": true,
+    "scanRoundTrip": true,
+    "corruptedEntryRejectedAs": "ENTRY_COMMITMENT_MISMATCH"
+  },
+  "commands": [
+    "pnpm run vectors",
+    "node --test test/protocol-v0.test.mjs test/independent-vectors.test.mjs",
+    "pnpm run build"
+  ],
+  "safety": "Fixture-only HPKE and byte encoding probe; no network, wallet, signing, transaction, or bundle surface."
+}

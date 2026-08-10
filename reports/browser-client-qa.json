@@ -1,0 +1,81 @@
+{
+  "schema": "blobmail.browser-client-qa.v1",
+  "generatedAt": "2026-08-10T01:20:18.685Z",
+  "scope": "standalone fixture-only browser client before verified-loopback injection",
+  "result": "PASS_WITH_VISUAL_PROBE_UNAVAILABLE",
+  "safety": {
+    "walletSurface": false,
+    "networkClientSurface": false,
+    "transactionSurface": false,
+    "signingSurface": false,
+    "fundedKeySurface": false,
+    "activeContentRendering": false,
+    "liveDeliveryClaim": false,
+    "standaloneModeMarkedPreview": true
+  },
+  "bounds": {
+    "maxTextUtf8Bytes": 480,
+    "maxInboxMessages": 12,
+    "maxSerializedStateBytes": 32768,
+    "storageKey": "blobmail.loopback.client.v1"
+  },
+  "checks": [
+    {
+      "name": "client DOM-independent tests",
+      "command": "node --test test/client*.test.mjs",
+      "result": "pass",
+      "tests": 12
+    },
+    {
+      "name": "Vite production build",
+      "command": "pnpm run build",
+      "result": "pass",
+      "modulesTransformed": 10
+    },
+    {
+      "name": "development server root",
+      "command": "Invoke-WebRequest http://127.0.0.1:5173/",
+      "result": "pass",
+      "statusCode": 200,
+      "contentType": "text/html",
+      "hasAppRoot": true
+    },
+    {
+      "name": "browser visual and interaction probe",
+      "result": "unavailable",
+      "detail": "The in-app browser runtime reported no available browser backends; no visual-pass claim is made."
+    },
+    {
+      "name": "patch whitespace",
+      "command": "git diff --check",
+      "result": "pass"
+    }
+  ],
+  "requiredEvidenceOrder": [
+    "LOCAL_BATCH_CREATED",
+    "BATCH_RECONSTRUCTED",
+    "ENTRY_BYTES_VERIFIED",
+    "DECRYPTED"
+  ],
+  "integration": {
+    "factory": "createClientAdapter({ executeLoopback, runtimeLabel })",
+    "method": "adapter.sendToLocalBatch({ senderId, recipientId, plaintextBytes })",
+    "bootstrap": "startBlobMailClient({ adapter })",
+    "currentIndexEntry": "/src/client/demo-main.js",
+    "requiredHandoff": "Replace the preview entry with primary-owned integration glue before acceptance."
+  },
+  "artifacts": [
+    { "path": "index.html", "sha256": "626890b764600799b02bcab0a9c304098d4660efc07824ea424bdf46364ace5c" },
+    { "path": "src/client/adapter.js", "sha256": "17887a31199f95b52e2f5301ebe29666c67982c76a0c60a857f341daf1fe39da" },
+    { "path": "src/client/constants.js", "sha256": "b677005fb706a62a9ccb4db32c0558743c1528187f05f602e60278108599feb0" },
+    { "path": "src/client/demo-main.js", "sha256": "b2eee075d4e0350c048bc0aa862097cc306664b3537335ed5312272cffbf25fc" },
+    { "path": "src/client/main.js", "sha256": "7ad87b6d85b659fbd1035d126f29fb52e76536f90f80aa3d09a9d2bfe13489c2" },
+    { "path": "src/client/state.js", "sha256": "95120ce26019acada22d3ae01e7d82deb019b5423aa3349bd3dee4e9c4796421" },
+    { "path": "src/client/storage.js", "sha256": "d28d6e0d5bc0912fdb1ae42eb29a54f4542325dccdcab6576c6f1728a26eb3f0" },
+    { "path": "src/client/styles.css", "sha256": "a059ab3c9e400db258f605355d1480bdf6b91cff824f9951ac573f4fe6396bf0" },
+    { "path": "test/client-adapter.test.mjs", "sha256": "567c34b427635b893296f729a0a1d5d33342c53470d0c9b79fc3efc0b5706458" },
+    { "path": "test/client-state.test.mjs", "sha256": "858374ced01754f0b22ead12ace528edfc02958c20b5d76cf8710378487701e8" },
+    { "path": "test/client-storage.test.mjs", "sha256": "3f7a6ba1ead20047dc40fdf3f571b21609170a0411d7e73d5a5f711384a2cf06" },
+    { "path": "docs/milxdy-adapter-boundary.md", "sha256": "d8f3224d44eb448d05412a4aff27784535b30c2b495190a4ef70946359651049" }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schema": "blobmail.sprint-0-adversarial.v1",
+  "generatedAt": "2026-08-10T01:29:25.019Z",
+  "result": "PASS",
+  "command": "pnpm run test:receipt && pnpm run audit:safety",
+  "cases": {
+    "corrupt": [
+      "entry commitment",
+      "batch commitment",
+      "field-element prefix",
+      "HPKE ciphertext"
+    ],
+    "oversized": [
+      "UTF-8 text",
+      "entry count",
+      "blob count",
+      "serialized client state"
+    ],
+    "duplicate": [
+      "entry ID",
+      "sidecar versioned hash"
+    ],
+    "reordered": [
+      "canonical batch entries",
+      "manifest sidecars"
+    ],
+    "unknownVersion": [
+      "plaintext",
+      "entry",
+      "batch",
+      "stored client state"
+    ],
+    "wrongRecipient": [
+      "recipient scan",
+      "exporter tag mismatch"
+    ],
+    "unsafeCapability": [
+      "no transaction-submission API in project source",
+      "no funded-key environment access in project source",
+      "no credential-shaped literals in project source",
+      "no wallet-injection access in project source",
+      "no external runtime network or peer API in application source",
+      "the only verification-network exception is a hard-coded 127.0.0.1 client probe"
+    ]
+  },
+  "expectedOutcomes": [
+    {
+      "case": "missing or duplicate sidecar",
+      "outcome": "reject before SIDECARS_MATCHED and emit no reconstruction/decryption claim"
+    },
+    {
+      "case": "reordered manifest sidecars",
+      "outcome": "restore manifest order only after commitment-derived versioned-hash matching"
+    },
+    {
+      "case": "corrupt batch, entry, field prefix, tag, or ciphertext",
+      "outcome": "reject at the failing integrity stage and never emit DECRYPTED"
+    },
+    {
+      "case": "duplicate or noncanonical entry order",
+      "outcome": "reject canonical batch parsing and emit no entry-verified state"
+    },
+    {
+      "case": "oversized or unknown-version input",
+      "outcome": "fail closed before persistence or cryptographic success evidence"
+    },
+    {
+      "case": "corrupt or oversized browser storage",
+      "outcome": "discard the invalid state or bounded inbox without broad storage deletion"
+    },
+    {
+      "case": "browser client restart",
+      "outcome": "restore only allowlisted bounded state and retain no key or wallet authority"
+    }
+  ],
+  "tests": 36,
+  "failures": 0,
+  "safetyFindings": 0,
+  "artifacts": [
+    {
+      "path": "reports/test-results.xml",
+      "sha256": "366b601eb779799f08362d9a2fa2e5581da1c1be2ebd0d3742ae5ac101b651b3"
+    },
+    {
+      "path": "reports/safety-audit.json",
+      "sha256": "2ab32157ee77de4131dc3838f35ba472db4a321c2f4f05b5d51653634dcabf8b"
+    }
+  ]
+}

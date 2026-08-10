@@ -1,0 +1,85 @@
+{
+  "schema": "blobmail.browser-loopback.v1",
+  "generatedAt": "2026-08-10T01:29:25.019Z",
+  "result": "PASS_WITH_VISUAL_BACKEND_UNAVAILABLE",
+  "localUrl": "http://127.0.0.1:5173",
+  "execution": {
+    "clientEntry": "/src/main.js",
+    "transport": "in-memory EIP-4844-shaped fixture",
+    "automatedDomIntegration": true,
+    "devServerHttpProbe": true,
+    "visualBackend": "unavailable; no visual-pass claim"
+  },
+  "evidenceOrder": [
+    "LOCAL_BATCH_CREATED",
+    "BATCH_RECONSTRUCTED",
+    "PAYLOAD_SHA256_VERIFIED",
+    "ENTRY_BYTES_VERIFIED",
+    "DECRYPTED"
+  ],
+  "negativeClaims": {
+    "broadcast": false,
+    "chainIncluded": false,
+    "kzgProofVerified": false,
+    "senderAuthenticated": false
+  },
+  "checks": {
+    "fullSuiteTests": 36,
+    "fullSuiteFailures": 0,
+    "localHttp": {
+      "rootHttp200": true,
+      "entryHttp200": true,
+      "appRootPresent": true,
+      "verifiedEntryPresent": true
+    },
+    "browserVisualProbe": "unavailable"
+  },
+  "scenarios": {
+    "reviewedComposeToDecrypt": {
+      "result": "pass",
+      "evidence": "test/client-dom-integration.test.mjs"
+    },
+    "restartPersistence": {
+      "result": "pass",
+      "evidence": "the DOM integration reboots the client against the same bounded localStorage fixture"
+    },
+    "duplicateRejection": {
+      "result": "pass",
+      "evidence": "test/protocol-v0.test.mjs canonical batch duplicate case"
+    },
+    "corruptFixtureRejection": {
+      "result": "pass",
+      "evidence": "protocol and transport corruption cases execute in the same browser-bundled modules"
+    },
+    "unsupportedInputRejection": {
+      "result": "pass",
+      "evidence": "client adapter/state tests reject invalid bytes, invalid UTF-8, and oversized text"
+    }
+  },
+  "artifacts": [
+    {
+      "path": "reports/test-results.xml",
+      "sha256": "366b601eb779799f08362d9a2fa2e5581da1c1be2ebd0d3742ae5ac101b651b3"
+    },
+    {
+      "path": "reports/dev-server-probe.json",
+      "sha256": "08d7fac50cbd7d56f9b0a1d229be88ef6bf33742f1c9bb698d22944507312c39"
+    },
+    {
+      "path": "test/client-dom-integration.test.mjs",
+      "sha256": "80940c33b14868a2687cbab49e38e521685a74e23da0e3a5d4c4842a981b6e52"
+    },
+    {
+      "path": "test/integration-loopback.test.mjs",
+      "sha256": "2ec125a38c53f8059c4ffc3d0f619e33fc37cbec971f2a2fda4a926a647ecbd1"
+    },
+    {
+      "path": "src/integration/loopback.js",
+      "sha256": "a6299d468f6bbb17b0d256f6a03807b42982c96b735abe5e0dd7986bc82d0a26"
+    },
+    {
+      "path": "src/main.js",
+      "sha256": "d842936558a2a6ebb47892a5e6d341288317a3152ccb325af720522c7f9f3d0f"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "blobmail.protocol-core-tests.v1",
+  "generatedAt": "2026-08-10T01:29:25.019Z",
+  "result": "PASS",
+  "command": "pnpm run test:receipt",
+  "tests": 36,
+  "failures": 0,
+  "coverage": [
+    "deterministic HPKE vectors and independent HPKE reproduction",
+    "canonical text, entry, and batch encodings",
+    "recipient scan and authenticated decryption",
+    "corruption, duplicate, reorder, version, bounds, and strict UTF-8 rejection"
+  ],
+  "artifacts": [
+    {
+      "path": "reports/test-results.xml",
+      "sha256": "366b601eb779799f08362d9a2fa2e5581da1c1be2ebd0d3742ae5ac101b651b3"
+    },
+    {
+      "path": "vectors/blobmail-v0.json",
+      "sha256": "f7094666e5f8fa00683a0ebd1d097ef1434d1e76814e4dd0e8c6fec7a4c5d648"
+    },
+    {
+      "path": "vectors/manifest.json",
+      "sha256": "1466ff460ea8a50a953e5aa6c87b9a2fc42ac9b4af621c285043d512787034e8"
+    },
+    {
+      "path": "docs/core-protocol-v0.md",
+      "sha256": "c762b22f7ec009fb21cd656de0bd3dbfd866c2fb71605094b0b412e29603dfb0"
+    },
+    {
+      "path": "reports/crypto-encoding-probe.json",
+      "sha256": "0ca660fbd89efc16b2bed0de158012f3392bfef154e60de0695a6c8b4d3ce9a8"
+    }
+  ]
+}

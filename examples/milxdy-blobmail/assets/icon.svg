@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-labelledby="title">
+  <title id="title">BlobMail</title>
+  <rect width="48" height="48" rx="13" fill="#11131a"/>
+  <circle cx="19" cy="25" r="11" fill="#ff7a5c"/>
+  <circle cx="29" cy="18" r="9" fill="#a593ff" fill-opacity=".9"/>
+  <circle cx="31" cy="30" r="9" fill="#70dfad" fill-opacity=".82"/>
+  <path d="m15 19 9 7 10-8v13H15Z" fill="#11131a" fill-opacity=".8"/>
+</svg>

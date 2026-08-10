@@ -1,0 +1,123 @@
+{
+  "schema": "blobmail.sprint-0-acceptance.v1",
+  "generatedAt": "2026-08-10T01:29:25.019Z",
+  "result": "PASS",
+  "issue": "https://github.com/bonklek/blobmail/issues/3",
+  "branch": "codex/3-blobmail-loopback",
+  "commands": [
+    "pnpm install --frozen-lockfile",
+    "pnpm verify",
+    "pnpm dev",
+    "pnpm probe:client"
+  ],
+  "outcomes": {
+    "deterministicProtocolCore": true,
+    "independentVerifier": true,
+    "publicRfeTransportAdaptation": true,
+    "firstPassBrowserClient": true,
+    "verifiedLocalLoopback": true,
+    "boundedLocalPersistence": true,
+    "milxdyAdapterBoundary": true,
+    "milxdyFixturePackage": true,
+    "adversarialSuite": true
+  },
+  "limits": [
+    "local fixtures only",
+    "no transaction or bundle construction/submission",
+    "no wallet, signing, funded key, or secret",
+    "no live sidecar retrieval or network transport",
+    "no KZG-proof or chain-inclusion claim",
+    "HPKE base mode does not authenticate the selected sender",
+    "no production privacy, settlement, delivery, read, or acknowledgement claim"
+  ],
+  "tests": {
+    "total": 36,
+    "failures": 0
+  },
+  "safety": {
+    "passed": true,
+    "findings": 0
+  },
+  "artifacts": [
+    {
+      "path": "README.md",
+      "sha256": "5271e8090e04dba78b0ec70ffa10aca588ee0ae30de02e8ac9cd05a4743ce84e"
+    },
+    {
+      "path": "docs/SPRINT_0_AGENT_PROMPT.md",
+      "sha256": "19a63b9fa81bdd5c2d824ce4c5c6a4a9b87fb0cbfddcbd0176c84774d586e0df"
+    },
+    {
+      "path": "docs/core-protocol-v0.md",
+      "sha256": "c762b22f7ec009fb21cd656de0bd3dbfd866c2fb71605094b0b412e29603dfb0"
+    },
+    {
+      "path": "docs/rfe-transport-provenance.md",
+      "sha256": "ce304e777238a7d5dd25d4a6bfbac01f7c40fbccaacad8bd739b7170abb566a3"
+    },
+    {
+      "path": "docs/milxdy-adapter-boundary.md",
+      "sha256": "d00bdd98a2b9b08ef22a55b8a6c105f927c617ffb3c43c3546ecbecc871d7d1a"
+    },
+    {
+      "path": "docs/sprint-0-handoff.md",
+      "sha256": "e1e2ca76b30bd17b184c27b23d9dafa37bf8af2ac1af0f8d8c34ea639746d6b2"
+    },
+    {
+      "path": "vectors/blobmail-v0.json",
+      "sha256": "f7094666e5f8fa00683a0ebd1d097ef1434d1e76814e4dd0e8c6fec7a4c5d648"
+    },
+    {
+      "path": "vectors/manifest.json",
+      "sha256": "1466ff460ea8a50a953e5aa6c87b9a2fc42ac9b4af621c285043d512787034e8"
+    },
+    {
+      "path": "reports/planning-authority.json",
+      "sha256": "f31b5664db9f751f6df34d2a7c36c64be99604b6b8a8067f00794c4a79c17f8f"
+    },
+    {
+      "path": "reports/crypto-encoding-probe.json",
+      "sha256": "0ca660fbd89efc16b2bed0de158012f3392bfef154e60de0695a6c8b4d3ce9a8"
+    },
+    {
+      "path": "reports/no-broadcast-audit.json",
+      "sha256": "cb5d59d021cb1c5c0efb1435a29cd266d1f4cf8beed74aef98b20c080ac41530"
+    },
+    {
+      "path": "reports/protocol-core-tests.json",
+      "sha256": "64d84a757de1e6fc6a07dde14d4d49e5873468371b68e53245e2f97e567c9157"
+    },
+    {
+      "path": "reports/browser-loopback.json",
+      "sha256": "eb5172fa5c318e64bfce015256141cb91e48e055f06cdf84e619fad594929b58"
+    },
+    {
+      "path": "reports/sprint-0-adversarial.json",
+      "sha256": "d4a6ff014b337a4a30ab2e64a0f447dd7013bd9f8d98b1a32f545340acd15aa1"
+    },
+    {
+      "path": "reports/safety-audit.json",
+      "sha256": "2ab32157ee77de4131dc3838f35ba472db4a321c2f4f05b5d51653634dcabf8b"
+    },
+    {
+      "path": "reports/dev-server-probe.json",
+      "sha256": "08d7fac50cbd7d56f9b0a1d229be88ef6bf33742f1c9bb698d22944507312c39"
+    },
+    {
+      "path": "dist/index.html",
+      "sha256": "7c6eaae3fb9b423d5799068eea9cf5641381a260afc4daf846f9fb33bebbfd48"
+    },
+    {
+      "path": "reports/milxdy-package-verification.json",
+      "sha256": "a0cadbb71ed1b191ca635d51ebff457b0fbca7ee6b70b426fa58ca80225ec9e3"
+    },
+    {
+      "path": "examples/milxdy-blobmail/milxdy.app.json",
+      "sha256": "4cb19ef6034139086e1a799bdbe19080982537e98aee38f5933d46b514d17603"
+    },
+    {
+      "path": "examples/milxdy-blobmail/dist/content.js",
+      "sha256": "46dedaf528b269ef1148708dc6da1545f1376a5a36a1f8dcd6e7245e11d19802"
+    }
+  ]
+}

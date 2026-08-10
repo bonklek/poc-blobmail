@@ -1,0 +1,65 @@
+.blobmail-sdk-panel {
+  position: fixed;
+  z-index: 2147483000;
+  inset-block-start: 72px;
+  inset-inline-end: 16px;
+  box-sizing: border-box;
+  inline-size: min(430px, calc(100vw - 32px));
+  max-block-size: calc(100vh - 88px);
+  overflow: auto;
+  border: 1px solid var(--milxdy-sdk-color-border);
+  border-radius: var(--milxdy-sdk-radius-panel);
+  background: var(--milxdy-sdk-color-surface);
+  color: var(--milxdy-sdk-color-text);
+  box-shadow: var(--milxdy-sdk-shadow-panel);
+  font: 14px/1.45 var(--milxdy-sdk-font-ui);
+  isolation: isolate;
+}
+
+.blobmail-sdk-panel *, .blobmail-sdk-panel *::before, .blobmail-sdk-panel *::after { box-sizing: border-box; }
+.blobmail-sdk-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px; border-block-end: 1px solid var(--milxdy-sdk-color-border); background: var(--milxdy-sdk-color-surface-raised); }
+.blobmail-sdk-title { margin: 3px 0 0; font-size: 19px; letter-spacing: -.03em; }
+.blobmail-sdk-eyebrow { color: var(--milxdy-sdk-color-muted); font: 600 9px var(--milxdy-sdk-font-mono); letter-spacing: .1em; }
+.blobmail-sdk-close { inline-size: 40px; block-size: 40px; border: 1px solid var(--milxdy-sdk-color-border); border-radius: 50%; background: transparent; color: inherit; cursor: pointer; font-size: 21px; }
+.blobmail-sdk-notice { display: flex; flex-direction: column; gap: 2px; padding: 11px 18px; border-block-end: 1px solid color-mix(in srgb, #51d69b 25%, transparent); background: color-mix(in srgb, #51d69b 9%, transparent); }
+.blobmail-sdk-notice strong { color: #51d69b; font-size: 11px; }
+.blobmail-sdk-notice span { color: var(--milxdy-sdk-color-muted); font-size: 9px; }
+.blobmail-sdk-body { min-block-size: 390px; }
+.blobmail-sdk-nav { display: grid; grid-template-columns: 1fr 1fr; padding: 8px; border-block-end: 1px solid var(--milxdy-sdk-color-border); }
+.blobmail-sdk-nav button, .blobmail-sdk-actions button, .blobmail-sdk-inbox > button, .blobmail-sdk-result > button { min-block-size: 38px; border: 1px solid transparent; border-radius: 9px; background: transparent; color: var(--milxdy-sdk-color-muted); cursor: pointer; font: 600 11px var(--milxdy-sdk-font-ui); }
+.blobmail-sdk-nav button.is-active { background: var(--milxdy-sdk-color-surface-raised); color: var(--milxdy-sdk-color-text); border-color: var(--milxdy-sdk-color-border); }
+.blobmail-sdk-content { padding: 18px; }
+.blobmail-sdk-route { display: grid; grid-template-columns: auto 1fr auto auto 1fr; align-items: center; gap: 8px; margin-block-end: 18px; }
+.blobmail-sdk-label { color: var(--milxdy-sdk-color-muted); font: 600 9px var(--milxdy-sdk-font-mono); text-transform: uppercase; }
+.blobmail-sdk-route select, .blobmail-sdk-compose textarea { border: 1px solid var(--milxdy-sdk-color-border); border-radius: 9px; background: var(--milxdy-sdk-color-surface-raised); color: var(--milxdy-sdk-color-text); font: inherit; }
+.blobmail-sdk-route select { min-inline-size: 0; padding: 7px; }
+.blobmail-sdk-arrow { color: var(--milxdy-sdk-color-muted); }
+.blobmail-sdk-compose > .blobmail-sdk-label { display: block; margin-block-end: 7px; }
+.blobmail-sdk-compose textarea { inline-size: 100%; resize: vertical; padding: 12px; line-height: 1.55; }
+.blobmail-sdk-count { display: block; margin-block-start: 5px; color: var(--milxdy-sdk-color-muted); font: 400 9px var(--milxdy-sdk-font-mono); text-align: end; }
+.blobmail-sdk-count.is-over, .blobmail-sdk-error { color: #ff6d6d; }
+.blobmail-sdk-consent { display: flex; align-items: flex-start; gap: 8px; margin-block-start: 14px; padding: 11px; border: 1px solid var(--milxdy-sdk-color-border); border-radius: 9px; color: var(--milxdy-sdk-color-muted); font-size: 10px; }
+.blobmail-sdk-review { padding: 15px; border: 1px solid var(--milxdy-sdk-color-border); border-radius: 9px; }
+.blobmail-sdk-review-text, .blobmail-sdk-message { white-space: pre-wrap; overflow-wrap: anywhere; }
+.blobmail-sdk-proof, .blobmail-sdk-footnote { color: var(--milxdy-sdk-color-muted); font-size: 9px; }
+.blobmail-sdk-error { font-size: 10px; }
+.blobmail-sdk-actions { display: flex; justify-content: flex-end; gap: 8px; margin-block-start: 16px; }
+.blobmail-sdk-actions button { padding-inline: 13px; border-color: var(--milxdy-sdk-color-border); }
+.blobmail-sdk-primary { background: var(--milxdy-sdk-color-accent) !important; color: #fff !important; border-color: transparent !important; }
+.blobmail-sdk-success { display: inline-block; padding: 5px 8px; border-radius: 6px; background: color-mix(in srgb, #51d69b 13%, transparent); color: #51d69b; font: 600 9px var(--milxdy-sdk-font-mono); }
+.blobmail-sdk-timeline { display: grid; gap: 8px; padding: 0; list-style: none; }
+.blobmail-sdk-timeline li { position: relative; padding: 8px 10px 8px 25px; border: 1px solid var(--milxdy-sdk-color-border); border-radius: 8px; font: 500 9px var(--milxdy-sdk-font-mono); }
+.blobmail-sdk-timeline li::before { position: absolute; inset-inline-start: 9px; content: "✓"; color: #51d69b; }
+.blobmail-sdk-card { padding: 13px; margin-block-end: 9px; border: 1px solid var(--milxdy-sdk-color-border); border-radius: 9px; }
+.blobmail-sdk-card code { display: block; overflow: hidden; color: var(--milxdy-sdk-color-muted); font: 400 8px var(--milxdy-sdk-font-mono); text-overflow: ellipsis; white-space: nowrap; }
+.blobmail-sdk-empty { padding: 36px 10px; color: var(--milxdy-sdk-color-muted); text-align: center; }
+.blobmail-sdk-inbox > button, .blobmail-sdk-result > button { inline-size: 100%; border-color: var(--milxdy-sdk-color-border); }
+.blobmail-sdk-panel :focus-visible { outline: 3px solid var(--milxdy-sdk-color-focus); outline-offset: 2px; }
+
+@media (max-width: 480px) {
+  .blobmail-sdk-panel { inset: 8px; inline-size: auto; max-block-size: calc(100vh - 16px); }
+}
+
+@media (forced-colors: active) {
+  .blobmail-sdk-panel, .blobmail-sdk-header, .blobmail-sdk-close, .blobmail-sdk-card { border-color: CanvasText; }
+}

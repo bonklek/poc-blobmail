@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+	<testcase name="verified adapter preserves decrypted bytes and normalizes evidence" classname="test" file="test/client-adapter.test.mjs"/>
+	<testcase name="verified adapter rejects missing or reordered proof states" classname="test" file="test/client-adapter.test.mjs"/>
+	<testcase name="adapter rejects non-byte plaintext and invalid decrypted UTF-8" classname="test" file="test/client-adapter.test.mjs"/>
+	<testcase name="standalone preview is explicitly labeled and never emits verified evidence" classname="test" file="test/client-adapter.test.mjs"/>
+	<testcase name="browser client drives the verified protocol and blob loopback into the inbox" classname="test" file="test/client-dom-integration.test.mjs"/>
+	<testcase name="compose state validates UTF-8 bytes instead of JavaScript characters" classname="test" file="test/client-state.test.mjs"/>
+	<testcase name="review is a required explicit state before local batch submission" classname="test" file="test/client-state.test.mjs"/>
+	<testcase name="successful loopback moves the reconstructed message into Bob's bounded inbox" classname="test" file="test/client-state.test.mjs"/>
+	<testcase name="switching identity resets the draft and cannot interrupt an active send" classname="test" file="test/client-state.test.mjs"/>
+	<testcase name="storage roundtrip retains only bounded, allowlisted client state" classname="test" file="test/client-storage.test.mjs"/>
+	<testcase name="malformed, oversized, and unknown-version state fail closed" classname="test" file="test/client-storage.test.mjs"/>
+	<testcase name="serialization drops inbox if total state crosses the 32 KiB ceiling" classname="test" file="test/client-storage.test.mjs"/>
+	<testcase name="clear removes only the BlobMail client key" classname="test" file="test/client-storage.test.mjs"/>
+	<testcase name="independent verifier checks padded-text encoding without the primary encoder" classname="test" file="test/independent-vectors.test.mjs"/>
+	<testcase name="independent verifier checks entry offsets and commitment" classname="test" file="test/independent-vectors.test.mjs"/>
+	<testcase name="independent verifier checks batch framing and commitment" classname="test" file="test/independent-vectors.test.mjs"/>
+	<testcase name="independent HPKE setup reproduces key, exporter tag, and ciphertext" classname="test" file="test/independent-vectors.test.mjs"/>
+	<testcase name="verified local loopback encrypts, blob-packs, reconstructs, scans, and decrypts" classname="test" file="test/integration-loopback.test.mjs"/>
+	<testcase name="deterministic test identities are stable and distinct" classname="test" file="test/integration-loopback.test.mjs"/>
+	<testcase name="loopback rejects invalid identity routing and invalid UTF-8" classname="test" file="test/integration-loopback.test.mjs"/>
+	<testcase name="deterministic identities and HPKE fixtures round trip" classname="test" file="test/protocol-v0.test.mjs"/>
+	<testcase name="text is NFC-normalized and strictly bounded" classname="test" file="test/protocol-v0.test.mjs"/>
+	<testcase name="plaintext decoder rejects noncanonical version, UTF-8, and padding" classname="test" file="test/protocol-v0.test.mjs"/>
+	<testcase name="entry parser rejects version, flags, length, and commitment corruption" classname="test" file="test/protocol-v0.test.mjs"/>
+	<testcase name="recipient scan skips unrelated entries and decrypts its match" classname="test" file="test/protocol-v0.test.mjs"/>
+	<testcase name="exporter-tag mismatch and authenticated-open failure stay distinct" classname="test" file="test/protocol-v0.test.mjs"/>
+	<testcase name="batch rejects corrupt, duplicate, reordered, and unknown-version fixtures" classname="test" file="test/protocol-v0.test.mjs"/>
+	<testcase name="deduplication retains first verified entry" classname="test" file="test/protocol-v0.test.mjs"/>
+	<testcase name="31-byte field-element encoding round-trips across a blob boundary" classname="test" file="test/transport-rfe.test.mjs"/>
+	<testcase name="decoder rejects a non-zero field-element prefix" classname="test" file="test/transport-rfe.test.mjs"/>
+	<testcase name="encoder and decoder enforce explicit bounded work" classname="test" file="test/transport-rfe.test.mjs"/>
+	<testcase name="commitment-to-versioned-hash matches a fixed fixture vector" classname="test" file="test/transport-rfe.test.mjs"/>
+	<testcase name="strict sidecar selection derives hashes, verifies supplied hashes, and restores manifest order" classname="test" file="test/transport-rfe.test.mjs"/>
+	<testcase name="strict sidecar selection rejects commitment mismatch, duplicates, and missing sidecars" classname="test" file="test/transport-rfe.test.mjs"/>
+	<testcase name="reconstruction emits staged evidence only after each check succeeds" classname="test" file="test/transport-rfe.test.mjs"/>
+	<testcase name="cache keys are deterministic, ordered, and do not depend on mutable storage" classname="test" file="test/transport-rfe.test.mjs"/>
+	<!-- tests 36 -->
+	<!-- suites 0 -->
+	<!-- pass 36 -->
+	<!-- fail 0 -->
+	<!-- cancelled 0 -->
+	<!-- skipped 0 -->
+	<!-- todo 0 -->
+</testsuites>
