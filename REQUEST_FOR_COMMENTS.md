@@ -2,6 +2,14 @@
 
 BlobMail is a proposed private encrypted messaging system using shared Ethereum blob batches as the delivery/availability layer.
 
+BlobMail now treats ERC-8179 Blob Space Segments as its intended allocation and
+discovery boundary. ERC-8180 Blob Authenticated Messaging is the closest
+standards proposal, but its public decoder interface is not directly suitable
+for recipient-only encrypted contents. BlobMail is therefore also a concrete
+privacy-oriented comment on BAM: can the standard clearly distinguish public
+authenticated messages from opaque or recipient-private authenticated
+payloads without making public exposure a protocol requirement?
+
 The motivating product is a browser-extension mail/chat surface for X/Twitter users. Alice selects Bob's X profile, resolves Bob's messaging public key, encrypts locally, submits a padded encrypted payload into a shared pending layer, and a blob-aware bundler batches many such payloads into one Ethereum blob. Bob's client scans blob batches and decrypts entries intended for him.
 
 ## What is being proposed

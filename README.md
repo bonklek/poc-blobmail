@@ -119,6 +119,20 @@ The current design assumes:
 - ERC-4337 bundlers can be extended into blob-aware batchers;
 - settlement starts on testnet with a weaker manifest-based proof, then moves toward production-grade blob-content linkage.
 
+## Relationship to ERC-8179 and ERC-8180
+
+BlobMail is adopting ERC-8179's field-element segment model as its intended
+blob allocation and discovery boundary. Its transport includes pure
+segment-aware encoding and reconstruction while retaining the existing
+full-blob compatibility path.
+
+ERC-8180 (Blob Authenticated Messaging) is close prior art, but its publicly
+decodable sender/message model is not a drop-in fit for recipient-private HPKE
+mail. BlobMail treats itself as a privacy-focused comment and composability
+case for BAM: it borrows the decoder/verifier trust separation while keeping
+decryption and optional sender authentication recipient-local. See the
+[project position](./docs/erc-8179-8180-position.md).
+
 ## Start here
 
 - [Request for comments](./REQUEST_FOR_COMMENTS.md)

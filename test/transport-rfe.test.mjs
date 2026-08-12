@@ -9,12 +9,15 @@ import {
   TransportIntegrityError,
   bytesToHex,
   commitmentToVersionedHash,
+  decodePayloadFromBlobSegment,
   decodePayloadFromBlobs,
   encodePayloadToBlobs,
   reconstructAndVerifyPayload,
   selectSidecarsByVersionedHash,
   sha256Hex,
   sidecarCacheKey,
+  segmentPayloadCapacity,
+  writePayloadToBlobSegment,
 } from '../src/transport/index.js'
 
 const PUBLIC_RFE_VECTOR = Object.freeze({
@@ -45,6 +48,41 @@ test('decoder rejects a non-zero field-element prefix', () => {
   assert.throws(
     () => decodePayloadFromBlobs([blob], 3),
     /invalid blob field element prefix at blob 0, byte offset 32/,
+  )
+})
+
+test('ERC-8179-style segment encoding preserves unrelated field elements', () => {
+  const original = new Uint8Array(BLOB_BYTES)
+  original.fill(0xa5, 1, 32)
+  original.fill(0x5a, 7 * 32 + 1, 8 * 32)
+  const payload = fixturePayload(70)
+  const encoded = writePayloadToBlobSegment(original, payload, { startFE: 3, endFE: 7 })
+
+  assert.deepEqual(encoded.subarray(0, 3 * 32), original.subarray(0, 3 * 32))
+  assert.deepEqual(encoded.subarray(7 * 32, 8 * 32), original.subarray(7 * 32, 8 * 32))
+  assert.equal(segmentPayloadCapacity(3, 7), 124)
+  assert.deepEqual(
+    decodePayloadFromBlobSegment(encoded, payload.byteLength, { startFE: 3, endFE: 7 }),
+    payload,
+  )
+})
+
+test('segment decoding rejects invalid ranges, excess payload, and non-canonical padding', () => {
+  const blob = new Uint8Array(BLOB_BYTES)
+  assert.throws(
+    () => writePayloadToBlobSegment(blob, new Uint8Array(), { startFE: 10, endFE: 10 }),
+    /field-element segment/,
+  )
+  assert.throws(
+    () => writePayloadToBlobSegment(blob, new Uint8Array(32), { startFE: 10, endFE: 11 }),
+    /exceeds decoded capacity 31/,
+  )
+
+  const encoded = writePayloadToBlobSegment(blob, new Uint8Array([1]), { startFE: 10, endFE: 11 })
+  encoded[10 * 32 + 2] = 1
+  assert.throws(
+    () => decodePayloadFromBlobSegment(encoded, 1, { startFE: 10, endFE: 11 }),
+    /non-zero padding/,
   )
 })
 

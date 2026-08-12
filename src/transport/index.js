@@ -5,8 +5,11 @@ export {
   MAX_BLOBS_PER_BATCH,
   PAYLOAD_BYTES_PER_BLOB,
   PAYLOAD_BYTES_PER_FIELD_ELEMENT,
+  decodePayloadFromBlobSegment,
   decodePayloadFromBlobs,
   encodePayloadToBlobs,
+  segmentPayloadCapacity,
+  writePayloadToBlobSegment,
 } from './blob-codec.js'
 
 export {
