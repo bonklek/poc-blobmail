@@ -1,0 +1,18 @@
+{
+  "schema": "blobmail.sepolia-publication-input.v1",
+  "expectedPublisherAddress": "0x1111111111111111111111111111111111111111",
+  "chain": { "id": "11155111", "genesisValidatorsRoot": "0xd8ea171f3c94aea21ebc42a1ed61052acf3f9209c00e4efbaaddac09ed9b8078" },
+  "reference": {
+    "blockNumber": "9000000",
+    "blockHash": "0x4444444444444444444444444444444444444444444444444444444444444444",
+    "observedAtUnixSeconds": "1786377600",
+    "baseFeePerGasWei": "1000000000",
+    "blobBaseFeeWei": "1000000000",
+    "publisherNonce": "0",
+    "observationArtifactSha256": "5555555555555555555555555555555555555555555555555555555555555555"
+  },
+  "fees": { "gasLimit": "21000", "maxFeePerGasWei": "2000000000", "maxPriorityFeePerGasWei": "100000000", "maxFeePerBlobGasWei": "2000000000" },
+  "caps": { "maxExecutionCostWei": "42000000000000", "maxBlobCostWei": "262144000000000", "maxTotalExposureWei": "304144000000000" },
+  "expiry": { "validThroughBlock": "9000100", "validThroughUnixSeconds": "1786379400" },
+  "review": { "currentBlockNumber": "9000000", "canonicalReferenceBlockHash": "0x4444444444444444444444444444444444444444444444444444444444444444", "atUnixSeconds": "1786377600" }
+}

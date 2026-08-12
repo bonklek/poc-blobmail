@@ -1,5 +1,6 @@
 {
   "schema": "blobmail.sepolia-sidecar-source-provenance.v1",
+  "canonicalLineEndings": "LF",
   "scope": "read-only Sepolia sidecar acquisition and KZG verification",
   "publicReadPath": {
     "repository": "https://github.com/bonklek/eth-radio",

@@ -24,7 +24,7 @@
     "senderAuthenticated": false
   },
   "checks": {
-    "fullSuiteTests": 66,
+    "fullSuiteTests": 76,
     "fullSuiteFailures": 0,
     "localHttp": {
       "rootHttp200": true,
@@ -59,11 +59,11 @@
   "artifacts": [
     {
       "path": "reports/test-results.xml",
-      "sha256": "ba222704677c1f8f60aee9ea534abae098028bb503c41c4af4b43e9859d35a93"
+      "sha256": "4f1c0d6c8c8f8372529a3780e0a7d39f64f1c86b220a8dd8838d12b64a7c8b22"
     },
     {
       "path": "reports/dev-server-probe.json",
-      "sha256": "08d7fac50cbd7d56f9b0a1d229be88ef6bf33742f1c9bb698d22944507312c39"
+      "sha256": "a6373715b4a6be15a406cba4c12f901160e6a7c324208966744272959619f3d8"
     },
     {
       "path": "test/client-dom-integration.test.mjs",
@@ -71,15 +71,15 @@
     },
     {
       "path": "test/integration-loopback.test.mjs",
-      "sha256": "2ec125a38c53f8059c4ffc3d0f619e33fc37cbec971f2a2fda4a926a647ecbd1"
+      "sha256": "11d955385a5fd5b850da219833c57fbbe3baed563f726bcd0af2dcf7729e1e72"
     },
     {
       "path": "src/integration/loopback.js",
-      "sha256": "a6299d468f6bbb17b0d256f6a03807b42982c96b735abe5e0dd7986bc82d0a26"
+      "sha256": "623b5c49803baf89e23598591fce36fcae079b660b10e5e2309a5902940b873b"
     },
     {
       "path": "src/main.js",
-      "sha256": "d842936558a2a6ebb47892a5e6d341288317a3152ccb325af720522c7f9f3d0f"
+      "sha256": "0e7f3e970b09a99903b654badbd608c354d71f5580cb5c5a48bda60c9b85b191"
     }
   ]
 }

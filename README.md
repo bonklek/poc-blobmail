@@ -6,9 +6,10 @@ deterministic test recipient, packs the entry into an Ethereum-blob-shaped
 memory fixture, reconstructs and verifies it, decrypts it, and stores a bounded
 local mailbox with separate Inbox and Sent views.
 
-It does **not** broadcast, construct transactions, connect a wallet, submit a
-bundle, prove KZG, or claim chain inclusion. It remains an experimental
-protocol and architecture workspace, not a production messaging system.
+It does **not** broadcast, connect a wallet, submit a bundle, or claim chain
+inclusion. Its separate testnet tools stop at read-only replay or unsigned
+review artifacts. It remains an experimental protocol and architecture
+workspace, not a production messaging system.
 
 ## Run the first client
 
@@ -47,6 +48,18 @@ See [the Sepolia sidecar guide](./docs/sepolia-sidecar-replay.md).
 This path still has no wallet, signer, transaction construction, or submission
 surface. The one funded testnet publication remains a separate human-only
 operator action.
+
+## Unsigned Sepolia publication package
+
+```sh
+pnpm run package:sepolia:unsigned
+```
+
+This produces a deterministic one-blob review package under
+`artifacts/sepolia-unsigned-publication-v1/` with verified KZG material,
+explicit fee/exposure caps, block/time expiry, and a canonical manifest. It
+contains no signer, signature, endpoint, raw transaction, or submission
+method. See [the unsigned publication guide](./docs/sepolia-unsigned-publication.md).
 
 ## Optional read-only Sepolia probe
 

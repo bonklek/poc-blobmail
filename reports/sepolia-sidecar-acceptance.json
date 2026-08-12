@@ -97,7 +97,7 @@
     "explicitReadonlyLiveCommand": true
   },
   "tests": {
-    "total": 66,
+    "total": 76,
     "failures": 0
   },
   "safety": {
@@ -113,19 +113,19 @@
   "artifacts": [
     {
       "path": "src/sidecars/index.js",
-      "sha256": "f32aa09f6eb54295a3a27c878b98bbab757d1b53873b05859f2dda776d7ba019"
+      "sha256": "8ed6a7ad0e4ae2284743aa19482b9eb0974f5f15a827d8176753b7902ce47ec2"
     },
     {
       "path": "src/sidecars/cache.js",
-      "sha256": "53c32b5340ed2792f83ad263c11ca09944c0b8959711e6e209e45aad2dbdea53"
+      "sha256": "35dffd63dc0ee7c8f8140b328f0a5380d05b2ce59f9ecacb5ce2631104a458f2"
     },
     {
       "path": "src/sidecars/node-kzg.js",
-      "sha256": "d57c185551fd0401274164351e80e6d82b7e4084b0818df5d097ec113b822130"
+      "sha256": "3ab9495c27a8b6fd99bfd9f38dffe71cdddd3563acccf59d29b8ebb86784c319"
     },
     {
       "path": "src/sidecars/replay.js",
-      "sha256": "70e1bbe1f6de9b1f1980215a4c2975eb0c36e1155c15969f7aa6d0c1095b6632"
+      "sha256": "a1656af3b61efffe81cf40d2fc7e4199c8c5b9ac058f2bd112b76dec75ef115f"
     },
     {
       "path": "src/network/node-https.js",
@@ -133,51 +133,51 @@
     },
     {
       "path": "scripts/generate-sidecar-vectors.mjs",
-      "sha256": "55fe76a2c38f1ecdc040c995866dde7b550e11dc770911dd75e3000c25720fa2"
+      "sha256": "99516d07f36c2d221f463eebc332550f97fd30082057e32e11373a328dd363c4"
     },
     {
       "path": "scripts/generate-sidecar-replay-report.mjs",
-      "sha256": "48f69239ae59ed21ffbbd6656f88afbb7249c4c298a4f0e6614002eb8c983f76"
+      "sha256": "88d40c15c72974362c3394d0154e85325cd873999c08408a870598ab9903f184"
     },
     {
       "path": "scripts/probe-sepolia-sidecars.mjs",
-      "sha256": "a2d22d9165b7758eb1d1669c2095689e5a01b4a194afa4b778114283b5d24387"
+      "sha256": "b6bf3a966911efa9761d335d4bf3421438e778640600449b45a0776e59f7aa5f"
     },
     {
       "path": "test/sepolia-sidecar-replay.test.mjs",
-      "sha256": "2200f87590e8d231c7a766d4d6407c26df39ebdeb2213493d61868eb38450991"
+      "sha256": "c4c69b91d4f907def9ea6c537bdbdc6e26df90bfc7db0c2e9ee9d09133725bd8"
     },
     {
       "path": "test/sepolia-sidecar-receipt.test.mjs",
-      "sha256": "11a2741d61e2d8dcbe91163bcf173f8d1cfb312583c6971f81ed117873f2f4b3"
+      "sha256": "2fe4432e7caa94bca061c4f8c3efcad3abea5ceb93959a7628b54be8ce5d2ef2"
     },
     {
       "path": "docs/sepolia-sidecar-replay.md",
-      "sha256": "e744da64cc67b2cddb6047314c171a48ec0f004ea97a417a70c5338188fb6b5c"
+      "sha256": "34a86f8213d3fef428696d4e57852671731943b8670a30aeb6a2a0f9572823c4"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
-      "sha256": "73f1e0a95522d87bed84e1194d761e5d1219429b601a8284b86555734a551667"
+      "sha256": "ee6f8f1651d128f77ab16d891f0fac9713abffd44d0024dec00cd3c4e6db06f7"
     },
     {
       "path": "vectors/sepolia-sidecar-replay-v1.json",
-      "sha256": "3a6e89988568262fc1971989c6d4ddb1e2da3598509b1e592eab189fcff6fc81"
+      "sha256": "93a8b2db0edf4c45ae1497a8636b2fde36b1f09cda639ba33e10684e469a0457"
     },
     {
       "path": "reports/sepolia-sidecar-source-provenance.json",
-      "sha256": "82916126c780f8fc1be91a3db3d6b21eef5aae940b13226edc3fc6ad07eecc8f"
+      "sha256": "3fcf4ec6eb6b7e28995a45a230c0324b05cacb5e09fd41e4f459eed3575865b9"
     },
     {
       "path": "reports/sepolia-sidecar-fixture-replay.json",
-      "sha256": "ac63d245b012baba9d3d6c48a5cf16d30d01cf8dd8a5bb72f07265972b3065c2"
+      "sha256": "d940b5c6fce76de6601cd36f8202d29810b04eb56f5a975083d1957dbee30259"
     },
     {
       "path": "reports/safety-audit.json",
-      "sha256": "745df3e723828ca734e598b7444e77e53ba64d6a3e0e64787c53de3f3c184300"
+      "sha256": "2b44b5e247ee663b56d4c142cd609c140755fa1d7a05be3f8452547ef1b16cf8"
     },
     {
       "path": "reports/test-results.xml",
-      "sha256": "ba222704677c1f8f60aee9ea534abae098028bb503c41c4af4b43e9859d35a93"
+      "sha256": "4f1c0d6c8c8f8372529a3780e0a7d39f64f1c86b220a8dd8838d12b64a7c8b22"
     }
   ]
 }

@@ -74,6 +74,43 @@ for (const [check, passed] of Object.entries(renderingChecks)) {
   if (!passed) findings.push({ file: "src/client/main.js", rule: check });
 }
 
+const publicationSources = await Promise.all([
+  "src/publication/canonical-json.js",
+  "src/publication/cost.js",
+  "src/publication/package.js",
+].map((file) => readFile(file, "utf8")));
+const publicationSource = publicationSources.join("\n");
+const unsignedRequest = JSON.parse(await readFile(
+  "artifacts/sepolia-unsigned-publication-v1/unsigned-request.json",
+  "utf8",
+));
+const publicationReport = JSON.parse(await readFile("reports/sepolia-unsigned-publication.json", "utf8"));
+const forbiddenArtifactKeys = /^(?:privateKey|mnemonic|seedPhrase|keystore|signer|wallet|authorization|token|signature|rawTransaction|rpcUrl|headers|submission)$/i;
+const artifactKeyFindings = [];
+function scanArtifactKeys(value, cursor = "$") {
+  if (Array.isArray(value)) return value.forEach((item, index) => scanArtifactKeys(item, `${cursor}[${index}]`));
+  if (!value || typeof value !== "object") return;
+  for (const [key, item] of Object.entries(value)) {
+    if (forbiddenArtifactKeys.test(key)) artifactKeyFindings.push(`${cursor}.${key}`);
+    scanArtifactKeys(item, `${cursor}.${key}`);
+  }
+}
+scanArtifactKeys(unsignedRequest);
+const publicationChecks = {
+  sourceIsOffline: !/node:https|node:http|\bfetch\s*\(|process\.env|WebSocket|EventSource/.test(publicationSource),
+  noSigningOrSubmissionApi: !/createWalletClient|privateKeyToAccount|signTransaction|serializeTransaction|eth_send|sendTransaction|sendRawTransaction|sendBundle/.test(publicationSource),
+  artifactKeysClosed: artifactKeyFindings.length === 0,
+  unsignedReviewStatus: unsignedRequest.status === "UNSIGNED_REVIEW_ONLY",
+  zeroValue: unsignedRequest.value === "0x0",
+  oneBlob: unsignedRequest.blobVersionedHashes?.length === 1,
+  reportClaimsNoSecret: publicationReport.safety?.containsSecretMaterial === false,
+  reportClaimsNoSignature: publicationReport.safety?.containsSignature === false,
+  reportClaimsNoSubmission: publicationReport.safety?.containsSubmissionCapability === false,
+};
+for (const [check, passed] of Object.entries(publicationChecks)) {
+  if (!passed) findings.push({ file: "src/publication", rule: check });
+}
+
 const report = {
   schema: "blobmail.safety-audit.v1",
   scope: ROOTS,
@@ -83,11 +120,13 @@ const report = {
     "no credential-shaped literals in project source",
     "no wallet-injection access in project source",
     "no external runtime network or peer API in browser application source",
+    "unsigned publication source is offline and generated package keys exclude secret, signature, wallet, endpoint, and submission fields",
     "verification-network exceptions are the hard-coded 127.0.0.1 client probe and explicit bounded read-only Sepolia provider/sidecar probes",
   ],
   filesScanned: files.length,
   renderingChecks,
   sepoliaProbeChecks,
+  publicationChecks,
   findings,
   passed: findings.length === 0,
 };

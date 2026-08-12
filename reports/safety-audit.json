@@ -10,9 +10,10 @@
     "no credential-shaped literals in project source",
     "no wallet-injection access in project source",
     "no external runtime network or peer API in browser application source",
+    "unsigned publication source is offline and generated package keys exclude secret, signature, wallet, endpoint, and submission fields",
     "verification-network exceptions are the hard-coded 127.0.0.1 client probe and explicit bounded read-only Sepolia provider/sidecar probes"
   ],
-  "filesScanned": 37,
+  "filesScanned": 42,
   "renderingChecks": {
     "decryptedMessageUsesTextContent": true,
     "evidenceDetailUsesTextContent": true
@@ -24,6 +25,17 @@
     "noRedirectHandling": true,
     "providerProbeUsesBoundedAdapter": true,
     "sidecarProbeUsesBoundedAdapter": true
+  },
+  "publicationChecks": {
+    "sourceIsOffline": true,
+    "noSigningOrSubmissionApi": true,
+    "artifactKeysClosed": true,
+    "unsignedReviewStatus": true,
+    "zeroValue": true,
+    "oneBlob": true,
+    "reportClaimsNoSecret": true,
+    "reportClaimsNoSignature": true,
+    "reportClaimsNoSubmission": true
   },
   "findings": [],
   "passed": true

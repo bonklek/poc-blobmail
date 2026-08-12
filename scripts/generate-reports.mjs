@@ -303,6 +303,26 @@ const sidecarAcceptance = {
 };
 await writeJson(`${REPORTS}/sepolia-sidecar-acceptance.json`, sidecarAcceptance);
 
+const unsignedPublication = await readJson(`${REPORTS}/sepolia-unsigned-publication.json`);
+if (!['PASS_FIXTURE', 'PASS'].includes(unsignedPublication.result)) {
+  throw new Error('unsigned publication fixture is not green');
+}
+const unsignedAcceptanceRequired = [
+  'docs/sepolia-unsigned-publication.md',
+  'test/publication-cost.test.mjs',
+  'test/publication-package.test.mjs',
+  'test/sepolia-unsigned-publication-receipt.test.mjs',
+  'reports/safety-audit.json',
+  'reports/test-results.xml',
+];
+await writeJson(`${REPORTS}/sepolia-unsigned-publication.json`, {
+  ...unsignedPublication,
+  result: 'PASS',
+  tests: { total: testCount, failures: failureCount },
+  safetyAudit: { passed: safety.passed, findings: safety.findings.length },
+  acceptanceArtifacts: await Promise.all(unsignedAcceptanceRequired.map(artifact)),
+});
+
 console.log(JSON.stringify({
   result: "PASS",
   tests: testCount,
@@ -312,5 +332,6 @@ console.log(JSON.stringify({
     "reports/sprint-0-adversarial.json",
     "reports/sprint-0-acceptance.json",
     "reports/sepolia-sidecar-acceptance.json",
+    "reports/sepolia-unsigned-publication.json",
   ],
 }, null, 2));

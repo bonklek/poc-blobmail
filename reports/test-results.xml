@@ -41,6 +41,14 @@
 	<testcase name="exporter-tag mismatch and authenticated-open failure stay distinct" classname="test" file="test/protocol-v0.test.mjs"/>
 	<testcase name="batch rejects corrupt, duplicate, reordered, and unknown-version fixtures" classname="test" file="test/protocol-v0.test.mjs"/>
 	<testcase name="deduplication retains first verified entry" classname="test" file="test/protocol-v0.test.mjs"/>
+	<testcase name="cost envelope uses exact BigInt upper bounds and accepts equality" classname="test" file="test/publication-cost.test.mjs"/>
+	<testcase name="component, total, priority, and observed fee caps fail closed" classname="test" file="test/publication-cost.test.mjs"/>
+	<testcase name="integer parsing rejects fractions, exponents, signs, leading zeroes, and uint256 overflow" classname="test" file="test/publication-cost.test.mjs"/>
+	<testcase name="reference freshness uses inclusive boundaries and rejects stale, future, and expired observations" classname="test" file="test/publication-cost.test.mjs"/>
+	<testcase name="unsigned package generation is byte-for-byte deterministic and independently KZG verified" classname="test" file="test/publication-package.test.mjs"/>
+	<testcase name="wrong chain, reorg, secret-shaped fields, malformed batch, and absent KZG fail closed before output" classname="test" file="test/publication-package.test.mjs"/>
+	<testcase name="invalid generated KZG proof fails closed" classname="test" file="test/publication-package.test.mjs"/>
+	<testcase name="mutated blob, commitment, and proof do not verify" classname="test" file="test/publication-package.test.mjs"/>
 	<testcase name="checked-in live receipt is a redacted successful Sepolia capability observation" classname="test" file="test/sepolia-probe-receipt.test.mjs"/>
 	<testcase name="source provenance pins public eth-radio files and excludes wallet behavior" classname="test" file="test/sepolia-probe-receipt.test.mjs"/>
 	<testcase name="browser-importable network core has no ambient environment or network adapter" classname="test" file="test/sepolia-probe-receipt.test.mjs"/>
@@ -58,6 +66,8 @@
 	<testcase name="two beacon providers must agree on roots and sidecar bytes" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
 	<testcase name="bounded cache is deterministic, evicts oldest data, and never skips KZG verification" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
 	<testcase name="independent all-zero c-kzg vector has the expected point-at-infinity commitment and proof" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
+	<testcase name="unsigned publication receipt binds every artifact and contains no secret/signing surface" classname="test" file="test/sepolia-unsigned-publication-receipt.test.mjs"/>
+	<testcase name="publication implementation has no network, environment, wallet, signing, serialization, or submission import surface" classname="test" file="test/sepolia-unsigned-publication-receipt.test.mjs"/>
 	<testcase name="31-byte field-element encoding round-trips across a blob boundary" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="decoder rejects a non-zero field-element prefix" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="encoder and decoder enforce explicit bounded work" classname="test" file="test/transport-rfe.test.mjs"/>
@@ -66,9 +76,9 @@
 	<testcase name="strict sidecar selection rejects commitment mismatch, duplicates, and missing sidecars" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="reconstruction emits staged evidence only after each check succeeds" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="cache keys are deterministic, ordered, and do not depend on mutable storage" classname="test" file="test/transport-rfe.test.mjs"/>
-	<!-- tests 66 -->
+	<!-- tests 76 -->
 	<!-- suites 0 -->
-	<!-- pass 66 -->
+	<!-- pass 76 -->
 	<!-- fail 0 -->
 	<!-- cancelled 0 -->
 	<!-- skipped 0 -->
