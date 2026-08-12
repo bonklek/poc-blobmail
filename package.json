@@ -15,6 +15,7 @@
     "probe:client": "node scripts/probe-running-client.mjs",
     "probe:sepolia": "node scripts/probe-sepolia-providers.mjs",
     "probe:sidecars": "node scripts/probe-sepolia-sidecars.mjs",
+    "batcher": "node scripts/run-reference-batcher.mjs",
     "verify:milxdy": "node examples/milxdy-blobmail/tools/verify.mjs",
     "reports": "node scripts/generate-sidecar-replay-report.mjs && node scripts/generate-reports.mjs",
     "verify": "pnpm run vectors && pnpm run test:receipt && pnpm run audit:safety && pnpm run build && pnpm run build:milxdy && pnpm run verify:milxdy && pnpm run reports"

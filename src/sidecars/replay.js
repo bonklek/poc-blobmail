@@ -5,6 +5,7 @@
  */
 
 import { parseBatch } from '../protocol/index.js'
+import { decodeBlobMailBatchFromDeclaredSegment } from '../segments/index.js'
 import {
   BLOB_BYTES,
   PAYLOAD_BYTES_PER_BLOB,
@@ -92,13 +93,22 @@ function normalizeManifest(manifest) {
   if (new Set(normalizedHashes).size !== normalizedHashes.length) {
     fail('DUPLICATE_EXPECTED_HASH', 'manifest versioned hashes must be unique')
   }
-  if (!Number.isSafeInteger(manifest.payloadBytes)
+  const isDeclaredSegment = manifest.startFE !== undefined || manifest.endFE !== undefined
+  if (isDeclaredSegment) {
+    if (normalizedHashes.length !== 1) fail('INVALID_MANIFEST', 'a declared segment must identify exactly one blob')
+    if (!Number.isSafeInteger(manifest.startFE) || !Number.isSafeInteger(manifest.endFE)
+      || manifest.startFE < 0 || manifest.startFE >= manifest.endFE || manifest.endFE > 4096) {
+      fail('INVALID_MANIFEST', 'declared segment field-element range is invalid')
+    }
+  } else if (!Number.isSafeInteger(manifest.payloadBytes)
     || manifest.payloadBytes < 1
     || manifest.payloadBytes > hashes.length * PAYLOAD_BYTES_PER_BLOB) {
     fail('INVALID_MANIFEST', 'manifest payloadBytes exceeds the declared blob capacity')
   }
-  const payloadSha256 = String(manifest.payloadSha256 ?? '').toLowerCase().replace(/^0x/, '')
-  if (!/^[0-9a-f]{64}$/.test(payloadSha256)) {
+  const payloadSha256 = manifest.payloadSha256 === undefined
+    ? null
+    : String(manifest.payloadSha256).toLowerCase().replace(/^0x/, '')
+  if ((!isDeclaredSegment || payloadSha256 !== null) && !/^[0-9a-f]{64}$/.test(payloadSha256 ?? '')) {
     fail('INVALID_MANIFEST', 'manifest payloadSha256 must be a 32-byte digest')
   }
   const batchId = manifest.batchId === undefined ? null : String(manifest.batchId).toLowerCase().replace(/^0x/, '')
@@ -109,11 +119,14 @@ function normalizeManifest(manifest) {
     ? null
     : hex(manifest.expectedBeaconRoot, 32, 'expectedBeaconRoot')
   return Object.freeze({
+    kind: isDeclaredSegment ? 'declared-segment' : 'payload',
     blobVersionedHashes: Object.freeze(normalizedHashes),
-    payloadBytes: manifest.payloadBytes,
+    payloadBytes: isDeclaredSegment ? null : manifest.payloadBytes,
     payloadSha256,
     batchId,
     expectedBeaconRoot,
+    startFE: isDeclaredSegment ? manifest.startFE : null,
+    endFE: isDeclaredSegment ? manifest.endFE : null,
   })
 }
 
@@ -522,12 +535,21 @@ export async function replaySepoliaBlobTransaction({
   }))
 
   let payload
+  let batch
   try {
-    payload = decodePayloadFromBlobs(
-      matches.map(({ blob }) => blob),
-      normalizedManifest.payloadBytes,
-      { maxBlobs: SEPOLIA_SIDECAR_LIMITS.maxBlobs },
-    )
+    if (normalizedManifest.kind === 'declared-segment') {
+      batch = await decodeBlobMailBatchFromDeclaredSegment(matches[0].blob, {
+        startFE: normalizedManifest.startFE,
+        endFE: normalizedManifest.endFE,
+      })
+      payload = batch.batchBytes
+    } else {
+      payload = decodePayloadFromBlobs(
+        matches.map(({ blob }) => blob),
+        normalizedManifest.payloadBytes,
+        { maxBlobs: SEPOLIA_SIDECAR_LIMITS.maxBlobs },
+      )
+    }
   } catch {
     fail('BATCH_RECONSTRUCTION_FAILED', 'blob field elements could not be reconstructed', completedEvidence)
   }
@@ -537,16 +559,19 @@ export async function replaySepoliaBlobTransaction({
   }))
 
   const payloadSha256 = await sha256Hex(payload)
-  if (payloadSha256 !== normalizedManifest.payloadSha256) {
+  if (normalizedManifest.payloadSha256 !== null && payloadSha256 !== normalizedManifest.payloadSha256) {
     fail('PAYLOAD_SHA256_MISMATCH', 'reconstructed payload digest does not match the manifest', completedEvidence)
   }
-  completedEvidence.push(evidence(SIDECAR_EVIDENCE_STATES.PAYLOAD_SHA256_VERIFIED, { payloadSha256 }))
+  if (normalizedManifest.payloadSha256 !== null) {
+    completedEvidence.push(evidence(SIDECAR_EVIDENCE_STATES.PAYLOAD_SHA256_VERIFIED, { payloadSha256 }))
+  }
 
-  let batch
-  try {
-    batch = await parseBatch(payload)
-  } catch {
-    fail('INVALID_BLOBMAIL_BATCH', 'verified payload is not a canonical BlobMail batch', completedEvidence)
+  if (!batch) {
+    try {
+      batch = await parseBatch(payload)
+    } catch {
+      fail('INVALID_BLOBMAIL_BATCH', 'verified payload is not a canonical BlobMail batch', completedEvidence)
+    }
   }
   if (normalizedManifest.batchId && batch.batchId !== normalizedManifest.batchId) {
     fail('BATCH_ID_MISMATCH', 'parsed batch ID does not match the manifest', completedEvidence)

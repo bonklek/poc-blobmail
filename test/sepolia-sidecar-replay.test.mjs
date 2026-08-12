@@ -19,6 +19,7 @@ import {
   sha256Hex,
 } from '../src/transport/index.js'
 import { deriveIdentity, encryptText, packBatch } from '../src/protocol/index.js'
+import { createBlobMailSegment } from '../src/segments/index.js'
 
 const PROFILE = createNetworkProfile({
   BLOBMAIL_NETWORK_MODE: 'readonly',
@@ -172,6 +173,33 @@ test('replays a canonical Sepolia blob into a verified BlobMail batch', async ()
   assert.equal(result.evidence[0].details.finality, 'finalized_checkpoint_at_or_after_inclusion')
   assert.equal(result.accounting.requestCount, 10)
   assert.ok(network.calls.every(({ method }) => method === 'GET' || method === 'POST'))
+})
+
+test('replays an event-declared segment without trusting an external payload manifest', async () => {
+  const segment = createBlobMailSegment(fixture.batch.batchBytes, { startFE: 19 })
+  const sidecar = await makeSidecar(segment.blob)
+  const network = requester({ sidecars: [sidecar], transactionHashes: [sidecar.versionedHash] })
+  const result = await replaySepoliaBlobTransaction({
+    profile: PROFILE,
+    txHash: TX_HASH,
+    manifest: {
+      blobVersionedHashes: [sidecar.versionedHash],
+      startFE: segment.startFE,
+      endFE: segment.endFE,
+      expectedBeaconRoot: BEACON_ROOT,
+    },
+    requestJson: network.requestJson,
+    kzg,
+  })
+
+  assert.equal(result.batchId, fixture.batch.batchId)
+  assert.deepEqual(result.payload, fixture.batch.batchBytes)
+  assert.deepEqual(result.evidence.map(({ state }) => state), [
+    SIDECAR_EVIDENCE_STATES.BLOB_TRANSACTION_INCLUDED,
+    SIDECAR_EVIDENCE_STATES.SIDECARS_MATCHED,
+    SIDECAR_EVIDENCE_STATES.KZG_PROOF_VERIFIED,
+    SIDECAR_EVIDENCE_STATES.BATCH_RECONSTRUCTED,
+  ])
 })
 
 test('accepts reordered provider sidecars but rejects missing and duplicate matches', async () => {

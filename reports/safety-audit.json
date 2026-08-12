@@ -5,15 +5,16 @@
     "scripts"
   ],
   "guarantees": [
-    "no transaction-submission API in project source",
-    "no funded-key environment access in project source",
+    "transaction submission exists only in the isolated Node reference-batcher capability",
+    "funded-key environment access exists only in the explicit live-mode operator script",
     "no credential-shaped literals in project source",
     "no wallet-injection access in project source",
     "no external runtime network or peer API in browser application source",
     "unsigned publication source is offline and generated package keys exclude secret, signature, wallet, endpoint, and submission fields",
-    "verification-network exceptions are the hard-coded 127.0.0.1 client probe and explicit bounded read-only Sepolia provider/sidecar probes"
+    "verification-network exceptions are the hard-coded 127.0.0.1 client probe and explicit bounded read-only Sepolia provider/sidecar probes",
+    "reference batcher is offline by default, loopback-bound, fee-capped, and excluded from the browser entry graph"
   ],
-  "filesScanned": 46,
+  "filesScanned": 55,
   "renderingChecks": {
     "decryptedMessageUsesTextContent": true,
     "evidenceDetailUsesTextContent": true
@@ -36,6 +37,18 @@
     "reportClaimsNoSecret": true,
     "reportClaimsNoSignature": true,
     "reportClaimsNoSubmission": true
+  },
+  "batcherChecks": {
+    "notImportedByBrowserEntry": true,
+    "offlineByDefault": true,
+    "loopbackBindOnly": true,
+    "explicitSepoliaMode": true,
+    "pinnedContractBytecode": true,
+    "boundedFeeEnvelope": true,
+    "secretOnlyInOperatorScript": true,
+    "secretNotLogged": true,
+    "boundedRequestBody": true,
+    "explicitCorsOrigin": true
   },
   "findings": [],
   "passed": true
