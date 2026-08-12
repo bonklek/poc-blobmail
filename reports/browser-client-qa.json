@@ -25,7 +25,7 @@
       "name": "full verification",
       "command": "pnpm verify",
       "result": "pass",
-      "tests": 52,
+      "tests": 66,
       "standaloneModulesTransformed": 71,
       "milxdyModulesTransformed": 62
     },

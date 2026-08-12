@@ -44,6 +44,20 @@
 	<testcase name="checked-in live receipt is a redacted successful Sepolia capability observation" classname="test" file="test/sepolia-probe-receipt.test.mjs"/>
 	<testcase name="source provenance pins public eth-radio files and excludes wallet behavior" classname="test" file="test/sepolia-probe-receipt.test.mjs"/>
 	<testcase name="browser-importable network core has no ambient environment or network adapter" classname="test" file="test/sepolia-probe-receipt.test.mjs"/>
+	<testcase name="fixture replay receipt binds full provenance and every adversarial scenario" classname="test" file="test/sepolia-sidecar-receipt.test.mjs"/>
+	<testcase name="sidecar receipts and vectors contain no credential-shaped or signing material" classname="test" file="test/sepolia-sidecar-receipt.test.mjs"/>
+	<testcase name="replays a canonical Sepolia blob into a verified BlobMail batch" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
+	<testcase name="accepts reordered provider sidecars but rejects missing and duplicate matches" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
+	<testcase name="invalid KZG stops the evidence ladder before reconstruction" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
+	<testcase name="truncated and oversized sidecar inputs fail within explicit bounds" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
+	<testcase name="a valid proof over noncanonical field elements fails after KZG but before digest evidence" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
+	<testcase name="corrupt canonical blob bytes fail payload SHA-256 before batch parsing" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
+	<testcase name="wrong-chain and reorg observations fail before inclusion evidence" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
+	<testcase name="non-finalized inclusion stays explicit without blocking verified reconstruction" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
+	<testcase name="legacy sidecar endpoint fallback remains explicit in provenance" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
+	<testcase name="two beacon providers must agree on roots and sidecar bytes" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
+	<testcase name="bounded cache is deterministic, evicts oldest data, and never skips KZG verification" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
+	<testcase name="independent all-zero c-kzg vector has the expected point-at-infinity commitment and proof" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
 	<testcase name="31-byte field-element encoding round-trips across a blob boundary" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="decoder rejects a non-zero field-element prefix" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="encoder and decoder enforce explicit bounded work" classname="test" file="test/transport-rfe.test.mjs"/>
@@ -52,9 +66,9 @@
 	<testcase name="strict sidecar selection rejects commitment mismatch, duplicates, and missing sidecars" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="reconstruction emits staged evidence only after each check succeeds" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="cache keys are deterministic, ordered, and do not depend on mutable storage" classname="test" file="test/transport-rfe.test.mjs"/>
-	<!-- tests 52 -->
+	<!-- tests 66 -->
 	<!-- suites 0 -->
-	<!-- pass 52 -->
+	<!-- pass 66 -->
 	<!-- fail 0 -->
 	<!-- cancelled 0 -->
 	<!-- skipped 0 -->

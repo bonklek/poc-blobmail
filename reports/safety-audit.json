@@ -10,9 +10,9 @@
     "no credential-shaped literals in project source",
     "no wallet-injection access in project source",
     "no external runtime network or peer API in browser application source",
-    "verification-network exceptions are the hard-coded 127.0.0.1 client probe and the explicit bounded read-only Sepolia provider probe"
+    "verification-network exceptions are the hard-coded 127.0.0.1 client probe and explicit bounded read-only Sepolia provider/sidecar probes"
   ],
-  "filesScanned": 29,
+  "filesScanned": 37,
   "renderingChecks": {
     "decryptedMessageUsesTextContent": true,
     "evidenceDetailUsesTextContent": true
@@ -21,7 +21,9 @@
     "httpsOnly": true,
     "boundedTimeout": true,
     "boundedResponse": true,
-    "noRedirectHandling": true
+    "noRedirectHandling": true,
+    "providerProbeUsesBoundedAdapter": true,
+    "sidecarProbeUsesBoundedAdapter": true
   },
   "findings": [],
   "passed": true

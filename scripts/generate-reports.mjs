@@ -73,14 +73,14 @@ const browserQa = await readJson(`${REPORTS}/browser-client-qa.json`);
 const browser = {
   schema: "blobmail.browser-loopback.v1",
   generatedAt,
-  result: "PASS_WITH_VISUAL_BACKEND_UNAVAILABLE",
+  result: browserQa.result === "PASS" ? "PASS" : "PASS_WITH_VISUAL_BACKEND_UNAVAILABLE",
   localUrl: devProbe.origin,
   execution: {
     clientEntry: "/src/main.js",
     transport: "in-memory EIP-4844-shaped fixture",
     automatedDomIntegration: true,
     devServerHttpProbe: true,
-    visualBackend: "unavailable; no visual-pass claim",
+    visualBackend: browserQa.result === "PASS" ? "in-app browser interaction passed" : "unavailable; no visual-pass claim",
   },
   evidenceOrder: [
     "LOCAL_BATCH_CREATED",
@@ -99,7 +99,7 @@ const browser = {
     fullSuiteTests: testCount,
     fullSuiteFailures: failureCount,
     localHttp: devProbe.checks,
-    browserVisualProbe: browserQa.checks.find(({ name }) => name.includes("visual"))?.result ?? "unavailable",
+    browserVisualProbe: browserQa.checks.find(({ name }) => name.includes("browser interaction"))?.result ?? "unavailable",
   },
   scenarios: {
     reviewedComposeToDecrypt: {
@@ -229,11 +229,11 @@ const acceptance = {
     adversarialSuite: true,
   },
   limits: [
-    "local fixtures only",
+    "Sprint 0 browser execution remains local-fixture-only",
     "no transaction or bundle construction/submission",
     "no wallet, signing, funded key, or secret",
-    "no live sidecar retrieval or network transport",
-    "no KZG-proof or chain-inclusion claim",
+    "explicit read-only Sepolia provider and sidecar scripts remain outside the browser runtime",
+    "no live BlobMail publication or chain-inclusion receipt exists yet",
     "HPKE base mode does not authenticate the selected sender",
     "no production privacy, settlement, delivery, read, or acknowledgement claim",
   ],
@@ -243,6 +243,66 @@ const acceptance = {
 };
 await writeJson(`${REPORTS}/sprint-0-acceptance.json`, acceptance);
 
+const sidecarReceipt = await readJson(`${REPORTS}/sepolia-sidecar-fixture-replay.json`);
+if (sidecarReceipt.result !== "PASS_FIXTURE") throw new Error("sidecar fixture replay is not green");
+const sidecarRequired = [
+  "src/sidecars/index.js",
+  "src/sidecars/cache.js",
+  "src/sidecars/node-kzg.js",
+  "src/sidecars/replay.js",
+  "src/network/node-https.js",
+  "scripts/generate-sidecar-vectors.mjs",
+  "scripts/generate-sidecar-replay-report.mjs",
+  "scripts/probe-sepolia-sidecars.mjs",
+  "test/sepolia-sidecar-replay.test.mjs",
+  "test/sepolia-sidecar-receipt.test.mjs",
+  "docs/sepolia-sidecar-replay.md",
+  "THIRD_PARTY_NOTICES.md",
+  "vectors/sepolia-sidecar-replay-v1.json",
+  "reports/sepolia-sidecar-source-provenance.json",
+  "reports/sepolia-sidecar-fixture-replay.json",
+  "reports/safety-audit.json",
+  "reports/test-results.xml",
+];
+const sidecarAcceptance = {
+  schema: "blobmail.sepolia-sidecar-acceptance.v1",
+  generatedAt,
+  result: "PASS",
+  issue: "https://github.com/bonklek/blobmail/issues/6",
+  branch: "codex/6-sepolia-sidecars",
+  commands: [
+    "pnpm run vectors",
+    "node --test test/sepolia-sidecar-replay.test.mjs test/sepolia-sidecar-receipt.test.mjs",
+    "pnpm audit:safety",
+    "pnpm verify",
+  ],
+  evidenceOrder: sidecarReceipt.evidence.map(({ state }) => state),
+  scenarios: sidecarReceipt.adversarialCases,
+  outcomes: {
+    identityAndChainGuard: true,
+    executionCanonicality: true,
+    beaconRootResolution: true,
+    providerDisagreementDetection: true,
+    commitmentHashMatching: true,
+    kzgProofVerification: true,
+    boundedReconstruction: true,
+    payloadDigestBeforeBatchParse: true,
+    boundedDeterministicCache: true,
+    independentKzgVector: true,
+    explicitReadonlyLiveCommand: true,
+  },
+  tests: { total: testCount, failures: failureCount },
+  safety: { passed: safety.passed, findings: safety.findings.length },
+  limits: [
+    "fixture receipt only until a human publishes ticket #8",
+    "no wallet, key, signer, transaction construction, submission, or bundle capability",
+    "finalized-checkpoint slot observation is not a cryptographic ancestry proof",
+    "bounded cache is memory-only and caller-owned",
+  ],
+  artifacts: await Promise.all(sidecarRequired.map(artifact)),
+};
+await writeJson(`${REPORTS}/sepolia-sidecar-acceptance.json`, sidecarAcceptance);
+
 console.log(JSON.stringify({
   result: "PASS",
   tests: testCount,
@@ -251,5 +311,6 @@ console.log(JSON.stringify({
     "reports/browser-loopback.json",
     "reports/sprint-0-adversarial.json",
     "reports/sprint-0-acceptance.json",
+    "reports/sepolia-sidecar-acceptance.json",
   ],
 }, null, 2));

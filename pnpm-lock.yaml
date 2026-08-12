@@ -14,6 +14,9 @@ importers:
       '@hpke/dhkem-x25519':
         specifier: 1.8.0
         version: 1.8.0
+      kzg-wasm:
+        specifier: 1.0.0
+        version: 1.0.0
     devDependencies:
       happy-dom:
         specifier: 20.11.2
@@ -170,6 +173,9 @@ packages:
   happy-dom@20.11.2:
     resolution: {integrity: sha512-7MB+bJLkxu3SowAfBJbjW+c55kNz5tkR45gu2qzrxznezhLeN5YIlJbwUgSzlGc+qWoZ8Ykg71H5ezz69xixrw==}
     engines: {node: '>=20.0.0'}
+
+  kzg-wasm@1.0.0:
+    resolution: {integrity: sha512-jMvFK5uiV41BgcLrCaHbNeDeQeZdoTcqOYm7yS1Xdvl4MAykjou+SLlnt+P1bWz5C0YWHOmgUUjIpCuU83zNTA==}
 
   lightningcss-android-arm64@1.33.0:
     resolution: {integrity: sha512-gEpRTalKdosp4Bb8qWtc2iOgE5SeIHlpS1up9bFq2wAyYhl1UdTObYiHe98zEM9SQvSoqQZ1IQD0JNpg3Ml5pg==}
@@ -431,6 +437,8 @@ snapshots:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+
+  kzg-wasm@1.0.0: {}
 
   lightningcss-android-arm64@1.33.0:
     optional: true

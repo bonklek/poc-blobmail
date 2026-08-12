@@ -1,0 +1,183 @@
+{
+  "schema": "blobmail.sepolia-sidecar-acceptance.v1",
+  "generatedAt": "2026-08-10T01:29:25.019Z",
+  "result": "PASS",
+  "issue": "https://github.com/bonklek/blobmail/issues/6",
+  "branch": "codex/6-sepolia-sidecars",
+  "commands": [
+    "pnpm run vectors",
+    "node --test test/sepolia-sidecar-replay.test.mjs test/sepolia-sidecar-receipt.test.mjs",
+    "pnpm audit:safety",
+    "pnpm verify"
+  ],
+  "evidenceOrder": [
+    "BLOB_TRANSACTION_INCLUDED",
+    "SIDECARS_MATCHED",
+    "KZG_PROOF_VERIFIED",
+    "BATCH_RECONSTRUCTED",
+    "PAYLOAD_SHA256_VERIFIED"
+  ],
+  "scenarios": [
+    {
+      "name": "missing",
+      "expectedError": "MISSING_SIDECAR",
+      "completedEvidence": 1
+    },
+    {
+      "name": "duplicate",
+      "expectedError": "DUPLICATE_SIDECAR",
+      "completedEvidence": 1
+    },
+    {
+      "name": "reordered-with-unrelated",
+      "expectedResult": "PASS"
+    },
+    {
+      "name": "corrupt-canonical-bytes",
+      "expectedError": "PAYLOAD_SHA256_MISMATCH",
+      "completedEvidence": 4
+    },
+    {
+      "name": "wrong-chain",
+      "expectedError": "CHAIN_ID_MISMATCH",
+      "completedEvidence": 0
+    },
+    {
+      "name": "reorged-execution",
+      "expectedError": "REORGED_BLOCK",
+      "completedEvidence": 0
+    },
+    {
+      "name": "reorged-beacon",
+      "expectedError": "REORGED_BLOCK",
+      "completedEvidence": 0
+    },
+    {
+      "name": "non-finalized",
+      "expectedResult": "PASS",
+      "finality": "not_finalized_at_observation"
+    },
+    {
+      "name": "provider-disagreement",
+      "expectedError": "PROVIDER_DISAGREEMENT",
+      "completedEvidence": 0
+    },
+    {
+      "name": "invalid-kzg",
+      "expectedError": "INVALID_KZG_PROOF",
+      "completedEvidence": 2
+    },
+    {
+      "name": "nonzero-field-prefix",
+      "expectedError": "BATCH_RECONSTRUCTION_FAILED",
+      "completedEvidence": 3
+    },
+    {
+      "name": "truncated-sidecar",
+      "expectedError": "INVALID_SIDECARS",
+      "completedEvidence": 1
+    },
+    {
+      "name": "oversized-manifest",
+      "expectedError": "INVALID_MANIFEST",
+      "completedEvidence": 0
+    }
+  ],
+  "outcomes": {
+    "identityAndChainGuard": true,
+    "executionCanonicality": true,
+    "beaconRootResolution": true,
+    "providerDisagreementDetection": true,
+    "commitmentHashMatching": true,
+    "kzgProofVerification": true,
+    "boundedReconstruction": true,
+    "payloadDigestBeforeBatchParse": true,
+    "boundedDeterministicCache": true,
+    "independentKzgVector": true,
+    "explicitReadonlyLiveCommand": true
+  },
+  "tests": {
+    "total": 66,
+    "failures": 0
+  },
+  "safety": {
+    "passed": true,
+    "findings": 0
+  },
+  "limits": [
+    "fixture receipt only until a human publishes ticket #8",
+    "no wallet, key, signer, transaction construction, submission, or bundle capability",
+    "finalized-checkpoint slot observation is not a cryptographic ancestry proof",
+    "bounded cache is memory-only and caller-owned"
+  ],
+  "artifacts": [
+    {
+      "path": "src/sidecars/index.js",
+      "sha256": "f32aa09f6eb54295a3a27c878b98bbab757d1b53873b05859f2dda776d7ba019"
+    },
+    {
+      "path": "src/sidecars/cache.js",
+      "sha256": "53c32b5340ed2792f83ad263c11ca09944c0b8959711e6e209e45aad2dbdea53"
+    },
+    {
+      "path": "src/sidecars/node-kzg.js",
+      "sha256": "d57c185551fd0401274164351e80e6d82b7e4084b0818df5d097ec113b822130"
+    },
+    {
+      "path": "src/sidecars/replay.js",
+      "sha256": "70e1bbe1f6de9b1f1980215a4c2975eb0c36e1155c15969f7aa6d0c1095b6632"
+    },
+    {
+      "path": "src/network/node-https.js",
+      "sha256": "dcae0bab2a2fe52f0872fb56bb5182c45a70b3416c4547c38aee3370932c6be7"
+    },
+    {
+      "path": "scripts/generate-sidecar-vectors.mjs",
+      "sha256": "55fe76a2c38f1ecdc040c995866dde7b550e11dc770911dd75e3000c25720fa2"
+    },
+    {
+      "path": "scripts/generate-sidecar-replay-report.mjs",
+      "sha256": "48f69239ae59ed21ffbbd6656f88afbb7249c4c298a4f0e6614002eb8c983f76"
+    },
+    {
+      "path": "scripts/probe-sepolia-sidecars.mjs",
+      "sha256": "a2d22d9165b7758eb1d1669c2095689e5a01b4a194afa4b778114283b5d24387"
+    },
+    {
+      "path": "test/sepolia-sidecar-replay.test.mjs",
+      "sha256": "2200f87590e8d231c7a766d4d6407c26df39ebdeb2213493d61868eb38450991"
+    },
+    {
+      "path": "test/sepolia-sidecar-receipt.test.mjs",
+      "sha256": "11a2741d61e2d8dcbe91163bcf173f8d1cfb312583c6971f81ed117873f2f4b3"
+    },
+    {
+      "path": "docs/sepolia-sidecar-replay.md",
+      "sha256": "e744da64cc67b2cddb6047314c171a48ec0f004ea97a417a70c5338188fb6b5c"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "73f1e0a95522d87bed84e1194d761e5d1219429b601a8284b86555734a551667"
+    },
+    {
+      "path": "vectors/sepolia-sidecar-replay-v1.json",
+      "sha256": "3a6e89988568262fc1971989c6d4ddb1e2da3598509b1e592eab189fcff6fc81"
+    },
+    {
+      "path": "reports/sepolia-sidecar-source-provenance.json",
+      "sha256": "82916126c780f8fc1be91a3db3d6b21eef5aae940b13226edc3fc6ad07eecc8f"
+    },
+    {
+      "path": "reports/sepolia-sidecar-fixture-replay.json",
+      "sha256": "ac63d245b012baba9d3d6c48a5cf16d30d01cf8dd8a5bb72f07265972b3065c2"
+    },
+    {
+      "path": "reports/safety-audit.json",
+      "sha256": "745df3e723828ca734e598b7444e77e53ba64d6a3e0e64787c53de3f3c184300"
+    },
+    {
+      "path": "reports/test-results.xml",
+      "sha256": "ba222704677c1f8f60aee9ea534abae098028bb503c41c4af4b43e9859d35a93"
+    }
+  ]
+}

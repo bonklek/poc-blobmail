@@ -35,6 +35,19 @@ suite, performs the no-broadcast safety scan, builds both the standalone client
 and fixture-only milXdy package, runs the offline package verifier, and
 regenerates machine-readable acceptance reports.
 
+## Read-only Sepolia replay
+
+The testnet layer includes an explicit, offline-by-default Sepolia provider
+profile and a bounded sidecar replay path for already-published type-3
+transactions. The replay binds execution block and beacon-root provenance,
+matches commitment-derived versioned hashes, verifies every KZG proof, restores
+the declared payload, checks SHA-256, and only then parses the BlobMail batch.
+See [the Sepolia sidecar guide](./docs/sepolia-sidecar-replay.md).
+
+This path still has no wallet, signer, transaction construction, or submission
+surface. The one funded testnet publication remains a separate human-only
+operator action.
+
 ## Optional read-only Sepolia probe
 
 The application remains offline by default. An explicit Node-only provider

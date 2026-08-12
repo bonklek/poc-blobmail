@@ -22,16 +22,16 @@
     "adversarialSuite": true
   },
   "limits": [
-    "local fixtures only",
+    "Sprint 0 browser execution remains local-fixture-only",
     "no transaction or bundle construction/submission",
     "no wallet, signing, funded key, or secret",
-    "no live sidecar retrieval or network transport",
-    "no KZG-proof or chain-inclusion claim",
+    "explicit read-only Sepolia provider and sidecar scripts remain outside the browser runtime",
+    "no live BlobMail publication or chain-inclusion receipt exists yet",
     "HPKE base mode does not authenticate the selected sender",
     "no production privacy, settlement, delivery, read, or acknowledgement claim"
   ],
   "tests": {
-    "total": 52,
+    "total": 66,
     "failures": 0
   },
   "safety": {
@@ -41,7 +41,7 @@
   "artifacts": [
     {
       "path": "README.md",
-      "sha256": "52fa8acfcd3fbccaa90cd2dff10915b18094894ff7d3784e3d5fb68537675208"
+      "sha256": "2b4d9394dc68ba8789e98892abeeda1da81b59e0159d2bb9eb9e6c4d06d1fd75"
     },
     {
       "path": "docs/SPRINT_0_AGENT_PROMPT.md",
@@ -85,19 +85,19 @@
     },
     {
       "path": "reports/protocol-core-tests.json",
-      "sha256": "c3e3ff7c9601432114b7e30ee4183d43410cb8e6502a5be1bcf0e6b62133da34"
+      "sha256": "d730bc2e22a35467e26f3421cf9cf72289610947cd3be47633fbdae2bbe4d119"
     },
     {
       "path": "reports/browser-loopback.json",
-      "sha256": "e0425e5829cf6e5324488095be56213a3ba7ae8bd683985795c601663f29bfcc"
+      "sha256": "d80f8ced81304edb1927f06cbcc250a8fb13ac9b91736fbf5fddf683828cabd2"
     },
     {
       "path": "reports/sprint-0-adversarial.json",
-      "sha256": "a52ade98e9611819684695e5a52c599c4f86136a9a5590521e5a7fa97f2bc4a1"
+      "sha256": "58e46f2a5432d18da6adef0067531ef708539ff6e84485a8de1e6fce7a5f1cfe"
     },
     {
       "path": "reports/safety-audit.json",
-      "sha256": "cb33b632686ecc008b30cb4ca91d06a559d1487d56fcea21bdf8d28d73fa79aa"
+      "sha256": "745df3e723828ca734e598b7444e77e53ba64d6a3e0e64787c53de3f3c184300"
     },
     {
       "path": "reports/dev-server-probe.json",
