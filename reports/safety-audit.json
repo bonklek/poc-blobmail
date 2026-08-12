@@ -13,7 +13,7 @@
     "unsigned publication source is offline and generated package keys exclude secret, signature, wallet, endpoint, and submission fields",
     "verification-network exceptions are the hard-coded 127.0.0.1 client probe and explicit bounded read-only Sepolia provider/sidecar probes"
   ],
-  "filesScanned": 42,
+  "filesScanned": 46,
   "renderingChecks": {
     "decryptedMessageUsesTextContent": true,
     "evidenceDetailUsesTextContent": true

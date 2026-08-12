@@ -6,6 +6,7 @@ Start here:
 
 - [Master architecture](./master-architecture.md)
 - [Position on ERC-8179 and ERC-8180](./erc-8179-8180-position.md)
+- [Identity and `.eth` / `.gwei` resolution](./identity-resolution.md)
 - [Read-only Sepolia provider profile](./sepolia-provider-profile.md)
 - [Sepolia sidecar replay](./sepolia-sidecar-replay.md)
 - [Unsigned Sepolia publication package](./sepolia-unsigned-publication.md)

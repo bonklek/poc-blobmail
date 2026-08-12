@@ -22,7 +22,8 @@
   "dependencies": {
     "@hpke/core": "1.9.0",
     "@hpke/dhkem-x25519": "1.8.0",
-    "kzg-wasm": "1.0.0"
+    "kzg-wasm": "1.0.0",
+    "viem": "2.55.13"
   },
   "devDependencies": {
     "happy-dom": "20.11.2",
