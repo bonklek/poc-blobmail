@@ -19,6 +19,7 @@ export const SEPOLIA_PROBE_LIMITS = Object.freeze({
 export const DEFAULT_SEPOLIA_PROVIDER_HOSTS = Object.freeze([
   'sepolia.drpc.org',
   'ethereum-sepolia-rpc.publicnode.com',
+  'lodestar-sepolia.chainsafe.io',
   'ethereum-sepolia-beacon-api.publicnode.com',
 ])
 

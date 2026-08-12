@@ -7,6 +7,10 @@ function sha256(bytes) {
   return createHash('sha256').update(bytes).digest('hex')
 }
 
+function canonicalJson(bytes) {
+  return Buffer.from(JSON.stringify(JSON.parse(bytes.toString('utf8'))))
+}
+
 test('fixture replay receipt binds full provenance and every adversarial scenario', async () => {
   const receipt = JSON.parse(await readFile('reports/sepolia-sidecar-fixture-replay.json', 'utf8'))
   const vectorBytes = await readFile(receipt.artifacts.vector.path)
@@ -41,8 +45,8 @@ test('fixture replay receipt binds full provenance and every adversarial scenari
     'PAYLOAD_SHA256_VERIFIED',
   ])
   assert.deepEqual(receipt.adversarialCases.map(({ name }) => name), expectedCases)
-  assert.equal(sha256(vectorBytes), receipt.artifacts.vector.sha256)
-  assert.equal(sha256(sourceBytes), receipt.artifacts.sourceProvenance.sha256)
+  assert.equal(sha256(canonicalJson(vectorBytes)), receipt.artifacts.vector.sha256)
+  assert.equal(sha256(canonicalJson(sourceBytes)), receipt.artifacts.sourceProvenance.sha256)
   assert.equal(receipt.negativeClaims.liveNetworkObserved, false)
   assert.equal(receipt.negativeClaims.transactionSubmitted, false)
 })

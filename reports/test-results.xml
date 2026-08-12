@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <testsuites>
+	<testcase name="HTTP batcher accepts canonical encrypted entries and exposes status without ciphertext" classname="test" file="test/batcher-http.test.mjs"/>
+	<testcase name="HTTP batcher rejects foreign origins, invalid media, oversized bodies, and unknown paths" classname="test" file="test/batcher-http.test.mjs"/>
+	<testcase name="publisher forwards one blob and exact BSS calldata under explicit fee caps" classname="test" file="test/batcher-publisher.test.mjs"/>
+	<testcase name="publisher records confirmed inclusion only after a successful receipt" classname="test" file="test/batcher-publisher.test.mjs"/>
+	<testcase name="publisher rejects missing clients and inconsistent fee caps before signing" classname="test" file="test/batcher-publisher.test.mjs"/>
+	<testcase name="viem adapter serializes a real signed EIP-4844 transaction with kzg-wasm" classname="test" file="test/batcher-publisher.test.mjs"/>
+	<testcase name="reference batcher deduplicates canonical entries and exposes bounded public status" classname="test" file="test/batcher-service.test.mjs"/>
+	<testcase name="reference batcher fails closed for malformed, expired, unknown, and failed jobs" classname="test" file="test/batcher-service.test.mjs"/>
 	<testcase name="verified adapter preserves decrypted bytes and normalizes evidence" classname="test" file="test/client-adapter.test.mjs"/>
 	<testcase name="verified adapter rejects missing or reordered proof states" classname="test" file="test/client-adapter.test.mjs"/>
 	<testcase name="adapter rejects non-byte plaintext and invalid decrypted UTF-8" classname="test" file="test/client-adapter.test.mjs"/>
@@ -14,6 +22,16 @@
 	<testcase name="malformed, oversized, and unknown-version state fail closed" classname="test" file="test/client-storage.test.mjs"/>
 	<testcase name="serialization drops inbox if total state crosses the 32 KiB ceiling" classname="test" file="test/client-storage.test.mjs"/>
 	<testcase name="clear removes only the BlobMail client key" classname="test" file="test/client-storage.test.mjs"/>
+	<testcase name="contact codes are deterministic, checksummed, and round trip X25519 keys" classname="test" file="test/identity-contact.test.mjs"/>
+	<testcase name="contact parser rejects mutation, alternate encoding, whitespace, and unknown versions" classname="test" file="test/identity-contact.test.mjs"/>
+	<testcase name="raw, .eth, and .gwei recipients resolve to the same contact record with evidence" classname="test" file="test/identity-contact.test.mjs"/>
+	<testcase name="name resolution fails closed on missing, malformed, and unsupported records" classname="test" file="test/identity-contact.test.mjs"/>
+	<testcase name="Ethereum reader verifies chain context and resolves ENS and GNS text records" classname="test" file="test/identity-ethereum-resolver.test.mjs"/>
+	<testcase name="Ethereum reader rejects wrong chains before accepting record data" classname="test" file="test/identity-ethereum-resolver.test.mjs"/>
+	<testcase name="identity vault creates, encrypts, unlocks, and restores contacts" classname="test" file="test/identity-vault.test.mjs"/>
+	<testcase name="identity vault rejects wrong passphrases, ciphertext mutation, and weak passphrases" classname="test" file="test/identity-vault.test.mjs"/>
+	<testcase name="identity vault rejects mismatched keypairs after authenticated decryption" classname="test" file="test/identity-vault.test.mjs"/>
+	<testcase name="unlocked session reseals inbox, outbox, and reorg cursor without plaintext storage" classname="test" file="test/identity-vault.test.mjs"/>
 	<testcase name="independent verifier checks padded-text encoding without the primary encoder" classname="test" file="test/independent-vectors.test.mjs"/>
 	<testcase name="independent verifier checks entry offsets and commitment" classname="test" file="test/independent-vectors.test.mjs"/>
 	<testcase name="independent verifier checks batch framing and commitment" classname="test" file="test/independent-vectors.test.mjs"/>
@@ -21,6 +39,8 @@
 	<testcase name="verified local loopback encrypts, blob-packs, reconstructs, scans, and decrypts" classname="test" file="test/integration-loopback.test.mjs"/>
 	<testcase name="deterministic test identities are stable and distinct" classname="test" file="test/integration-loopback.test.mjs"/>
 	<testcase name="loopback rejects invalid identity routing and invalid UTF-8" classname="test" file="test/integration-loopback.test.mjs"/>
+	<testcase name="mailbox refresh scans verified batches, deduplicates entries, and advances atomically" classname="test" file="test/mailbox-receiver.test.mjs"/>
+	<testcase name="mailbox cursor does not escape when a discovered sidecar fails verification" classname="test" file="test/mailbox-receiver.test.mjs"/>
 	<testcase name="probe verifies both identities before bounded independent capability checks" classname="test" file="test/network-probe.test.mjs"/>
 	<testcase name="chain mismatch stops after the two identity requests and emits no capability claim" classname="test" file="test/network-probe.test.mjs"/>
 	<testcase name="unsupported blob endpoints are reported as an independent capability gap" classname="test" file="test/network-probe.test.mjs"/>
@@ -49,12 +69,27 @@
 	<testcase name="wrong chain, reorg, secret-shaped fields, malformed batch, and absent KZG fail closed before output" classname="test" file="test/publication-package.test.mjs"/>
 	<testcase name="invalid generated KZG proof fails closed" classname="test" file="test/publication-package.test.mjs"/>
 	<testcase name="mutated blob, commitment, and proof do not verify" classname="test" file="test/publication-package.test.mjs"/>
+	<testcase name="discovery uses a bounded pinned filter and returns a reorg anchor" classname="test" file="test/segment-discovery.test.mjs"/>
+	<testcase name="discovery rejects a changed anchor before requesting logs" classname="test" file="test/segment-discovery.test.mjs"/>
+	<testcase name="discovery does not scan unconfirmed blocks" classname="test" file="test/segment-discovery.test.mjs"/>
+	<testcase name="segment profile packs a canonical batch at a nonzero FE offset and preserves neighbors" classname="test" file="test/segment-profile.test.mjs"/>
+	<testcase name="segment declaration calldata binds the exact canonical range and content tag" classname="test" file="test/segment-profile.test.mjs"/>
+	<testcase name="event parser accepts only the pinned contract, content tag, and valid range" classname="test" file="test/segment-profile.test.mjs"/>
+	<testcase name="segment manifests reject spare claimed field elements and overflow" classname="test" file="test/segment-profile.test.mjs"/>
+	<testcase name="declared-segment batch discovery rejects nonzero bytes after the self-described batch" classname="test" file="test/segment-profile.test.mjs"/>
+	<testcase name="segment publication package binds encrypted entries to KZG, FE range, and BSS calldata" classname="test" file="test/segment-publication-package.test.mjs"/>
+	<testcase name="segment publication package rejects malformed entries and missing KZG" classname="test" file="test/segment-publication-package.test.mjs"/>
+	<testcase name="sender resolves a raw contact, encrypts locally, and waits for inclusion" classname="test" file="test/sending-client.test.mjs"/>
+	<testcase name="sender uses the same resolver path for .eth and .gwei records" classname="test" file="test/sending-client.test.mjs"/>
+	<testcase name="HTTP batcher client accepts HTTPS and loopback HTTP but rejects unsafe origins" classname="test" file="test/sending-client.test.mjs"/>
+	<testcase name="checked-in live MVP receipt binds publication, discovery, KZG, and recipient decryption" classname="test" file="test/sepolia-mvp-live-acceptance.test.mjs"/>
 	<testcase name="checked-in live receipt is a redacted successful Sepolia capability observation" classname="test" file="test/sepolia-probe-receipt.test.mjs"/>
 	<testcase name="source provenance pins public eth-radio files and excludes wallet behavior" classname="test" file="test/sepolia-probe-receipt.test.mjs"/>
 	<testcase name="browser-importable network core has no ambient environment or network adapter" classname="test" file="test/sepolia-probe-receipt.test.mjs"/>
 	<testcase name="fixture replay receipt binds full provenance and every adversarial scenario" classname="test" file="test/sepolia-sidecar-receipt.test.mjs"/>
 	<testcase name="sidecar receipts and vectors contain no credential-shaped or signing material" classname="test" file="test/sepolia-sidecar-receipt.test.mjs"/>
 	<testcase name="replays a canonical Sepolia blob into a verified BlobMail batch" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
+	<testcase name="replays an event-declared segment without trusting an external payload manifest" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
 	<testcase name="accepts reordered provider sidecars but rejects missing and duplicate matches" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
 	<testcase name="invalid KZG stops the evidence ladder before reconstruction" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
 	<testcase name="truncated and oversized sidecar inputs fail within explicit bounds" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
@@ -63,6 +98,7 @@
 	<testcase name="wrong-chain and reorg observations fail before inclusion evidence" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
 	<testcase name="non-finalized inclusion stays explicit without blocking verified reconstruction" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
 	<testcase name="legacy sidecar endpoint fallback remains explicit in provenance" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
+	<testcase name="blobs-only current endpoint falls back to proof-bearing legacy sidecars" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
 	<testcase name="two beacon providers must agree on roots and sidecar bytes" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
 	<testcase name="bounded cache is deterministic, evicts oldest data, and never skips KZG verification" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
 	<testcase name="independent all-zero c-kzg vector has the expected point-at-infinity commitment and proof" classname="test" file="test/sepolia-sidecar-replay.test.mjs"/>
@@ -70,15 +106,17 @@
 	<testcase name="publication implementation has no network, environment, wallet, signing, serialization, or submission import surface" classname="test" file="test/sepolia-unsigned-publication-receipt.test.mjs"/>
 	<testcase name="31-byte field-element encoding round-trips across a blob boundary" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="decoder rejects a non-zero field-element prefix" classname="test" file="test/transport-rfe.test.mjs"/>
+	<testcase name="ERC-8179-style segment encoding preserves unrelated field elements" classname="test" file="test/transport-rfe.test.mjs"/>
+	<testcase name="segment decoding rejects invalid ranges, excess payload, and non-canonical padding" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="encoder and decoder enforce explicit bounded work" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="commitment-to-versioned-hash matches a fixed fixture vector" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="strict sidecar selection derives hashes, verifies supplied hashes, and restores manifest order" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="strict sidecar selection rejects commitment mismatch, duplicates, and missing sidecars" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="reconstruction emits staged evidence only after each check succeeds" classname="test" file="test/transport-rfe.test.mjs"/>
 	<testcase name="cache keys are deterministic, ordered, and do not depend on mutable storage" classname="test" file="test/transport-rfe.test.mjs"/>
-	<!-- tests 76 -->
+	<!-- tests 114 -->
 	<!-- suites 0 -->
-	<!-- pass 76 -->
+	<!-- pass 114 -->
 	<!-- fail 0 -->
 	<!-- cancelled 0 -->
 	<!-- skipped 0 -->

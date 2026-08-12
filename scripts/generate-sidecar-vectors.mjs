@@ -11,6 +11,7 @@ import {
 } from '../src/transport/index.js'
 
 const OUTPUT = 'vectors/sepolia-sidecar-replay-v1.json'
+const canonicalJson = (bytes) => Buffer.from(JSON.stringify(JSON.parse(bytes.toString('utf8'))))
 const kzg = await loadNodeKzg()
 const recipient = await deriveIdentity(new Uint8Array(32).fill(2))
 const encrypted = await encryptText({
@@ -77,7 +78,7 @@ const vector = {
   },
   provenance: {
     sourceReport: 'reports/sepolia-sidecar-source-provenance.json',
-    sourceReportSha256: createHash('sha256').update(provenanceBytes).digest('hex'),
+    sourceReportSha256: createHash('sha256').update(canonicalJson(provenanceBytes)).digest('hex'),
     executableTest: 'test/sepolia-sidecar-replay.test.mjs',
   },
 }

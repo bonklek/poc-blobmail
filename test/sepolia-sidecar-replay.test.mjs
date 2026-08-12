@@ -19,6 +19,7 @@ import {
   sha256Hex,
 } from '../src/transport/index.js'
 import { deriveIdentity, encryptText, packBatch } from '../src/protocol/index.js'
+import { createBlobMailSegment } from '../src/segments/index.js'
 
 const PROFILE = createNetworkProfile({
   BLOBMAIL_NETWORK_MODE: 'readonly',
@@ -60,6 +61,7 @@ function requester({
   sidecars = fixture.sidecars,
   transactionHashes = fixture.manifest.blobVersionedHashes,
   currentStatus = 200,
+  currentData = sidecars,
 } = {}) {
   const calls = []
   const requestJson = async (spec) => {
@@ -107,7 +109,7 @@ function requester({
       case '/eth/v1/beacon/headers/finalized':
         return beacon({ header: { message: { slot: String(finalizedSlot) } } })
       case `/eth/v1/beacon/blobs/${beaconRoot}`:
-        return currentStatus === 200 ? beacon(sidecars) : { statusCode: currentStatus, body: { code: currentStatus } }
+        return currentStatus === 200 ? beacon(currentData) : { statusCode: currentStatus, body: { code: currentStatus } }
       case `/eth/v1/beacon/blob_sidecars/${beaconRoot}`:
         return beacon(sidecars)
       default: throw new Error(`unexpected beacon path ${spec.url.pathname}`)
@@ -172,6 +174,33 @@ test('replays a canonical Sepolia blob into a verified BlobMail batch', async ()
   assert.equal(result.evidence[0].details.finality, 'finalized_checkpoint_at_or_after_inclusion')
   assert.equal(result.accounting.requestCount, 10)
   assert.ok(network.calls.every(({ method }) => method === 'GET' || method === 'POST'))
+})
+
+test('replays an event-declared segment without trusting an external payload manifest', async () => {
+  const segment = createBlobMailSegment(fixture.batch.batchBytes, { startFE: 19 })
+  const sidecar = await makeSidecar(segment.blob)
+  const network = requester({ sidecars: [sidecar], transactionHashes: [sidecar.versionedHash] })
+  const result = await replaySepoliaBlobTransaction({
+    profile: PROFILE,
+    txHash: TX_HASH,
+    manifest: {
+      blobVersionedHashes: [sidecar.versionedHash],
+      startFE: segment.startFE,
+      endFE: segment.endFE,
+      expectedBeaconRoot: BEACON_ROOT,
+    },
+    requestJson: network.requestJson,
+    kzg,
+  })
+
+  assert.equal(result.batchId, fixture.batch.batchId)
+  assert.deepEqual(result.payload, fixture.batch.batchBytes)
+  assert.deepEqual(result.evidence.map(({ state }) => state), [
+    SIDECAR_EVIDENCE_STATES.BLOB_TRANSACTION_INCLUDED,
+    SIDECAR_EVIDENCE_STATES.SIDECARS_MATCHED,
+    SIDECAR_EVIDENCE_STATES.KZG_PROOF_VERIFIED,
+    SIDECAR_EVIDENCE_STATES.BATCH_RECONSTRUCTED,
+  ])
 })
 
 test('accepts reordered provider sidecars but rejects missing and duplicate matches', async () => {
@@ -346,6 +375,19 @@ test('legacy sidecar endpoint fallback remains explicit in provenance', async ()
     kzg,
   })
   assert.deepEqual(result.provenance.endpoints, ['legacy'])
+  assert.equal(result.accounting.requestCount, 11)
+})
+
+test('blobs-only current endpoint falls back to proof-bearing legacy sidecars', async () => {
+  const network = requester({ currentData: fixture.sidecars.map(({ blob }) => blob) })
+  const result = await replaySepoliaBlobTransaction({
+    profile: PROFILE,
+    txHash: TX_HASH,
+    manifest: fixture.manifest,
+    requestJson: network.requestJson,
+    kzg,
+  })
+  assert.deepEqual(result.provenance.endpoints, ['legacy_after_blobs_only'])
   assert.equal(result.accounting.requestCount, 11)
 })
 

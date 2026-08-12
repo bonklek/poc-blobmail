@@ -1,6 +1,6 @@
 {
   "schema": "blobmail.sprint-0-acceptance.v1",
-  "generatedAt": "2026-08-10T01:29:25.019Z",
+  "generatedAt": "2026-08-12T20:01:26.416Z",
   "result": "PASS",
   "issue": "https://github.com/bonklek/blobmail/issues/3",
   "branch": "codex/3-blobmail-loopback",
@@ -31,7 +31,7 @@
     "no production privacy, settlement, delivery, read, or acknowledgement claim"
   ],
   "tests": {
-    "total": 76,
+    "total": 114,
     "failures": 0
   },
   "safety": {
@@ -41,7 +41,7 @@
   "artifacts": [
     {
       "path": "README.md",
-      "sha256": "d62f7ee6fe05e44ea1d87d270273e2809acac74bf2e8a75bd8210ead5191d4c5"
+      "sha256": "3a5ef84229bec3f661b7486f1caae86a13b8dea7a36d09ed2d04ed7104b91364"
     },
     {
       "path": "docs/SPRINT_0_AGENT_PROMPT.md",
@@ -85,27 +85,27 @@
     },
     {
       "path": "reports/protocol-core-tests.json",
-      "sha256": "2a3e90b5cfae035839d6551704a769f9afb2d6dd7f5f9b8705d3a722f974a23a"
+      "sha256": "fc2c6bc4d77ba31b916ef3c3b5b05b0186def45ca838ccbd46a4ae6bf8605bb0"
     },
     {
       "path": "reports/browser-loopback.json",
-      "sha256": "ed5426455ae5a065270662ab49ee96ad2d3d01743ab5fa35899468000a2e4da8"
+      "sha256": "669e871cfc7b9345eb2e8e351d9eb7ebd45afba21e12b9352be7f415c35ce92f"
     },
     {
       "path": "reports/sprint-0-adversarial.json",
-      "sha256": "a2390353aec160d286b1b67238094873ba89bcf28b1cb158d8a948b3a5142387"
+      "sha256": "b0deae2c4f159950c47da4ff1af6b21d678763e376b72e05cf60c603d51c8f20"
     },
     {
       "path": "reports/safety-audit.json",
-      "sha256": "2b44b5e247ee663b56d4c142cd609c140755fa1d7a05be3f8452547ef1b16cf8"
+      "sha256": "5dc644e4cc569bc90c383938f6276f540e2d04e051963b4118cd1774e6111825"
     },
     {
       "path": "reports/dev-server-probe.json",
-      "sha256": "a6373715b4a6be15a406cba4c12f901160e6a7c324208966744272959619f3d8"
+      "sha256": "b8060802040fa2f9f989969333d50851f850ed4283e692b115af20465f1cd7b5"
     },
     {
       "path": "dist/index.html",
-      "sha256": "41c2e4b9d651e2aa6b4e75d40aea2e7062f95543bc4dfbaa1d0f7fbeba2e2c48"
+      "sha256": "95d9591b998f6139fe26a755d3351f8398e1062f595d58535e2297ff1cc1856a"
     },
     {
       "path": "reports/milxdy-package-verification.json",

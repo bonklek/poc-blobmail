@@ -137,11 +137,11 @@
   "artifacts": {
     "vector": {
       "path": "vectors/sepolia-sidecar-replay-v1.json",
-      "sha256": "93a8b2db0edf4c45ae1497a8636b2fde36b1f09cda639ba33e10684e469a0457"
+      "sha256": "7a4d96e37009b459f9978785ba891d4851ddff2b8d62d6a158b87a386453a889"
     },
     "sourceProvenance": {
       "path": "reports/sepolia-sidecar-source-provenance.json",
-      "sha256": "3fcf4ec6eb6b7e28995a45a230c0324b05cacb5e09fd41e4f459eed3575865b9"
+      "sha256": "570392fefd1ed480c68048c4a1f971cef233163827c7d7c237058e305862ee0c"
     }
   },
   "negativeClaims": {

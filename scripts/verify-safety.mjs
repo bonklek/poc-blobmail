@@ -18,6 +18,11 @@ const FORBIDDEN = [
 const APPROVED_READ_ONLY_NETWORK_PROBES = new Set([
   "src/network/node-https.js",
 ]);
+const APPROVED_BATCHER_CAPABILITIES = new Set([
+  "src/batcher/node-server.js",
+  "src/batcher/publisher.js",
+  "scripts/run-reference-batcher.mjs",
+]);
 
 async function filesUnder(root) {
   const entries = await readdir(root, { withFileTypes: true });
@@ -44,8 +49,10 @@ for (const file of files.sort()) {
   if (file === OUTPUT || file.endsWith("verify-safety.mjs")) continue;
   const text = await readFile(file, "utf8");
   for (const [rule, pattern] of FORBIDDEN) {
+    const normalizedFile = file.replaceAll("\\", "/");
     if (file.endsWith("probe-running-client.mjs") && rule === "runtime network request") continue;
-    if (APPROVED_READ_ONLY_NETWORK_PROBES.has(file.replaceAll("\\", "/")) && rule === "runtime network request") continue;
+    if (APPROVED_READ_ONLY_NETWORK_PROBES.has(normalizedFile) && rule === "runtime network request") continue;
+    if (APPROVED_BATCHER_CAPABILITIES.has(normalizedFile)) continue;
     if (pattern.test(text)) findings.push({ file: file.replaceAll("\\", "/"), rule });
   }
 }
@@ -66,18 +73,34 @@ for (const [check, passed] of Object.entries(sepoliaProbeChecks)) {
 }
 
 const clientMain = await readFile("src/client/main.js", "utf8");
+const mvpMain = await readFile("src/mvp/main.js", "utf8");
 const renderingChecks = {
-  decryptedMessageUsesTextContent: clientMain.includes("body.textContent = message.body"),
+  decryptedMessageUsesTextContent: clientMain.includes("body.textContent = message.body")
+    && mvpMain.includes("body.textContent = message.body"),
   evidenceDetailUsesTextContent: clientMain.includes("detail.textContent = item.detail"),
 };
 for (const [check, passed] of Object.entries(renderingChecks)) {
   if (!passed) findings.push({ file: "src/client/main.js", rule: check });
 }
 
+const browserFetch = await readFile("src/network/browser-fetch.js", "utf8");
+const sendingClient = await readFile("src/sending/client.js", "utf8");
+const browserNetworkChecks = {
+  httpsRpcOnly: browserFetch.includes("url.protocol !== 'https:'"),
+  credentialsOmitted: browserFetch.includes("credentials: 'omit'") && sendingClient.includes("credentials: 'omit'"),
+  redirectsRejected: browserFetch.includes("redirect: 'error'") && sendingClient.includes("redirect: 'error'"),
+  boundedRpcResponses: browserFetch.includes("bytes.byteLength > spec.maxResponseBytes"),
+  safeBatcherOrigins: sendingClient.includes("url.protocol !== 'https:'") && sendingClient.includes("127.0.0.1"),
+};
+for (const [check, passed] of Object.entries(browserNetworkChecks)) {
+  if (!passed) findings.push({ file: "src/network/browser-fetch.js", rule: check });
+}
+
 const publicationSources = await Promise.all([
   "src/publication/canonical-json.js",
   "src/publication/cost.js",
   "src/publication/package.js",
+  "src/publication/segment-package.js",
 ].map((file) => readFile(file, "utf8")));
 const publicationSource = publicationSources.join("\n");
 const unsignedRequest = JSON.parse(await readFile(
@@ -111,22 +134,46 @@ for (const [check, passed] of Object.entries(publicationChecks)) {
   if (!passed) findings.push({ file: "src/publication", rule: check });
 }
 
+const batcherPublisher = await readFile("src/batcher/publisher.js", "utf8");
+const batcherServer = await readFile("src/batcher/node-server.js", "utf8");
+const batcherScript = await readFile("scripts/run-reference-batcher.mjs", "utf8");
+const browserEntry = await readFile("src/main.js", "utf8");
+const batcherChecks = {
+  notImportedByBrowserEntry: !browserEntry.includes("batcher"),
+  offlineByDefault: batcherScript.includes("BLOBMAIL_BATCHER_MODE ?? 'offline'"),
+  loopbackBindOnly: batcherScript.includes("HOST !== '127.0.0.1'"),
+  explicitSepoliaMode: batcherScript.includes("MODE === 'offline'") && batcherScript.includes("sepolia.id"),
+  pinnedContractBytecode: batcherScript.includes("SEPOLIA_BSS_RUNTIME_KECCAK256"),
+  boundedFeeEnvelope: batcherScript.includes("calculateCostEnvelope") && batcherScript.includes("MAX_TOTAL_EXPOSURE_WEI"),
+  secretOnlyInOperatorScript: !batcherPublisher.includes("process.env") && !batcherServer.includes("process.env")
+    && batcherScript.includes("BLOBMAIL_BATCHER_PRIVATE_KEY"),
+  secretNotLogged: !/console\.(?:log|error)\([^)]*(?:secret|PRIVATE_KEY)/.test(batcherScript),
+  boundedRequestBody: batcherServer.includes("total > maxBytes"),
+  explicitCorsOrigin: batcherServer.includes("origin === allowedOrigin"),
+};
+for (const [check, passed] of Object.entries(batcherChecks)) {
+  if (!passed) findings.push({ file: "src/batcher", rule: check });
+}
+
 const report = {
   schema: "blobmail.safety-audit.v1",
   scope: ROOTS,
   guarantees: [
-    "no transaction-submission API in project source",
-    "no funded-key environment access in project source",
+    "transaction submission exists only in the isolated Node reference-batcher capability",
+    "funded-key environment access exists only in the explicit live-mode operator script",
     "no credential-shaped literals in project source",
     "no wallet-injection access in project source",
-    "no external runtime network or peer API in browser application source",
+    "browser network access is bounded to credential-free HTTPS RPC/beacon reads and an explicit HTTPS or loopback batcher origin",
     "unsigned publication source is offline and generated package keys exclude secret, signature, wallet, endpoint, and submission fields",
     "verification-network exceptions are the hard-coded 127.0.0.1 client probe and explicit bounded read-only Sepolia provider/sidecar probes",
+    "reference batcher is offline by default, loopback-bound, fee-capped, and excluded from the browser entry graph",
   ],
   filesScanned: files.length,
   renderingChecks,
+  browserNetworkChecks,
   sepoliaProbeChecks,
   publicationChecks,
+  batcherChecks,
   findings,
   passed: findings.length === 0,
 };

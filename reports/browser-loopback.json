@@ -1,6 +1,6 @@
 {
   "schema": "blobmail.browser-loopback.v1",
-  "generatedAt": "2026-08-10T01:29:25.019Z",
+  "generatedAt": "2026-08-12T20:01:26.416Z",
   "result": "PASS",
   "localUrl": "http://127.0.0.1:5173",
   "execution": {
@@ -24,13 +24,13 @@
     "senderAuthenticated": false
   },
   "checks": {
-    "fullSuiteTests": 76,
+    "fullSuiteTests": 114,
     "fullSuiteFailures": 0,
     "localHttp": {
       "rootHttp200": true,
       "entryHttp200": true,
       "appRootPresent": true,
-      "verifiedEntryPresent": true
+      "mvpEntryPresent": true
     },
     "browserVisualProbe": "pass"
   },
@@ -59,11 +59,11 @@
   "artifacts": [
     {
       "path": "reports/test-results.xml",
-      "sha256": "4f1c0d6c8c8f8372529a3780e0a7d39f64f1c86b220a8dd8838d12b64a7c8b22"
+      "sha256": "ae25742d89e57eff28f7cfdd5d13b2d8712063593f607039506cfedd5f797163"
     },
     {
       "path": "reports/dev-server-probe.json",
-      "sha256": "a6373715b4a6be15a406cba4c12f901160e6a7c324208966744272959619f3d8"
+      "sha256": "b8060802040fa2f9f989969333d50851f850ed4283e692b115af20465f1cd7b5"
     },
     {
       "path": "test/client-dom-integration.test.mjs",
@@ -79,7 +79,7 @@
     },
     {
       "path": "src/main.js",
-      "sha256": "0e7f3e970b09a99903b654badbd608c354d71f5580cb5c5a48bda60c9b85b191"
+      "sha256": "5f8d3bbfd0e17e91ea4b6813f94afbc2c0d48517660d9c4e30368bd78884f22d"
     }
   ]
 }
