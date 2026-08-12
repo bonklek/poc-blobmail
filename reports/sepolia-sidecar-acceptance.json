@@ -1,6 +1,6 @@
 {
   "schema": "blobmail.sepolia-sidecar-acceptance.v1",
-  "generatedAt": "2026-08-10T01:29:25.019Z",
+  "generatedAt": "2026-08-12T20:01:26.416Z",
   "result": "PASS",
   "issue": "https://github.com/bonklek/blobmail/issues/6",
   "branch": "codex/6-sepolia-sidecars",
@@ -97,7 +97,7 @@
     "explicitReadonlyLiveCommand": true
   },
   "tests": {
-    "total": 76,
+    "total": 114,
     "failures": 0
   },
   "safety": {
@@ -125,7 +125,7 @@
     },
     {
       "path": "src/sidecars/replay.js",
-      "sha256": "a1656af3b61efffe81cf40d2fc7e4199c8c5b9ac058f2bd112b76dec75ef115f"
+      "sha256": "0fa29c140b8dc4eb7609724e578c2fc5a263f6f3ea8a4ff96f8233a292485652"
     },
     {
       "path": "src/network/node-https.js",
@@ -145,7 +145,7 @@
     },
     {
       "path": "test/sepolia-sidecar-replay.test.mjs",
-      "sha256": "c4c69b91d4f907def9ea6c537bdbdc6e26df90bfc7db0c2e9ee9d09133725bd8"
+      "sha256": "881d5b48ead215fb8fd59c0348636e2739e8327507d78cea759ef2c41c998ae7"
     },
     {
       "path": "test/sepolia-sidecar-receipt.test.mjs",
@@ -173,11 +173,11 @@
     },
     {
       "path": "reports/safety-audit.json",
-      "sha256": "2b44b5e247ee663b56d4c142cd609c140755fa1d7a05be3f8452547ef1b16cf8"
+      "sha256": "5dc644e4cc569bc90c383938f6276f540e2d04e051963b4118cd1774e6111825"
     },
     {
       "path": "reports/test-results.xml",
-      "sha256": "4f1c0d6c8c8f8372529a3780e0a7d39f64f1c86b220a8dd8838d12b64a7c8b22"
+      "sha256": "ae25742d89e57eff28f7cfdd5d13b2d8712063593f607039506cfedd5f797163"
     }
   ]
 }

@@ -293,14 +293,24 @@ async function readSidecars(source, accounting, root) {
     'current blob endpoint',
     { allowUnsupported: true },
   )
-  if (current !== null) return { endpoint: 'current', sidecars: normalizeSidecarArray(current, 'current blob endpoint') }
+  if (current !== null && Array.isArray(current)
+    && current.every((candidate) => candidate && typeof candidate === 'object' && !Array.isArray(candidate))) {
+    return { endpoint: 'current', sidecars: normalizeSidecarArray(current, 'current blob endpoint') }
+  }
+  if (current !== null && (!Array.isArray(current)
+    || !current.every((candidate) => typeof candidate === 'string' && /^0x(?:[0-9a-f]{2})+$/iu.test(candidate)))) {
+    fail('INVALID_PROVIDER_RESPONSE', 'current blob endpoint returned an unsupported data shape')
+  }
   const legacy = await beacon(
     source,
     accounting,
     `/eth/v1/beacon/blob_sidecars/${root}`,
     'legacy blob sidecar endpoint',
   )
-  return { endpoint: 'legacy', sidecars: normalizeSidecarArray(legacy, 'legacy blob sidecar endpoint') }
+  return {
+    endpoint: current === null ? 'legacy' : 'legacy_after_blobs_only',
+    sidecars: normalizeSidecarArray(legacy, 'legacy blob sidecar endpoint'),
+  }
 }
 
 async function observeBeaconSource(source, accounting, { slot, blockHash }) {
@@ -317,11 +327,11 @@ async function observeBeaconSource(source, accounting, { slot, blockHash }) {
     fail('EXECUTION_BEACON_MISMATCH', 'beacon block does not contain the execution block')
   }
 
-  const [headData, finalizedData, sidecars] = await Promise.all([
+  const [headData, finalizedData] = await Promise.all([
     beacon(source, accounting, '/eth/v1/beacon/headers/head', 'head header'),
     beacon(source, accounting, '/eth/v1/beacon/headers/finalized', 'finalized header'),
-    readSidecars(source, accounting, root),
   ])
+  const sidecars = await readSidecars(source, accounting, root)
   const headSlot = decimal(headData?.header?.message?.slot, 'head slot')
   const finalizedSlot = decimal(finalizedData?.header?.message?.slot, 'finalized slot')
   if (finalizedSlot > headSlot) fail('INVALID_PROVIDER_RESPONSE', 'finalized slot exceeds head slot')

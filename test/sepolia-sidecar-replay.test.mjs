@@ -61,6 +61,7 @@ function requester({
   sidecars = fixture.sidecars,
   transactionHashes = fixture.manifest.blobVersionedHashes,
   currentStatus = 200,
+  currentData = sidecars,
 } = {}) {
   const calls = []
   const requestJson = async (spec) => {
@@ -108,7 +109,7 @@ function requester({
       case '/eth/v1/beacon/headers/finalized':
         return beacon({ header: { message: { slot: String(finalizedSlot) } } })
       case `/eth/v1/beacon/blobs/${beaconRoot}`:
-        return currentStatus === 200 ? beacon(sidecars) : { statusCode: currentStatus, body: { code: currentStatus } }
+        return currentStatus === 200 ? beacon(currentData) : { statusCode: currentStatus, body: { code: currentStatus } }
       case `/eth/v1/beacon/blob_sidecars/${beaconRoot}`:
         return beacon(sidecars)
       default: throw new Error(`unexpected beacon path ${spec.url.pathname}`)
@@ -374,6 +375,19 @@ test('legacy sidecar endpoint fallback remains explicit in provenance', async ()
     kzg,
   })
   assert.deepEqual(result.provenance.endpoints, ['legacy'])
+  assert.equal(result.accounting.requestCount, 11)
+})
+
+test('blobs-only current endpoint falls back to proof-bearing legacy sidecars', async () => {
+  const network = requester({ currentData: fixture.sidecars.map(({ blob }) => blob) })
+  const result = await replaySepoliaBlobTransaction({
+    profile: PROFILE,
+    txHash: TX_HASH,
+    manifest: fixture.manifest,
+    requestJson: network.requestJson,
+    kzg,
+  })
+  assert.deepEqual(result.provenance.endpoints, ['legacy_after_blobs_only'])
   assert.equal(result.accounting.requestCount, 11)
 })
 

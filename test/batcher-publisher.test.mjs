@@ -2,6 +2,10 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import { publishSegmentPackage } from '../src/batcher/index.js'
+import { viemKzgAdapter } from '../src/batcher/index.js'
+import { loadNodeKzg } from '../src/sidecars/index.js'
+import { privateKeyToAccount } from 'viem/accounts'
+import { parseTransaction } from 'viem'
 
 test('publisher forwards one blob and exact BSS calldata under explicit fee caps', async () => {
   let request
@@ -70,4 +74,27 @@ test('publisher rejects missing clients and inconsistent fee caps before signing
     }),
     /cannot exceed/u,
   )
+})
+
+test('viem adapter serializes a real signed EIP-4844 transaction with kzg-wasm', async () => {
+  const kzg = await loadNodeKzg()
+  const account = privateKeyToAccount(`0x${'11'.repeat(32)}`)
+  const raw = await account.signTransaction({
+    chainId: 11155111,
+    type: 'eip4844',
+    nonce: 0,
+    gas: 80_000n,
+    maxFeePerGas: 2_000_000_000n,
+    maxPriorityFeePerGas: 100_000_000n,
+    maxFeePerBlobGas: 2_000_000_000n,
+    to: '0x9C4b230066a6808D83F5FBa0c040E0Df2Fcc7314',
+    value: 0n,
+    data: '0x',
+    blobs: [`0x${'00'.repeat(131072)}`],
+    kzg: viemKzgAdapter(kzg),
+  })
+  const transaction = parseTransaction(raw)
+  assert.equal(raw.startsWith('0x03'), true)
+  assert.equal(transaction.type, 'eip4844')
+  assert.equal(transaction.blobVersionedHashes.length, 1)
 })

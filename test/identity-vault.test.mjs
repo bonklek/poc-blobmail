@@ -7,6 +7,7 @@ import {
   createContactCode,
   createIdentityVault,
   openIdentityVault,
+  openIdentityVaultSession,
   sealIdentityVault,
 } from '../src/identity/index.js'
 
@@ -57,4 +58,36 @@ test('identity vault rejects mismatched keypairs after authenticated decryption'
     openIdentityVault(envelope, PASSPHRASE),
     (error) => error.code === 'INVALID_VAULT' && /keypair/u.test(error.message),
   )
+})
+
+test('unlocked session reseals inbox, outbox, and reorg cursor without plaintext storage', async () => {
+  const created = await createIdentityVault(PASSPHRASE)
+  const session = await openIdentityVaultSession(created.envelope, PASSPHRASE)
+  const mailbox = {
+    inbox: [{
+      entryId: '11'.repeat(32),
+      batchId: '22'.repeat(32),
+      body: 'encrypted-at-rest inbox text',
+      receivedAt: '2026-08-12T01:00:00.000Z',
+      transactionHash: `0x${'33'.repeat(32)}`,
+      blockNumber: 10,
+    }],
+    outbox: [{
+      entryId: '44'.repeat(32),
+      body: 'encrypted-at-rest sent text',
+      recipient: 'bob.eth',
+      submittedAt: '2026-08-12T01:01:00.000Z',
+      status: 'included',
+      batchId: '55'.repeat(32),
+      transactionHash: `0x${'66'.repeat(32)}`,
+    }],
+    cursor: { nextBlock: 11, anchor: { blockNumber: 10, blockHash: `0x${'77'.repeat(32)}` } },
+  }
+  const nextEnvelope = await session.save({ mailbox })
+  assert.doesNotMatch(nextEnvelope, /encrypted-at-rest/u)
+  assert.equal(session.getVault().mailbox.inbox[0].body, mailbox.inbox[0].body)
+  const reopened = await openIdentityVault(nextEnvelope, PASSPHRASE)
+  assert.deepEqual(reopened.mailbox, mailbox)
+  session.lock()
+  assert.throws(() => session.getVault(), { code: 'VAULT_LOCKED' })
 })

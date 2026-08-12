@@ -14,8 +14,8 @@ the following environment values and the explicit mode `readonly`:
 BLOBMAIL_NETWORK_MODE=readonly
 BLOBMAIL_NETWORK=sepolia
 BLOBMAIL_SEPOLIA_EXECUTION_RPC_URL=https://ethereum-sepolia-rpc.publicnode.com
-BLOBMAIL_SEPOLIA_BEACON_RPC_URL=https://ethereum-sepolia-beacon-api.publicnode.com
-BLOBMAIL_SEPOLIA_ALLOWED_HOSTS=ethereum-sepolia-rpc.publicnode.com,ethereum-sepolia-beacon-api.publicnode.com
+BLOBMAIL_SEPOLIA_BEACON_RPC_URL=https://lodestar-sepolia.chainsafe.io
+BLOBMAIL_SEPOLIA_ALLOWED_HOSTS=ethereum-sepolia-rpc.publicnode.com,lodestar-sepolia.chainsafe.io
 ```
 
 The checked-in [`.env.example`](../.env.example) stays offline. The probe does
@@ -80,8 +80,8 @@ PowerShell:
 $env:BLOBMAIL_NETWORK_MODE='readonly'
 $env:BLOBMAIL_NETWORK='sepolia'
 $env:BLOBMAIL_SEPOLIA_EXECUTION_RPC_URL='https://ethereum-sepolia-rpc.publicnode.com'
-$env:BLOBMAIL_SEPOLIA_BEACON_RPC_URL='https://ethereum-sepolia-beacon-api.publicnode.com'
-$env:BLOBMAIL_SEPOLIA_ALLOWED_HOSTS='ethereum-sepolia-rpc.publicnode.com,ethereum-sepolia-beacon-api.publicnode.com'
+$env:BLOBMAIL_SEPOLIA_BEACON_RPC_URL='https://lodestar-sepolia.chainsafe.io'
+$env:BLOBMAIL_SEPOLIA_ALLOWED_HOSTS='ethereum-sepolia-rpc.publicnode.com,lodestar-sepolia.chainsafe.io'
 pnpm probe:sepolia
 ```
 

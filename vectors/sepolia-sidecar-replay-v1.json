@@ -103,7 +103,7 @@
   },
   "provenance": {
     "sourceReport": "reports/sepolia-sidecar-source-provenance.json",
-    "sourceReportSha256": "3fcf4ec6eb6b7e28995a45a230c0324b05cacb5e09fd41e4f459eed3575865b9",
+    "sourceReportSha256": "570392fefd1ed480c68048c4a1f971cef233163827c7d7c237058e305862ee0c",
     "executableTest": "test/sepolia-sidecar-replay.test.mjs"
   }
 }

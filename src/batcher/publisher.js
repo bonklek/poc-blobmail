@@ -1,4 +1,4 @@
-import { bytesToHex } from '../transport/index.js'
+import { bytesToHex, hexToBytes } from '../transport/index.js'
 
 function bigint(value, label) {
   if (typeof value === 'bigint' && value > 0n) return value
@@ -10,9 +10,13 @@ export function viemKzgAdapter(kzg) {
   if (!kzg || typeof kzg.blobToKZGCommitment !== 'function' || typeof kzg.computeBlobKZGProof !== 'function') {
     throw new TypeError('an initialized KZG implementation is required')
   }
+  const hex = (value) => typeof value === 'string' ? value : bytesToHex(value)
   return Object.freeze({
-    blobToKzgCommitment: (blob) => kzg.blobToKZGCommitment(blob),
-    computeBlobKzgProof: (blob, commitment) => kzg.computeBlobKZGProof(blob, commitment),
+    blobToKzgCommitment: (blob) => hexToBytes(kzg.blobToKZGCommitment(hex(blob)), 'KZG commitment'),
+    computeBlobKzgProof: (blob, commitment) => hexToBytes(
+      kzg.computeBlobKZGProof(hex(blob), hex(commitment)),
+      'KZG proof',
+    ),
   })
 }
 

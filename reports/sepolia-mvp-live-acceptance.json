@@ -1,0 +1,83 @@
+{
+  "schema": "blobmail.sepolia-mvp-live-acceptance.v1",
+  "generatedAt": "2026-08-12T20:00:36.561Z",
+  "result": "PASS",
+  "network": {
+    "name": "sepolia",
+    "chainId": 11155111,
+    "genesisValidatorsRoot": "0xd8ea171f3c94aea21ebc42a1ed61052acf3f9209c00e4efbaaddac09ed9b8078"
+  },
+  "publication": {
+    "publisherAddress": "0x045B73b0612b1801dcF7b4516a46097fc9B35a9f",
+    "transactionHash": "0x2fefb2af56b446ef49f966a7ad5b4bd73fb3afe7a84c7bab4c253aace9dc1f24",
+    "transactionType": 3,
+    "status": 1,
+    "blockNumber": 11475321,
+    "blockHash": "0x722830e8681a782baf71d5b6f339186896c50adc5b37036f6179faec530ed071",
+    "retryCount": 0,
+    "valueWei": "0",
+    "gasUsed": "24886",
+    "effectiveGasPriceWei": "2074643290",
+    "executionCostWei": "51629572914940",
+    "blobGasUsed": "131072",
+    "blobGasPriceWei": "53813898",
+    "blobCostWei": "7053495238656",
+    "actualTotalCostWei": "58683068153596",
+    "maximumExposureWei": "4221440000000000",
+    "balanceBeforeWei": "325208689959593609",
+    "balanceAfterWei": "325150006891440013"
+  },
+  "declaration": {
+    "contractAddress": "0x9C4b230066a6808D83F5FBa0c040E0Df2Fcc7314",
+    "contentTagLabel": "blobmail.v0",
+    "contentTag": "0x588f9cf7d00ec8d2d2b114649471dd72b1039a3684231a834fda412c72107bbe",
+    "startFE": 0,
+    "endFE": 22,
+    "payloadBytes": 664,
+    "payloadSha256": "f9f73cbcb0a340562f63ad68aea4bf4a13338d6933feb993667ced6199c8a1aa",
+    "batchId": "d9aa20531ce09ce8ec2622a41b5d9ec3cf3f60eda203c3e439db5f8cb8c2e314",
+    "entryIds": [
+      "286f16d4dcaec39648c37d0afecc7eaf2f21c52cc77c883ab49703d19c6e9f83"
+    ],
+    "versionedHash": "0x01278f73675fd90794ac0cc797eae25761347fe515ff76ee8ced08ce834ab541",
+    "commitment": "0xb6c02eff9805727569550e2cd5ca51125ab0ceaaf951b87135301e50dec667a946afb669b46d70eaac073b2dfb5e5634",
+    "proof": "0xb56b29c65812f8d39eb64c19a9c19bee734207ed25001217fcedc719a4a6eae7853235f7e5ec9b78da2465ebc5693c7a"
+  },
+  "receiver": {
+    "result": "PASS",
+    "executionProviderId": "blobmail-sepolia-v0:execution:sepolia.gateway.tenderly.co",
+    "beaconProviderId": "blobmail-sepolia-v0:beacon:lodestar-sepolia.chainsafe.io",
+    "slot": 10902528,
+    "beaconRoot": "0x967a69bf71f0de7602176e9d4b95a1ff9a922f640b1f632a873ff815f0ec75a5",
+    "sidecarEndpoint": "legacy_after_blobs_only",
+    "observedHeadSlot": 10902602,
+    "observedFinalizedSlot": 10902528,
+    "finalizedAtObservation": true,
+    "requestCount": 11,
+    "commitmentHashVerified": true,
+    "kzgProofVerified": true,
+    "batchReconstructed": true,
+    "recipientMatches": 1,
+    "notForRecipient": 0,
+    "unrelatedRecipientMatches": 0,
+    "unrelatedNotForRecipient": 1,
+    "plaintextUtf8Bytes": 53,
+    "plaintextSha256": "8a80dc0205e6c61c7b84ac84eb8fec34b9564afd4b2c41ac1850636563e7008e"
+  },
+  "source": {
+    "blobmailBranch": "codex/9-standalone-mvp",
+    "blobmailBaseCommit": "cffcdd39bbde9b9f644dd3e4d52db1b5870455be",
+    "operatorBoundaryRepository": "https://github.com/bonklek/eth-radio",
+    "operatorBoundaryCommit": "b465e02f88bbca85932344228c1cfe5abfb51253",
+    "operatorSecretLocation": "separate process environment; not copied",
+    "submissionRetries": 0
+  },
+  "negativeClaims": {
+    "containsPrivateKey": false,
+    "containsRpcCredential": false,
+    "containsRawSignedTransaction": false,
+    "containsPlaintext": false,
+    "deliveryReceipt": false,
+    "readReceipt": false
+  }
+}

@@ -9,6 +9,7 @@ export {
   createNetworkProfile,
   providerRequestUrl,
 } from './profile.js'
+export { BrowserRequestError, boundedFetchJson, createBrowserRpc } from './browser-fetch.js'
 
 export {
   ProviderProbeError,

@@ -1,6 +1,6 @@
 {
   "schema": "blobmail.sepolia-provider-probe.v0",
-  "generatedAt": "2026-08-10T13:57:26.583Z",
+  "generatedAt": "2026-08-12T19:55:05.641Z",
   "result": "PASS",
   "mode": "readonly",
   "network": "sepolia",
@@ -32,10 +32,10 @@
         "chainId": 11155111
       },
       "capabilities": {
-        "blockNumber": 11459643,
+        "blockNumber": 11475367,
         "latestBlock": {
-          "number": 11459643,
-          "hash": "0x9ae4d534ef13793c4751989ad44c10f3b49fac4a6e5de79aeebe1e692a32eda8"
+          "number": 11475367,
+          "hash": "0x9cb2d6cf62d388b2358e30db2b0af04e1f70a0058ee4af7569ffe070705b3821"
         },
         "blockLagAtProbe": 0,
         "blobAwareBlockRead": true,
@@ -44,16 +44,16 @@
           "excessBlobGas": true,
           "parentBeaconBlockRoot": true
         },
-        "fullTransactionObjectsRead": 151,
-        "blobTransactionsObserved": 6,
+        "fullTransactionObjectsRead": 140,
+        "blobTransactionsObserved": 5,
         "blobTransactionRead": "observed_in_latest_block",
         "transactionReadMethod": "supported_null_sentinel"
       },
       "diagnostic": null
     },
     "beacon": {
-      "providerId": "blobmail-sepolia-v0:beacon:ethereum-sepolia-beacon-api.publicnode.com",
-      "hostname": "ethereum-sepolia-beacon-api.publicnode.com",
+      "providerId": "blobmail-sepolia-v0:beacon:lodestar-sepolia.chainsafe.io",
+      "hostname": "lodestar-sepolia.chainsafe.io",
       "result": "PASS",
       "identity": {
         "time": "1655733600",
@@ -61,18 +61,18 @@
         "validatorsRoot": "0xd8ea171f3c94aea21ebc42a1ed61052acf3f9209c00e4efbaaddac09ed9b8078"
       },
       "capabilities": {
-        "headSlot": 10886387,
-        "finalizedSlot": 10886304,
-        "finalityDistanceSlots": 83,
+        "headSlot": 10902575,
+        "finalizedSlot": 10902496,
+        "finalityDistanceSlots": 79,
         "legacySidecars": {
           "statusCode": 200,
           "outcome": "available_data",
           "itemCount": 1
         },
         "currentBlobs": {
-          "statusCode": 200,
-          "outcome": "available_empty",
-          "itemCount": 0
+          "statusCode": 400,
+          "outcome": "available_rejected_sentinel",
+          "itemCount": null
         }
       },
       "diagnostic": null
@@ -140,19 +140,19 @@
   },
   "failures": [],
   "evidence": {
-    "observationSha256": "22b40ca44e6f391ad49cf1fd1dc205c51bdff73372b150340dc7507819fb5361",
+    "observationSha256": "c693c7b55fdacf793048782925c1f8c006aa68269ab2befd76b3232a6b2d6c57",
     "artifacts": [
       {
         "path": ".env.example",
-        "sha256": "846aec0939b3b109ca6ceffdd97b0b0a48ccc076c3c3b79af28da34ff61a5bb9"
+        "sha256": "556209c680685c924285af1ee14da413b17e24dbfcff15211c3a10b1b732916f"
       },
       {
         "path": "src/network/index.js",
-        "sha256": "75fc894a95baebdf3cd1fe1c56c2939f6da1d3fc2e87d5dba3b3ec959cd8b6d7"
+        "sha256": "9235faa6b0d7ded8beaeca69689157e3bb5b4ab1421c4bc7a2fe6a8b7755782b"
       },
       {
         "path": "src/network/profile.js",
-        "sha256": "199010ff2b052890245144d8d2a404aaaa5e9ec50a4501424551754694d97566"
+        "sha256": "bd5eefafea46d9fbddcb203d152c8992971c7d5ff398a13041ab7ffd89a20c4e"
       },
       {
         "path": "src/network/probe.js",
@@ -172,7 +172,7 @@
       },
       {
         "path": "docs/sepolia-provider-profile.md",
-        "sha256": "411db452613ae85575d05abd3c2c4d378850fea21f0713ba42011e51bb484e04"
+        "sha256": "fa216e4a14cd0962c5db9366e18335d9df8bad58937ebbdca162457276c5088e"
       },
       {
         "path": "test/network-profile.test.mjs",

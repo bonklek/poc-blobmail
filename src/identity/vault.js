@@ -6,6 +6,7 @@ export const VAULT_PAYLOAD_SCHEMA = 'blobmail.identity-vault-payload.v1'
 export const VAULT_KDF_ITERATIONS = 600_000
 export const MAX_VAULT_BYTES = 256 * 1024
 export const MAX_VAULT_CONTACTS = 64
+export const MAX_VAULT_MESSAGES = 128
 
 const AAD = new TextEncoder().encode('BlobMail/v1/identity-vault\0')
 const encoder = new TextEncoder()
@@ -39,10 +40,132 @@ function decodeBase64Url(value, expectedBytes, label) {
     fail('INVALID_VAULT', `${label} is not valid base64url`)
   }
   const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0))
-  if (bytes.byteLength !== expectedBytes || encodeBase64Url(bytes) !== value) {
+  if ((expectedBytes !== null && bytes.byteLength !== expectedBytes) || encodeBase64Url(bytes) !== value) {
     fail('INVALID_VAULT', `${label} has the wrong length or encoding`)
   }
   return bytes
+}
+
+function freezeMailbox(mailbox) {
+  return Object.freeze({
+    inbox: Object.freeze(mailbox.inbox.map((item) => Object.freeze(item))),
+    outbox: Object.freeze(mailbox.outbox.map((item) => Object.freeze(item))),
+    cursor: Object.freeze({
+      nextBlock: mailbox.cursor.nextBlock,
+      anchor: mailbox.cursor.anchor ? Object.freeze(mailbox.cursor.anchor) : null,
+    }),
+  })
+}
+
+function cleanString(value, label, minBytes, maxBytes) {
+  if (typeof value !== 'string') throw new TypeError(`${label} must be a string`)
+  const bytes = encoder.encode(value).byteLength
+  if (bytes < minBytes || bytes > maxBytes) throw new RangeError(`${label} must contain ${minBytes} to ${maxBytes} UTF-8 bytes`)
+  return value
+}
+
+function cleanHash(value, label, prefixed = false) {
+  const pattern = prefixed ? /^0x[0-9a-f]{64}$/u : /^[0-9a-f]{64}$/u
+  if (typeof value !== 'string' || !pattern.test(value)) throw new TypeError(`${label} must be lowercase 32-byte hex`)
+  return value
+}
+
+function cleanMailbox(value) {
+  const source = value === undefined ? {} : value
+  if (!source || typeof source !== 'object' || Array.isArray(source)) throw new TypeError('mailbox must be an object')
+  const cleanMessages = (items, kind) => {
+    if (!Array.isArray(items ?? [])) throw new TypeError(`mailbox.${kind} must be an array`)
+    if ((items ?? []).length > MAX_VAULT_MESSAGES) throw new RangeError(`mailbox.${kind} supports at most ${MAX_VAULT_MESSAGES} messages`)
+    return (items ?? []).map((item, index) => {
+      if (!item || typeof item !== 'object' || Array.isArray(item)) throw new TypeError(`${kind} message ${index} must be an object`)
+      const common = {
+        entryId: cleanHash(item.entryId, `${kind} message ${index} entryId`),
+        body: cleanString(item.body, `${kind} message ${index} body`, 1, 480),
+      }
+      if (kind === 'inbox') {
+        const blockNumber = Number(item.blockNumber)
+        if (!Number.isSafeInteger(blockNumber) || blockNumber < 0) throw new TypeError(`inbox message ${index} blockNumber is invalid`)
+        return {
+          ...common,
+          batchId: cleanHash(item.batchId, `inbox message ${index} batchId`),
+          receivedAt: cleanString(item.receivedAt, `inbox message ${index} receivedAt`, 1, 64),
+          transactionHash: cleanHash(item.transactionHash, `inbox message ${index} transactionHash`, true),
+          blockNumber,
+        }
+      }
+      const status = String(item.status ?? '')
+      if (!['included', 'failed'].includes(status)) throw new TypeError(`outbox message ${index} status is invalid`)
+      return {
+        ...common,
+        recipient: cleanString(item.recipient, `outbox message ${index} recipient`, 1, 255),
+        submittedAt: cleanString(item.submittedAt, `outbox message ${index} submittedAt`, 1, 64),
+        status,
+        ...(item.batchId === undefined ? {} : { batchId: cleanHash(item.batchId, `outbox message ${index} batchId`) }),
+        ...(item.transactionHash === undefined ? {} : { transactionHash: cleanHash(item.transactionHash, `outbox message ${index} transactionHash`, true) }),
+      }
+    })
+  }
+  const cursorSource = source.cursor ?? { nextBlock: 0, anchor: null }
+  if (!cursorSource || typeof cursorSource !== 'object' || !Number.isSafeInteger(cursorSource.nextBlock) || cursorSource.nextBlock < 0) {
+    throw new TypeError('mailbox cursor is invalid')
+  }
+  let anchor = null
+  if (cursorSource.anchor !== null && cursorSource.anchor !== undefined) {
+    if (!Number.isSafeInteger(cursorSource.anchor.blockNumber) || cursorSource.anchor.blockNumber < 0) {
+      throw new TypeError('mailbox cursor anchor block is invalid')
+    }
+    anchor = {
+      blockNumber: cursorSource.anchor.blockNumber,
+      blockHash: cleanHash(cursorSource.anchor.blockHash, 'mailbox cursor anchor hash', true),
+    }
+  }
+  const inbox = cleanMessages(source.inbox, 'inbox')
+  const outbox = cleanMessages(source.outbox, 'outbox')
+  if (new Set(inbox.map(({ entryId }) => entryId)).size !== inbox.length
+    || new Set(outbox.map(({ entryId }) => entryId)).size !== outbox.length) {
+    throw new TypeError('mailbox contains duplicate entry IDs')
+  }
+  return { inbox, outbox, cursor: { nextBlock: cursorSource.nextBlock, anchor } }
+}
+
+async function createVaultPayload({ identity, contacts = [], mailbox, createdAt } = {}) {
+  if (!identity?.publicKeyBytes || !identity?.privateKeyBytes) {
+    throw new TypeError('identity with public and private key bytes is required')
+  }
+  const clean = cleanContacts(contacts)
+  await validateContacts(clean)
+  const contactCode = await createContactCode(identity.publicKeyBytes)
+  return {
+    schema: VAULT_PAYLOAD_SCHEMA,
+    createdAt: createdAt ?? new Date().toISOString(),
+    identity: {
+      publicKey: encodeBase64Url(identity.publicKeyBytes),
+      privateKey: encodeBase64Url(identity.privateKeyBytes),
+      identityId: identity.identityId,
+      contactCode,
+    },
+    contacts: clean,
+    mailbox: cleanMailbox(mailbox),
+  }
+}
+
+async function encryptVaultPayload(payload, key, salt) {
+  const plaintext = encoder.encode(JSON.stringify(payload))
+  const iv = globalThis.crypto.getRandomValues(new Uint8Array(12))
+  try {
+    const ciphertext = new Uint8Array(await globalThis.crypto.subtle.encrypt(
+      { name: 'AES-GCM', iv, additionalData: AAD, tagLength: 128 }, key, plaintext,
+    ))
+    const envelope = JSON.stringify({
+      schema: VAULT_SCHEMA,
+      kdf: { name: 'PBKDF2-SHA-256', iterations: VAULT_KDF_ITERATIONS, salt: encodeBase64Url(salt) },
+      cipher: { name: 'AES-256-GCM', iv: encodeBase64Url(iv), ciphertext: encodeBase64Url(ciphertext) },
+    })
+    if (encoder.encode(envelope).byteLength > MAX_VAULT_BYTES) throw new RangeError('encrypted vault exceeds its storage bound')
+    return envelope
+  } finally {
+    plaintext.fill(0)
+  }
 }
 
 function validatePassphrase(passphrase) {
@@ -115,42 +238,15 @@ async function assertIdentityPair(identity) {
   }
 }
 
-export async function sealIdentityVault({ identity, contacts = [], createdAt } = {}, passphrase) {
-  if (!identity?.publicKeyBytes || !identity?.privateKeyBytes) {
-    throw new TypeError('identity with public and private key bytes is required')
-  }
+export async function sealIdentityVault({ identity, contacts = [], mailbox, createdAt } = {}, passphrase) {
   const passphraseBytes = validatePassphrase(passphrase)
-  const clean = cleanContacts(contacts)
-  const contactCode = await createContactCode(identity.publicKeyBytes)
-  const payload = {
-    schema: VAULT_PAYLOAD_SCHEMA,
-    createdAt: createdAt ?? new Date().toISOString(),
-    identity: {
-      publicKey: encodeBase64Url(identity.publicKeyBytes),
-      privateKey: encodeBase64Url(identity.privateKeyBytes),
-      identityId: identity.identityId,
-      contactCode,
-    },
-    contacts: clean,
-  }
-  const plaintext = encoder.encode(JSON.stringify(payload))
+  const payload = await createVaultPayload({ identity, contacts, mailbox, createdAt })
   const salt = globalThis.crypto.getRandomValues(new Uint8Array(16))
-  const iv = globalThis.crypto.getRandomValues(new Uint8Array(12))
   try {
     const key = await deriveVaultKey(passphraseBytes, salt, ['encrypt'])
-    const ciphertext = new Uint8Array(await globalThis.crypto.subtle.encrypt(
-      { name: 'AES-GCM', iv, additionalData: AAD, tagLength: 128 }, key, plaintext,
-    ))
-    const envelope = JSON.stringify({
-      schema: VAULT_SCHEMA,
-      kdf: { name: 'PBKDF2-SHA-256', iterations: VAULT_KDF_ITERATIONS, salt: encodeBase64Url(salt) },
-      cipher: { name: 'AES-256-GCM', iv: encodeBase64Url(iv), ciphertext: encodeBase64Url(ciphertext) },
-    })
-    if (encoder.encode(envelope).byteLength > MAX_VAULT_BYTES) throw new RangeError('encrypted vault exceeds its storage bound')
-    return envelope
+    return await encryptVaultPayload(payload, key, salt)
   } finally {
     passphraseBytes.fill(0)
-    plaintext.fill(0)
   }
 }
 
@@ -185,7 +281,10 @@ export async function openIdentityVault(envelope, passphrase) {
   }
   const salt = decodeBase64Url(parsed.kdf.salt, 16, 'vault salt')
   const iv = decodeBase64Url(parsed.cipher.iv, 12, 'vault IV')
-  const ciphertext = decodeBase64Url(parsed.cipher.ciphertext, parsed.cipher.ciphertext.length * 3 >> 2, 'vault ciphertext')
+  const ciphertext = decodeBase64Url(parsed.cipher.ciphertext, null, 'vault ciphertext')
+  if (ciphertext.byteLength < 16 || ciphertext.byteLength > MAX_VAULT_BYTES) {
+    fail('INVALID_VAULT', 'vault ciphertext has an invalid length')
+  }
   let plaintext
   try {
     const key = await deriveVaultKey(passphraseBytes, salt, ['decrypt'])
@@ -217,14 +316,65 @@ export async function openIdentityVault(envelope, passphrase) {
     }
     await assertIdentityPair(identity)
     const contacts = await validateContacts(cleanContacts(payload.contacts))
+    let mailbox
+    try {
+      mailbox = cleanMailbox(payload.mailbox)
+    } catch {
+      fail('INVALID_VAULT', 'vault mailbox is invalid')
+    }
     return Object.freeze({
       schema: VAULT_PAYLOAD_SCHEMA,
       createdAt: payload.createdAt,
       identity,
       contactCode: payload.identity.contactCode,
       contacts,
+      mailbox: freezeMailbox(mailbox),
     })
   } finally {
     plaintext?.fill(0)
   }
+}
+
+export async function openIdentityVaultSession(envelope, passphrase) {
+  const vault = await openIdentityVault(envelope, passphrase)
+  const parsed = JSON.parse(envelope)
+  const salt = decodeBase64Url(parsed.kdf.salt, 16, 'vault salt')
+  const passphraseBytes = validatePassphrase(passphrase)
+  let key
+  try {
+    key = await deriveVaultKey(passphraseBytes, salt, ['encrypt'])
+  } finally {
+    passphraseBytes.fill(0)
+  }
+  let current = vault
+  let locked = false
+  return Object.freeze({
+    getVault() {
+      if (locked) fail('VAULT_LOCKED', 'vault session is locked')
+      return current
+    },
+    async save({ contacts = current.contacts, mailbox = current.mailbox } = {}) {
+      if (locked) fail('VAULT_LOCKED', 'vault session is locked')
+      const payload = await createVaultPayload({
+        identity: current.identity,
+        contacts,
+        mailbox,
+        createdAt: current.createdAt,
+      })
+      const nextEnvelope = await encryptVaultPayload(payload, key, salt)
+      const nextContacts = await validateContacts(cleanContacts(payload.contacts))
+      const nextMailbox = cleanMailbox(payload.mailbox)
+      current = Object.freeze({
+        ...current,
+        contacts: nextContacts,
+        mailbox: freezeMailbox(nextMailbox),
+      })
+      return nextEnvelope
+    },
+    lock() {
+      locked = true
+      current = null
+      key = null
+    },
+  })
 }

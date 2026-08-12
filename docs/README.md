@@ -1,5 +1,7 @@
 # BlobMail docs
 
+- [Standalone Sepolia MVP testing](./mvp-testing.md)
+
 This directory contains the current BlobMail architecture notes.
 
 Start here:

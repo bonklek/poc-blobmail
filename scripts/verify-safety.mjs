@@ -73,12 +73,27 @@ for (const [check, passed] of Object.entries(sepoliaProbeChecks)) {
 }
 
 const clientMain = await readFile("src/client/main.js", "utf8");
+const mvpMain = await readFile("src/mvp/main.js", "utf8");
 const renderingChecks = {
-  decryptedMessageUsesTextContent: clientMain.includes("body.textContent = message.body"),
+  decryptedMessageUsesTextContent: clientMain.includes("body.textContent = message.body")
+    && mvpMain.includes("body.textContent = message.body"),
   evidenceDetailUsesTextContent: clientMain.includes("detail.textContent = item.detail"),
 };
 for (const [check, passed] of Object.entries(renderingChecks)) {
   if (!passed) findings.push({ file: "src/client/main.js", rule: check });
+}
+
+const browserFetch = await readFile("src/network/browser-fetch.js", "utf8");
+const sendingClient = await readFile("src/sending/client.js", "utf8");
+const browserNetworkChecks = {
+  httpsRpcOnly: browserFetch.includes("url.protocol !== 'https:'"),
+  credentialsOmitted: browserFetch.includes("credentials: 'omit'") && sendingClient.includes("credentials: 'omit'"),
+  redirectsRejected: browserFetch.includes("redirect: 'error'") && sendingClient.includes("redirect: 'error'"),
+  boundedRpcResponses: browserFetch.includes("bytes.byteLength > spec.maxResponseBytes"),
+  safeBatcherOrigins: sendingClient.includes("url.protocol !== 'https:'") && sendingClient.includes("127.0.0.1"),
+};
+for (const [check, passed] of Object.entries(browserNetworkChecks)) {
+  if (!passed) findings.push({ file: "src/network/browser-fetch.js", rule: check });
 }
 
 const publicationSources = await Promise.all([
@@ -148,13 +163,14 @@ const report = {
     "funded-key environment access exists only in the explicit live-mode operator script",
     "no credential-shaped literals in project source",
     "no wallet-injection access in project source",
-    "no external runtime network or peer API in browser application source",
+    "browser network access is bounded to credential-free HTTPS RPC/beacon reads and an explicit HTTPS or loopback batcher origin",
     "unsigned publication source is offline and generated package keys exclude secret, signature, wallet, endpoint, and submission fields",
     "verification-network exceptions are the hard-coded 127.0.0.1 client probe and explicit bounded read-only Sepolia provider/sidecar probes",
     "reference batcher is offline by default, loopback-bound, fee-capped, and excluded from the browser entry graph",
   ],
   filesScanned: files.length,
   renderingChecks,
+  browserNetworkChecks,
   sepoliaProbeChecks,
   publicationChecks,
   batcherChecks,

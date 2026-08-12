@@ -23,10 +23,12 @@ export {
   IdentityVaultError,
   MAX_VAULT_BYTES,
   MAX_VAULT_CONTACTS,
+  MAX_VAULT_MESSAGES,
   VAULT_KDF_ITERATIONS,
   VAULT_PAYLOAD_SCHEMA,
   VAULT_SCHEMA,
   createIdentityVault,
   openIdentityVault,
+  openIdentityVaultSession,
   sealIdentityVault,
 } from './vault.js'

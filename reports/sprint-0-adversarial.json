@@ -1,6 +1,6 @@
 {
   "schema": "blobmail.sprint-0-adversarial.v1",
-  "generatedAt": "2026-08-10T01:29:25.019Z",
+  "generatedAt": "2026-08-12T20:01:26.416Z",
   "result": "PASS",
   "command": "pnpm run test:receipt && pnpm run audit:safety",
   "cases": {
@@ -35,13 +35,14 @@
       "exporter tag mismatch"
     ],
     "unsafeCapability": [
-      "no transaction-submission API in project source",
-      "no funded-key environment access in project source",
+      "transaction submission exists only in the isolated Node reference-batcher capability",
+      "funded-key environment access exists only in the explicit live-mode operator script",
       "no credential-shaped literals in project source",
       "no wallet-injection access in project source",
-      "no external runtime network or peer API in browser application source",
+      "browser network access is bounded to credential-free HTTPS RPC/beacon reads and an explicit HTTPS or loopback batcher origin",
       "unsigned publication source is offline and generated package keys exclude secret, signature, wallet, endpoint, and submission fields",
-      "verification-network exceptions are the hard-coded 127.0.0.1 client probe and explicit bounded read-only Sepolia provider/sidecar probes"
+      "verification-network exceptions are the hard-coded 127.0.0.1 client probe and explicit bounded read-only Sepolia provider/sidecar probes",
+      "reference batcher is offline by default, loopback-bound, fee-capped, and excluded from the browser entry graph"
     ]
   },
   "expectedOutcomes": [
@@ -74,17 +75,17 @@
       "outcome": "restore only allowlisted bounded state and retain no key or wallet authority"
     }
   ],
-  "tests": 76,
+  "tests": 114,
   "failures": 0,
   "safetyFindings": 0,
   "artifacts": [
     {
       "path": "reports/test-results.xml",
-      "sha256": "4f1c0d6c8c8f8372529a3780e0a7d39f64f1c86b220a8dd8838d12b64a7c8b22"
+      "sha256": "ae25742d89e57eff28f7cfdd5d13b2d8712063593f607039506cfedd5f797163"
     },
     {
       "path": "reports/safety-audit.json",
-      "sha256": "2b44b5e247ee663b56d4c142cd609c140755fa1d7a05be3f8452547ef1b16cf8"
+      "sha256": "5dc644e4cc569bc90c383938f6276f540e2d04e051963b4118cd1774e6111825"
     }
   ]
 }

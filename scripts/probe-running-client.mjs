@@ -33,7 +33,7 @@ const checks = {
   rootHttp200: root.statusCode === 200,
   entryHttp200: entry.statusCode === 200,
   appRootPresent: rootText.includes('id="app"'),
-  verifiedEntryPresent: entryText.includes("executeLoopback"),
+  mvpEntryPresent: entryText.includes("startMvpClient"),
 };
 const passed = Object.values(checks).every(Boolean);
 

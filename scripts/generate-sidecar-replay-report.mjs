@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto'
 import { readFile, writeFile } from 'node:fs/promises'
 
 const OUTPUT = 'reports/sepolia-sidecar-fixture-replay.json'
+const canonicalJson = (bytes) => Buffer.from(JSON.stringify(JSON.parse(bytes.toString('utf8'))))
 const vectorBytes = await readFile('vectors/sepolia-sidecar-replay-v1.json')
 const vector = JSON.parse(vectorBytes.toString('utf8'))
 const sourceBytes = await readFile('reports/sepolia-sidecar-source-provenance.json')
@@ -53,11 +54,11 @@ const report = {
   artifacts: {
     vector: {
       path: 'vectors/sepolia-sidecar-replay-v1.json',
-      sha256: createHash('sha256').update(vectorBytes).digest('hex')
+      sha256: createHash('sha256').update(canonicalJson(vectorBytes)).digest('hex')
     },
     sourceProvenance: {
       path: 'reports/sepolia-sidecar-source-provenance.json',
-      sha256: createHash('sha256').update(sourceBytes).digest('hex')
+      sha256: createHash('sha256').update(canonicalJson(sourceBytes)).digest('hex')
     }
   },
   negativeClaims: {
