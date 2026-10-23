@@ -62,6 +62,7 @@ function requester({
   transactionHashes = fixture.manifest.blobVersionedHashes,
   currentStatus = 200,
   currentData = sidecars,
+  pending = false,
 } = {}) {
   const calls = []
   const requestJson = async (spec) => {
@@ -73,8 +74,8 @@ function requester({
           return rpc(spec.body.id, {
             hash: TX_HASH,
             type: '0x3',
-            blockHash: BLOCK_HASH,
-            blockNumber: `0x${BLOCK_NUMBER.toString(16)}`,
+            blockHash: pending ? null : BLOCK_HASH,
+            blockNumber: pending ? null : `0x${BLOCK_NUMBER.toString(16)}`,
             blobVersionedHashes: transactionHashes,
           })
         case 'eth_getBlockByHash':
@@ -351,6 +352,22 @@ test('wrong-chain and reorg observations fail before inclusion evidence', async 
       (error) => error instanceof SidecarReplayError && error.code === code && error.evidence.length === 0,
     )
   }
+})
+
+test('a pending transaction is reported as a provider response, not caller input', async () => {
+  const network = requester({ pending: true })
+  await assert.rejects(
+    replaySepoliaBlobTransaction({
+      profile: PROFILE,
+      txHash: TX_HASH,
+      manifest: fixture.manifest,
+      requestJson: network.requestJson,
+      kzg,
+    }),
+    (error) => error instanceof SidecarReplayError && error.code === 'INVALID_PROVIDER_RESPONSE'
+      && /pending/u.test(error.message) && error.evidence.length === 0,
+  )
+  assert.equal(network.calls.some(({ method }) => method === 'eth_getBlockByHash'), false)
 })
 
 test('non-finalized inclusion stays explicit without blocking verified reconstruction', async () => {

@@ -10,4 +10,4 @@ export {
   createReferenceBatcher,
 } from './service.js'
 
-export { createBatcherHttpServer } from './node-server.js'
+export { createBatcherHttpServer, listenBatcherServer } from './node-server.js'

@@ -48,3 +48,24 @@ test('reference batcher fails closed for malformed, expired, unknown, and failed
   assert.equal(batcher.get(accepted.id).status, 'failed')
   assert.equal(batcher.get(accepted.id).errorCode, 'RPC_FAILED')
 })
+
+test('reference batcher re-checks expiresAt before publication and never publishes an expired entry', async () => {
+  // Admission sees 11:59:59 (not yet expired); the publication-time check sees 12:00:01.
+  const clock = ['2026-08-12T11:59:59.000Z']
+  let calls = 0
+  const batcher = createReferenceBatcher({
+    now: () => clock[0],
+    publish: async () => {
+      calls += 1
+      return { status: 'packaged', batchId: '22'.repeat(32) }
+    },
+  })
+  const submission = batcher.submit({ entryHex, expiresAt: '2026-08-12T12:00:00.000Z' })
+  clock[0] = '2026-08-12T12:00:01.000Z'
+  const accepted = await submission
+  await batcher.waitForIdle()
+  const job = batcher.get(accepted.id)
+  assert.equal(job.status, 'failed')
+  assert.equal(job.errorCode, 'EXPIRED')
+  assert.equal(calls, 0)
+})
