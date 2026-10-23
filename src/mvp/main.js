@@ -236,7 +236,11 @@ export function startMvpClient({ root = document.querySelector('#app'), storage 
           await saveMailbox({ ...vault.mailbox, cursor: { nextBlock, anchor: null } })
           refs.checkResult.textContent = `Mailbox initialized at Sepolia block ${nextBlock}. Share your contact code now.`
         } else {
-          kzgPromise ??= import('kzg-wasm').then(({ loadKZG }) => loadKZG())
+          // Do not cache a failed load, or every later check would fail until reload.
+          kzgPromise ??= import('kzg-wasm').then(({ loadKZG }) => loadKZG()).catch((error) => {
+            kzgPromise = undefined
+            throw error
+          })
           const received = await refreshMailbox({
             profile: network.profile, requestRpc: network.executionRpc.requestRpc,
             requestJson: network.requestJson, kzg: await kzgPromise,

@@ -6,6 +6,7 @@ export const SEND_LIMITS = Object.freeze({
   maxPolls: 60,
   pollIntervalMs: 2_000,
   maxResponseBytes: 16_384,
+  requestTimeoutMs: 10_000,
 })
 
 export class SendClientError extends Error {
@@ -31,8 +32,15 @@ function normalizeJob(value) {
   return value
 }
 
-export function createBatcherClient({ endpoint, fetchImpl = globalThis.fetch } = {}) {
+export function createBatcherClient({
+  endpoint,
+  fetchImpl = globalThis.fetch,
+  timeoutMs = SEND_LIMITS.requestTimeoutMs,
+} = {}) {
   if (typeof fetchImpl !== 'function') throw new TypeError('fetchImpl must be a function')
+  if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 60_000) {
+    throw new RangeError('timeoutMs must be between 1 and 60000')
+  }
   let origin
   try {
     const url = new URL(endpoint)
@@ -47,23 +55,36 @@ export function createBatcherClient({ endpoint, fetchImpl = globalThis.fetch } =
   }
 
   async function json(pathname, options = {}) {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), timeoutMs)
     let response
+    let text
     try {
-      response = await fetchImpl(new URL(pathname, `${origin}/`), {
-        ...options,
-        redirect: 'error',
-        cache: 'no-store',
-        credentials: 'omit',
-        referrerPolicy: 'no-referrer',
-      })
-    } catch (cause) {
-      fail('BATCHER_UNAVAILABLE', 'batcher request failed', cause)
+      try {
+        response = await fetchImpl(new URL(pathname, `${origin}/`), {
+          ...options,
+          signal: controller.signal,
+          redirect: 'error',
+          cache: 'no-store',
+          credentials: 'omit',
+          referrerPolicy: 'no-referrer',
+        })
+      } catch (cause) {
+        fail('BATCHER_UNAVAILABLE', 'batcher request failed', cause)
+      }
+      const advertised = Number(response.headers?.get?.('content-length'))
+      if (Number.isFinite(advertised) && advertised > SEND_LIMITS.maxResponseBytes) {
+        controller.abort()
+        fail('BATCHER_RESPONSE_TOO_LARGE', 'batcher response exceeds its byte bound')
+      }
+      try {
+        text = await response.text()
+      } catch (cause) {
+        fail('BATCHER_UNAVAILABLE', 'batcher response could not be read', cause)
+      }
+    } finally {
+      clearTimeout(timeout)
     }
-    const advertised = Number(response.headers?.get?.('content-length'))
-    if (Number.isFinite(advertised) && advertised > SEND_LIMITS.maxResponseBytes) {
-      fail('BATCHER_RESPONSE_TOO_LARGE', 'batcher response exceeds its byte bound')
-    }
-    const text = await response.text()
     if (new TextEncoder().encode(text).byteLength > SEND_LIMITS.maxResponseBytes) {
       fail('BATCHER_RESPONSE_TOO_LARGE', 'batcher response exceeds its byte bound')
     }
