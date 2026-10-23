@@ -45,6 +45,15 @@ export function createReferenceBatcher({ publish, now = () => new Date().toISOSt
   }
 
   async function process(job, entryBytes) {
+    // Admission checked expiresAt before the (async) entry verification; re-check
+    // immediately before publication so an entry that expired in between is never
+    // handed to the publisher ("expired before inclusion" is a terminal failure).
+    if (job.expiresAt !== undefined && Date.parse(job.expiresAt) <= Date.parse(now())) {
+      job.status = 'failed'
+      job.errorCode = 'EXPIRED'
+      job.updatedAt = now()
+      return
+    }
     job.status = 'publishing'
     job.updatedAt = now()
     try {
@@ -94,6 +103,7 @@ export function createReferenceBatcher({ publish, now = () => new Date().toISOSt
       status: 'queued',
       submittedAt: timestamp,
       updatedAt: timestamp,
+      ...(expiresAt !== undefined ? { expiresAt } : {}),
     }
     jobs.set(job.id, job)
     const task = process(job, verified.entryBytes.slice()).finally(() => pending.delete(task))

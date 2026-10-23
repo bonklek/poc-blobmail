@@ -89,3 +89,28 @@ export function createBatcherHttpServer({
     }
   })
 }
+
+const LISTEN_ERROR_CODES = Object.freeze({ EADDRINUSE: 'PORT_IN_USE', EACCES: 'PORT_ACCESS_DENIED' })
+
+// Resolve once the server is listening; reject with a stable code instead of letting
+// an unhandled 'error' event (for example EADDRINUSE) crash the process.
+export function listenBatcherServer(server, { port, host = '127.0.0.1' } = {}) {
+  return new Promise((resolve, reject) => {
+    const onError = (error) => {
+      server.off('listening', onListening)
+      const code = LISTEN_ERROR_CODES[error?.code] ?? 'LISTEN_FAILED'
+      const reason = code === 'PORT_IN_USE' ? 'the port is already in use' : (error?.code ?? 'unknown error')
+      reject(Object.assign(
+        new Error(`reference batcher could not listen on http://${host}:${port}: ${reason}`),
+        { code, cause: error },
+      ))
+    }
+    const onListening = () => {
+      server.off('error', onError)
+      resolve(server.address())
+    }
+    server.once('error', onError)
+    server.once('listening', onListening)
+    server.listen(port, host)
+  })
+}

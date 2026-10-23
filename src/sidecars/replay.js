@@ -51,10 +51,12 @@ function fail(code, message, evidence = []) {
   throw new SidecarReplayError(code, message, evidence)
 }
 
-function hex(value, bytes, label) {
+// Caller-supplied values fail as INVALID_INPUT; provider-supplied values pass
+// INVALID_PROVIDER_RESPONSE so a bad or pending provider answer is not blamed on the caller.
+function hex(value, bytes, label, code = 'INVALID_INPUT') {
   const pattern = bytes === 32 ? HEX_32 : HEX_48
   if (typeof value !== 'string' || !pattern.test(value)) {
-    fail('INVALID_INPUT', `${label} must be ${bytes} bytes of hex`)
+    fail(code, `${label} must be ${bytes} bytes of hex`)
   }
   return value.toLowerCase()
 }
@@ -315,14 +317,14 @@ async function readSidecars(source, accounting, root) {
 
 async function observeBeaconSource(source, accounting, { slot, blockHash }) {
   const headerData = await beacon(source, accounting, `/eth/v1/beacon/headers/${slot}`, 'inclusion header')
-  const root = hex(headerData?.root, 32, 'inclusion header root')
+  const root = hex(headerData?.root, 32, 'inclusion header root', 'INVALID_PROVIDER_RESPONSE')
   const canonical = headerData?.canonical
   if (typeof canonical !== 'boolean') fail('INVALID_PROVIDER_RESPONSE', 'inclusion header omitted canonical')
   const headerSlot = decimal(headerData?.header?.message?.slot, 'inclusion header slot')
   if (headerSlot !== slot) fail('INVALID_PROVIDER_RESPONSE', 'inclusion header returned another slot')
 
   const blockData = await beacon(source, accounting, `/eth/v2/beacon/blocks/${root}`, 'beacon block')
-  const observedBlockHash = hex(executionBlockHash(blockData), 32, 'beacon execution block hash')
+  const observedBlockHash = hex(executionBlockHash(blockData), 32, 'beacon execution block hash', 'INVALID_PROVIDER_RESPONSE')
   if (observedBlockHash !== blockHash) {
     fail('EXECUTION_BEACON_MISMATCH', 'beacon block does not contain the execution block')
   }
@@ -350,8 +352,8 @@ async function observeBeaconSource(source, accounting, { slot, blockHash }) {
 async function sidecarFingerprint(observation) {
   const items = []
   for (const candidate of observation.sidecars) {
-    const commitment = hex(candidate.kzg_commitment ?? candidate.kzgCommitment ?? candidate.commitment, 48, 'sidecar commitment')
-    const proof = hex(candidate.kzg_proof ?? candidate.kzgProof, 48, 'sidecar proof')
+    const commitment = hex(candidate.kzg_commitment ?? candidate.kzgCommitment ?? candidate.commitment, 48, 'sidecar commitment', 'INVALID_PROVIDER_RESPONSE')
+    const proof = hex(candidate.kzg_proof ?? candidate.kzgProof, 48, 'sidecar proof', 'INVALID_PROVIDER_RESPONSE')
     const blob = candidate.blob
     if (typeof blob !== 'string' || !/^0x(?:[0-9a-f]{2})+$/i.test(blob)) {
       fail('INVALID_PROVIDER_RESPONSE', 'sidecar blob is not byte hex')
@@ -457,17 +459,20 @@ export async function replaySepoliaBlobTransaction({
     [normalizedTxHash],
   )
   if (!transaction || typeof transaction !== 'object') fail('TRANSACTION_NOT_FOUND', 'blob transaction was not found')
-  if (hex(transaction.hash, 32, 'transaction hash') !== normalizedTxHash) {
+  if (hex(transaction.hash, 32, 'transaction hash', 'INVALID_PROVIDER_RESPONSE') !== normalizedTxHash) {
     fail('INVALID_PROVIDER_RESPONSE', 'transaction hash does not match the request')
   }
   const type = hexQuantity(transaction.type, 'transaction type')
   if (type !== 3) fail('NOT_BLOB_TRANSACTION', 'transaction is not EIP-4844 type 3')
-  const blockHash = hex(transaction.blockHash, 32, 'transaction blockHash')
+  if (transaction.blockHash === null || transaction.blockNumber === null) {
+    fail('INVALID_PROVIDER_RESPONSE', 'blob transaction is still pending (no blockHash)')
+  }
+  const blockHash = hex(transaction.blockHash, 32, 'transaction blockHash', 'INVALID_PROVIDER_RESPONSE')
   const blockNumber = hexQuantity(transaction.blockNumber, 'transaction blockNumber')
   if (!Array.isArray(transaction.blobVersionedHashes)) {
     fail('INVALID_PROVIDER_RESPONSE', 'blob transaction omitted versioned hashes')
   }
-  const transactionHashes = transaction.blobVersionedHashes.map((value, index) => hex(value, 32, `transaction hash ${index}`))
+  const transactionHashes = transaction.blobVersionedHashes.map((value, index) => hex(value, 32, `transaction hash ${index}`, 'INVALID_PROVIDER_RESPONSE'))
   if (transactionHashes.length !== normalizedManifest.blobVersionedHashes.length
     || transactionHashes.some((value, index) => value !== normalizedManifest.blobVersionedHashes[index])) {
     fail('TRANSACTION_MANIFEST_MISMATCH', 'transaction versioned hashes do not match the manifest')
@@ -477,8 +482,8 @@ export async function replaySepoliaBlobTransaction({
     rpc(executionSource, profile.providers.execution, accounting, 3, 'eth_getBlockByHash', [blockHash, false]),
     rpc(executionSource, profile.providers.execution, accounting, 4, 'eth_getBlockByNumber', [transaction.blockNumber, false]),
   ])
-  if (!block || !canonicalBlock || hex(block.hash, 32, 'block hash') !== blockHash
-    || hex(canonicalBlock.hash, 32, 'canonical block hash') !== blockHash) {
+  if (!block || !canonicalBlock || hex(block.hash, 32, 'block hash', 'INVALID_PROVIDER_RESPONSE') !== blockHash
+    || hex(canonicalBlock.hash, 32, 'canonical block hash', 'INVALID_PROVIDER_RESPONSE') !== blockHash) {
     fail('REORGED_BLOCK', 'execution block is no longer canonical')
   }
   if (hexQuantity(block.number, 'block number') !== blockNumber) {

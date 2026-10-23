@@ -19,6 +19,23 @@ const DEFAULTS = Object.freeze({
   sepoliaBeacon: 'https://lodestar-sepolia.chainsafe.io',
 })
 
+const HEX_QUANTITY = /^0x(?:0|[1-9a-f][0-9a-f]*)$/i
+
+// The first mailbox cursor is derived from an untrusted RPC head. Reject anything
+// that is not a canonical, safe-range quantity, and anything that would yield
+// cursor block 0 (the "uninitialized" sentinel), instead of silently clamping.
+export function initialMailboxBlock(headHex) {
+  if (typeof headHex !== 'string' || !HEX_QUANTITY.test(headHex)) {
+    throw new Error('Sepolia RPC returned a non-canonical head block number')
+  }
+  const head = BigInt(headHex)
+  if (head > BigInt(Number.MAX_SAFE_INTEGER)) {
+    throw new Error('Sepolia RPC head block number exceeds the safe integer range')
+  }
+  if (head < 2n) throw new Error('Sepolia RPC head block number is implausibly low')
+  return Number(head) - 1
+}
+
 function markup(hasVault) {
   return `
     <main class="mvp-shell">
@@ -232,7 +249,7 @@ export function startMvpClient({ root = document.querySelector('#app'), storage 
         const network = sepoliaNetwork()
         if (vault.mailbox.cursor.nextBlock === 0) {
           const headHex = await network.executionRpc.requestRpc('eth_blockNumber')
-          const nextBlock = Math.max(0, Number(BigInt(headHex)) - 1)
+          const nextBlock = initialMailboxBlock(headHex)
           await saveMailbox({ ...vault.mailbox, cursor: { nextBlock, anchor: null } })
           refs.checkResult.textContent = `Mailbox initialized at Sepolia block ${nextBlock}. Share your contact code now.`
         } else {

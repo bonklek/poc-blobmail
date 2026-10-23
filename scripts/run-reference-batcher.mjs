@@ -4,7 +4,12 @@ import { createPublicClient, createWalletClient, http, keccak256 } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { sepolia } from 'viem/chains'
 
-import { createBatcherHttpServer, createReferenceBatcher, publishSegmentPackage } from '../src/batcher/index.js'
+import {
+  createBatcherHttpServer,
+  createReferenceBatcher,
+  listenBatcherServer,
+  publishSegmentPackage,
+} from '../src/batcher/index.js'
 import { calculateCostEnvelope } from '../src/publication/index.js'
 import { createSegmentPublicationPackage } from '../src/publication/index.js'
 import { loadNodeKzg } from '../src/sidecars/index.js'
@@ -106,13 +111,33 @@ if (MODE === 'offline') {
 
 const batcher = createReferenceBatcher({ publish })
 const server = createBatcherHttpServer({ batcher, allowedOrigin: ALLOWED_ORIGIN })
-server.listen(PORT, HOST, () => {
-  console.log(JSON.stringify({
-    schema: 'blobmail.reference-batcher-start.v1',
-    mode: MODE,
-    origin: `http://${HOST}:${PORT}`,
-    allowedOrigin: ALLOWED_ORIGIN,
-    contractAddress: SEPOLIA_BSS_CONTRACT,
-    ...(publicAddress ? { publisherAddress: publicAddress } : {}),
+// Exit code for a startup listen failure (port in use, permission denied), distinct
+// from Node's generic exit code 1 for an uncaught exception.
+const EXIT_LISTEN_FAILED = 2
+try {
+  await listenBatcherServer(server, { port: PORT, host: HOST })
+} catch (error) {
+  console.error(JSON.stringify({
+    schema: 'blobmail.reference-batcher-error.v1',
+    code: error.code,
+    message: error.message,
   }))
+  process.exit(EXIT_LISTEN_FAILED)
+}
+server.on('error', (error) => {
+  console.error(JSON.stringify({
+    schema: 'blobmail.reference-batcher-error.v1',
+    code: 'SERVER_ERROR',
+    message: String(error?.code ?? error?.message ?? 'unknown server error'),
+  }))
+  process.exitCode = 1
+  server.close()
 })
+console.log(JSON.stringify({
+  schema: 'blobmail.reference-batcher-start.v1',
+  mode: MODE,
+  origin: `http://${HOST}:${PORT}`,
+  allowedOrigin: ALLOWED_ORIGIN,
+  contractAddress: SEPOLIA_BSS_CONTRACT,
+  ...(publicAddress ? { publisherAddress: publicAddress } : {}),
+}))
