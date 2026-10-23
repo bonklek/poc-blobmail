@@ -16,25 +16,35 @@ export async function boundedFetchJson(spec, fetchImpl = globalThis.fetch) {
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), spec.timeoutMs)
   let response
+  let bytes
   try {
-    response = await fetchImpl(spec.url, {
-      method: spec.method,
-      headers: spec.headers,
-      body: spec.body === null ? undefined : JSON.stringify(spec.body),
-      signal: controller.signal,
-      redirect: 'error',
-      cache: 'no-store',
-      credentials: 'omit',
-      referrerPolicy: 'no-referrer',
-    })
-  } catch {
-    throw new BrowserRequestError('REQUEST_FAILED')
+    try {
+      response = await fetchImpl(spec.url, {
+        method: spec.method,
+        headers: spec.headers,
+        body: spec.body === null ? undefined : JSON.stringify(spec.body),
+        signal: controller.signal,
+        redirect: 'error',
+        cache: 'no-store',
+        credentials: 'omit',
+        referrerPolicy: 'no-referrer',
+      })
+    } catch {
+      throw new BrowserRequestError('REQUEST_FAILED')
+    }
+    const advertised = Number(response.headers?.get?.('content-length'))
+    if (Number.isFinite(advertised) && advertised > spec.maxResponseBytes) {
+      controller.abort()
+      throw new BrowserRequestError('RESPONSE_TOO_LARGE')
+    }
+    try {
+      bytes = new Uint8Array(await response.arrayBuffer())
+    } catch {
+      throw new BrowserRequestError('REQUEST_FAILED')
+    }
   } finally {
     clearTimeout(timeout)
   }
-  const advertised = Number(response.headers?.get?.('content-length'))
-  if (Number.isFinite(advertised) && advertised > spec.maxResponseBytes) throw new BrowserRequestError('RESPONSE_TOO_LARGE')
-  const bytes = new Uint8Array(await response.arrayBuffer())
   if (bytes.byteLength > spec.maxResponseBytes) throw new BrowserRequestError('RESPONSE_TOO_LARGE')
   let body
   try { body = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes)) } catch { throw new BrowserRequestError('INVALID_JSON_RESPONSE') }

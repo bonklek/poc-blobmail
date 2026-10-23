@@ -74,3 +74,22 @@ test('HTTP batcher client accepts HTTPS and loopback HTTP but rejects unsafe ori
   assert.throws(() => createBatcherClient({ endpoint: 'http://batcher.example.org' }), /HTTPS origin/u)
   assert.throws(() => createBatcherClient({ endpoint: 'https://user:pass@batcher.example.org' }), /HTTPS origin/u)
 })
+
+test('batcher client aborts a request that stalls past its timeout', async () => {
+  const fetchImpl = (_url, { signal }) => new Promise((_resolve, reject) => {
+    signal?.addEventListener('abort', () => reject(signal.reason), { once: true })
+  })
+  const client = createBatcherClient({ endpoint: 'http://127.0.0.1:8787', fetchImpl, timeoutMs: 50 })
+  await assert.rejects(client.get('ab'.repeat(32)), { name: 'SendClientError', code: 'BATCHER_UNAVAILABLE' })
+})
+
+test('batcher client maps response body read failures to a send error', async () => {
+  const fetchImpl = async () => ({
+    ok: true,
+    status: 200,
+    headers: new Headers(),
+    text: async () => { throw new TypeError('connection reset') },
+  })
+  const client = createBatcherClient({ endpoint: 'http://127.0.0.1:8787', fetchImpl })
+  await assert.rejects(client.get('ab'.repeat(32)), { name: 'SendClientError', code: 'BATCHER_UNAVAILABLE' })
+})
